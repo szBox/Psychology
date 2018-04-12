@@ -1,0 +1,123 @@
+body {
+    background-color: #fff;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+.weui-tabbar__icon {
+    display: inline-block;
+    width: 2rem !important;
+    height: 2rem !important;
+}
+
+.weui-tabbar {
+    position: fixed !important;
+}
+
+//恶心的背景条
+.bgg{
+    height: 0.5rem;
+    background: #f2f2f2;
+}
+/*头部*/
+
+.header {
+    background: #fff;
+    z-index: 999;
+    border-bottom: 1px solid #C9C9C9;
+    width: 100%;
+    position: relative;
+    h1 {
+        height: 2.75rem;
+        line-height: 2.75rem;
+        text-align: center;
+        font-size: 0.75rem;
+    }
+    img {
+        position: absolute;
+        width: 1rem;
+        height: 1rem;
+        top: 50%;
+        left: 0.75rem;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+}
+
+
+/*固定 定位  小图标跳转*/
+
+.flexd-go {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 0.75rem;
+    border-radius: 50%;
+    height: 2.5rem;
+    width: 2.5rem;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    font-size: 0.6rem;
+    span {
+        display: inline-block;
+        width: 1.2rem;
+        line-height: 20px;
+        margin-top: 0.25rem;
+    }
+}
+
+
+/*按钮的初始 样式*/
+
+.btn-init {
+    width: 100%;
+    display: block;
+    text-align: center;
+    height: 2rem;
+    line-height: 2rem;
+    background: #F2F2F2;
+}
+
+/*互动*/
+//组团活动
+ul.activitys-ul{
+        padding: 0.5rem 0.75rem;
+        li{
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: #fff;
+            >h1{
+                overflow: hidden;
+                >span{
+                    float: left;
+                }
+                >em{
+                    float: right;
+                    >span{
+                        color: #f00;
+                    }
+                }
+                >p{
+                    clear: both;
+                    font-size: 0.6rem;
+                    color: #999;
+                    line-height: 1.5rem;
+                }
+            }
+            >h2{
+                
+            }
+            >div.activitys-info>p{
+                color: #666;
+                font-size: 0.6rem;
+                line-height: 1.1rem;
+            }
+        }
+    }

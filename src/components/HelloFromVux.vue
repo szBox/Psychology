@@ -11,12 +11,14 @@
 </template>
 
 <script>
+import footBar from '@/components/common/footBar'
 import { Group, Cell  } from 'vux'
-//Vue.use(ToastPlugin)
+
 export default {
   components: {
     Group,
     Cell,
+    footBar
   },
   data () {
     return {
@@ -34,6 +36,7 @@ export default {
 				 text: 'yes',
 				 position:'bottom'
 				})
+  		this.$router.push({ path: "/footBar" });
   	}
   }
 }

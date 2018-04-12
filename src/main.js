@@ -4,23 +4,25 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
-import Home from './components/HelloFromVux'
 import Vuex from 'vuex'
-
+import $ from 'jquery'
+import router from './router'
+import Swiper from 'swiper'
+import VueScroller from 'vue-scroller'
 import  { ToastPlugin } from 'vux' /* 全局toast */
+import { Tab, TabItem } from 'vux'
+/*tab*/
+Vue.component('tab', Tab)
+Vue.component('tab-item', TabItem)
+import '@/assets/css/common.css'
+import '@/assets/css/style.less'
+import 'swiper/dist/css/swiper.min.css'
 
+import '@/assets/js/rem.js'
 Vue.use(Vuex)
 Vue.use(ToastPlugin)
 Vue.use(VueRouter)
-
-const routes = [{
-  path: '/',
-  component: Home
-}]
-
-const router = new VueRouter({
-  routes
-})
+Vue.use(VueScroller)
 
 FastClick.attach(document.body)
 

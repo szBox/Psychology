@@ -5,6 +5,7 @@ const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const vuxLoader = require('vux-loader')
 
+const webpack = require('webpack')
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -24,10 +25,18 @@ let webpackConfig = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
+     'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'jquery':'jquery'
     }
   },
+   // 增加一个plugins
+   plugins: [
+      new webpack.ProvidePlugin({
+          $: "jquery",
+          jQuery: "jquery"
+      })
+   ],
   module: {
     rules: [
       {
