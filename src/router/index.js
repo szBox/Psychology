@@ -32,8 +32,18 @@ import activitysNav2 from '@/components/template/index3/activitys/activitysNav2'
 import activitysInfo from '@/components/template/index3/activitys/activitysInfo'		//互动 > 组团活动list 活动详情
 import activitysWrite from '@/components/template/index3/activitys/activitysWrite'		//互动 > 组团活动list 发起组团
 
-
 import gamesList from '@/components/template/index3/games/gamesList'		//互动 > 游戏擂台list
+
+
+/*index4 我的*/
+import setting from '@/components/template/index4/setting/setting'		//我的 > 设置
+import changeMima from '@/components/template/index4/setting/changeMima'		//我的  >设置 >修改密码
+
+import ziliao from '@/components/template/index4/ziliao/ziliao'		//我的  >详细资料 
+
+import zixunList from '@/components/template/index4/zixun/zixunList'		//我的  >我的咨询 
+
+import shoucang from '@/components/template/index4/shoucang/shoucangList'		//我的  >我的收藏
 Vue.use(Router)
 
 export default new Router({
@@ -151,11 +161,38 @@ export default new Router({
 	   		component: activitysWrite,
 		},
 		
-		
 		{
 				path:'/index3/gamesList',
 	   		name:	'gamesList',			// 互动 > 游戏擂台list
 	   		component: gamesList,
 		},
+		
+		
+		
+		{
+				path:'/index4/setting',
+	   		name:	'setting',			//我的 > 设置
+	   		component: setting,
+		},
+		{
+				path:'/index4/changeMima',
+	   		name:	'changeMima',			//我的  >设置 >修改密码
+	   		component: changeMima,
+		},
+		{
+				path:'/index4/ziliao',
+	   		name:	'ziliao',			///我的  >详细资料 
+	   		component: ziliao,
+		},
+		{
+				path:'/index4/zixunList',
+	   		name:	'zixunList',			///我的  >我的咨询 
+	   		component: zixunList,
+		},
+		{
+				path:'/index4/shoucang',
+	   		name:	'shoucang',			///我的  >我的收藏 
+	   		component: shoucang,
+		}
   ]
 })

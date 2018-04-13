@@ -19,10 +19,12 @@ body {
 }
 
 //恶心的背景条
-.bgg{
+.bgg {
     height: 0.5rem;
     background: #f2f2f2;
 }
+
+
 /*头部*/
 
 .header {
@@ -35,19 +37,26 @@ body {
         height: 2.75rem;
         line-height: 2.75rem;
         text-align: center;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
-    img {
+    img,
+    em {
         position: absolute;
         width: 1rem;
         height: 1rem;
         top: 50%;
-        left: 0.75rem;
         -webkit-transform: translateY(-50%);
         -moz-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         -o-transform: translateY(-50%);
         transform: translateY(-50%);
+    }
+    img {
+        left: 0.75rem;
+    }
+    em {
+        width: auto;
+        right: 0.75rem;
     }
 }
 
@@ -85,39 +94,396 @@ body {
     background: #F2F2F2;
 }
 
+
 /*互动*/
+
 //组团活动
-ul.activitys-ul{
-        padding: 0.5rem 0.75rem;
-        li{
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-            background: #fff;
-            >h1{
-                overflow: hidden;
-                >span{
-                    float: left;
-                }
-                >em{
-                    float: right;
-                    >span{
-                        color: #f00;
-                    }
-                }
-                >p{
-                    clear: both;
-                    font-size: 0.6rem;
-                    color: #999;
-                    line-height: 1.5rem;
+ul.activitys-ul {
+    padding: 0.5rem 0.75rem;
+    li {
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        background: #fff;
+        >h1 {
+            overflow: hidden;
+            >span {
+                float: left;
+            }
+            >em {
+                float: right;
+                >span {
+                    color: #f00;
                 }
             }
-            >h2{
-                
-            }
-            >div.activitys-info>p{
-                color: #666;
+            >p {
+                clear: both;
                 font-size: 0.6rem;
-                line-height: 1.1rem;
+                color: #999;
+                line-height: 1.5rem;
+            }
+        }
+        >h2 {}
+        >div.activitys-info>p {
+            color: #666;
+            font-size: 0.6rem;
+            line-height: 1.1rem;
+        }
+    }
+}
+//index: 心灵阅读
+.swiper-box {
+        padding: 0 0.75rem;
+    }
+    
+    
+    .time-div>em {
+        margin-left: 1.5rem;
+    }
+    
+    .nav-list li {
+        overflow: hidden;
+        border-bottom: 1px solid #c9c9c9;
+        padding: 15px 0;
+    }
+    
+    .nav-list li>div{
+        width: 70%;
+        font-weight: bold;
+        color: #000000;
+        line-height: 1rem;
+    }
+    .nav-list li>div>div{
+        -webkit-line-clamp: 2;
+    }
+    .time-div {
+        font-size: 0.6rem;
+        color: #666;
+        font-weight: normal;
+        margin-top: 0.3rem;
+    }
+    
+    .nav-list img {
+        width: 5rem;
+        height: 3rem;fold
+        border: 1px solid red;
+    }
+    
+    .row {
+        background: lemonchiffon;
+    }
+//心灵阅读 info
+.yueduInfo{
+        background: #F2F2F2;
+    }
+    .yuedu-content,header,.yuedu-bbox{
+        background: #fff;
+    }
+    .yuedu-content{
+        padding: 0.75rem;
+        h1{
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        em{
+            display: block;
+            text-align: right;
+            font-size: 0.6rem;
+            color: #666;
+        }
+        div{
+            width: 100%;
+            height: 6rem;
+            border: 1px solid red;
+            margin: 0.5rem 0 ;
+        }
+        p{
+            font-size: 0.65rem;
+            color: #000;
+            line-height: 1.2rem;
+            >span{
+                margin-left: 1.3rem;
+            }
+        }
+        
+    }
+    
+    .yuedu-bbox{
+        margin: 0.5rem 0 2rem;
+        ul>li{
+            padding: 0.75rem;
+        }
+        div.pinglun{
+            border-bottom: 1px solid #e4e4e4;
+            padding: 0.2rem 0.75rem 0.75rem;
+            padding-left: 3.25rem;
+        }
+        h1{
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid #E4E4E4;
+        }
+    }
+    
+    
+    .pinglun-user{
+        overflow: hidden;
+        >img{
+            float: left;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: hotpink;
+        }
+        >div{
+            float: left;
+            margin-left: 0.75rem;
+            height: 2.5rem;
+            line-height: 1.25rem;
+            p{
+                font-size: 0.6rem;
+                color: #555;
+            }
+        }
+        >p{
+            float: right;
+            color: #555;
+            margin-right: 0.75rem;
+            font-size: 0.6rem;
+        }
+        
+    }
+//index3 互动    list
+.index3-list{
+        padding:1.5rem 1rem;
+        overflow: hidden;
+    }
+    .index3-list li{
+        float: left;
+        width: 31%;
+        margin-bottom: 0.75rem;
+        text-align: center;
+    }
+    .index3-list li:nth-child(3n-1){
+        margin-left: 3.3%;
+        margin-right: 3.3%;
+        
+    }
+    .index3-list img{
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        background: palevioletred;
+    }
+    .index3-list p{
+        margin-top: 15px;
+    }
+    
+//组团活动list
+.activitysBar{
+        position: absolute;
+        /*top: 2.8rem;*/
+        left: 0;
+        width: 100%;z-index: 8888;
+        background: #fff;
+    }
+
+    .activitysBar-div{
+        border-bottom: 1px solid #C9C9C9;
+        overflow: hidden;
+        padding: 0.5rem 0;
+        >a{
+            float: left;
+            width: 50%;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            text-align: center;
+        }
+        >a:first-child{
+            border-right: 1px solid #C9C9C9;
+        }
+    }
+    
+//组团活动 所有的    
+    
+//组团活动  我参与的
+    
+//组团活动 info   
+.activitys-ul li {
+        position: relative;
+        >p {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .activitys-block {
+            color: #333;
+        }
+        .activitys-info>p {
+            line-height: 1.25rem;
+        }
+    }
+    
+    .baoming-box {
+        padding: 0.75rem;
+        >h1 {
+            padding: 0.3rem 0;
+            font-size: 0.6rem;
+            overflow: hidden;
+            border-bottom: 1px solid #c9c9c9;
+            >span {
+                float: left;
+            }
+            >em {
+                float: right;
+                >span {
+                    color: #f00;
+                }
+            }
+        }
+        ul>li{
+            border-bottom: 1px solid #C9C9C9;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.6rem;
+            >em{
+                color: #666;
+            }
+        }
+    }    
+    
+//index4 我的
+.my-top {
+    padding: 2.5rem 0 1rem;
+    background: #F2F2F2;
+    text-align: center;
+}
+
+.img-div {
+    width: 5rem;
+    margin: 0 auto;
+}
+
+.img-div>img {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    background: red;
+}
+
+.img-div>p {
+    font-size: 0.9rem;
+    color: #000;
+    font-weight: 600;
+    margin: 0.75rem auto;
+}
+
+.ov-div {
+    text-align: center;
+}
+
+.ov-div>img {
+    width: 1rem;
+    height: 1rem;
+}
+
+.ov-div>span {
+    display: inline-block;
+    font-size: 0.6rem;
+    line-height: 1rem;
+    height: 1rem;
+}
+
+.my-list {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px 0.75rem 1.5rem;
+}
+
+.my-list li {
+    overflow: hidden;
+    border-bottom: 1px solid #E4E4E4;
+    padding: 0.5rem 0;
+}
+
+.my-list li img {
+    width: 1.2rem;
+    height: 1.2rem;
+    float: left;
+    margin-left: 1rem;
+    margin-right: 0.8rem;
+}
+
+.my-list li span {
+    float: left;
+    height: 1.2rem;
+    line-height: 1.2rem;
+    /*font-size: 0.7rem;*/
+}
+
+
+/*我的资料*/
+
+#backImg {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    width: 1rem;
+    height: 1rem;
+}
+
+.ziliao-box {
+    padding-left: 0.75rem;
+    .ziliao-div {
+        border-bottom: 1px solid #E4E4E4;
+        overflow: hidden;
+        span {
+            float: left;
+            line-height: 2.5rem;
+        }
+        input {
+            float: right;
+            text-align: right;
+            height: 2.5rem;
+            padding-right: 0.75rem;
+            margin-right: 0.75rem;
+            border: none;
+            width: 78%;
+        }
+    }
+}
+/*修改密码*/
+.mima-box{
+        padding: 0.75rem;
+        .mima-div{
+            border-radius: 0.25rem;
+            margin-top: 0.75rem;
+            overflow:hidden;
+            span{
+                float: left;
+                width: 3.8rem;
+                line-height: 2rem;
+                font-size: 0.65rem;
+            }
+            input{
+                float: left;
+                width: 77%;
+                height: 2rem;
+            }
+        }
+        .yzm-div{
+            position: relative;
+            >em{
+                position: absolute;
+                top: 50%;
+                right: 0.5rem;
+                font-size: 0.6rem;
+                color: mediumblue;
+                -webkit-transform: translateY(-50%);
+                -moz-transform: translateY(-50%);
+                -ms-transform: translateY(-50%);
+                -o-transform: translateY(-50%);
+                transform: translateY(-50%);
             }
         }
     }

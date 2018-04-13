@@ -79,48 +79,5 @@
 	.btn-box{
 		padding: 6rem 0.75rem 1.5rem;
 	}
-	.activitys-ul li {
-		position: relative;
-		>p {
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-		.activitys-block {
-			color: #333;
-		}
-		.activitys-info>p {
-			line-height: 1.25rem;
-		}
-	}
 	
-	.baoming-box {
-		padding: 0.75rem;
-		>h1 {
-			padding: 0.3rem 0;
-			font-size: 0.6rem;
-			overflow: hidden;
-			border-bottom: 1px solid #c9c9c9;
-			>span {
-				float: left;
-			}
-			>em {
-				float: right;
-				>span {
-					color: #f00;
-				}
-			}
-		}
-		ul>li{
-			border-bottom: 1px solid #C9C9C9;
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-between;
-			padding: 0.4rem 1.2rem;
-			font-size: 0.6rem;
-			>em{
-				color: #666;
-			}
-		}
-	}
 </style>

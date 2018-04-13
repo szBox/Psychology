@@ -142,44 +142,5 @@
 		width: inherit !important;
 	}
 	
-	.swiper-box {
-		padding: 0 0.75rem;
-	}
 	
-	
-	.time-div>em {
-		margin-left: 1.5rem;
-	}
-	
-	.nav-list li {
-		overflow: hidden;
-		border-bottom: 1px solid #c9c9c9;
-		padding: 15px 0;
-	}
-	
-	.nav-list li>div{
-		width: 70%;
-		font-weight: bold;
-		color: #000000;
-		line-height: 1rem;
-	}
-	.nav-list li>div>div{
-		-webkit-line-clamp: 2;
-	}
-	.time-div {
-		font-size: 0.6rem;
-		color: #666;
-		font-weight: normal;
-		margin-top: 0.3rem;
-	}
-	
-	.nav-list img {
-		width: 5rem;
-		height: 3rem;fold
-		border: 1px solid red;
-	}
-	
-	.row {
-		background: lemonchiffon;
-	}
 </style>

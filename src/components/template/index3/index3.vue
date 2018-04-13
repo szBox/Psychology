@@ -49,28 +49,5 @@
 
 <style scoped>
 	
-	.index3-list{
-		padding:1.5rem 1rem;
-		overflow: hidden;
-	}
-	.index3-list li{
-		float: left;
-		width: 31%;
-		margin-bottom: 0.75rem;
-		text-align: center;
-	}
-	.index3-list li:nth-child(3n-1){
-		margin-left: 3.3%;
-		margin-right: 3.3%;
-		
-	}
-	.index3-list img{
-		width: 4rem;
-		height: 4rem;
-		border-radius: 50%;
-		background: palevioletred;
-	}
-	.index3-list p{
-		margin-top: 15px;
-	}
+	
 </style>

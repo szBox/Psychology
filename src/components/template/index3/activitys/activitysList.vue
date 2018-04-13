@@ -54,27 +54,5 @@
 		color: forestgreen;
 		font-weight: bold;
 	}
-	.activitysBar{
-		position: absolute;
-		/*top: 2.8rem;*/
-		left: 0;
-		width: 100%;z-index: 8888;
-		background: #fff;
-	}
-
-	.activitysBar-div{
-		border-bottom: 1px solid #C9C9C9;
-		overflow: hidden;
-		padding: 0.5rem 0;
-		>a{
-			float: left;
-			width: 50%;
-			height: 1.5rem;
-			line-height: 1.5rem;
-			text-align: center;
-		}
-		>a:first-child{
-			border-right: 1px solid #C9C9C9;
-		}
-	}
+	
 </style>
