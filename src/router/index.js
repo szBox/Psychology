@@ -15,6 +15,10 @@ import index4 from '@/components/template/index4/index4'		//我的
 import yueduInfo from '@/components/template/index1/yueduInfo'		//心灵阅读 > 详情
 
 
+/*index2 里面的教师信息*/
+import teacherInfo from '@/components/template/index2/teacherInfo'		//咨询预约 > 教师信息
+import yuyueJilu from '@/components/template/index2/yuyueJilu'		//咨询预约 > 预约记录
+
 /*index3 互动*/
 import speakList from '@/components/template/index3/speak/speakList'		//互动 > 留言板list
 import speakWrite from '@/components/template/index3/speak/speakWrite'		//互动 > 留言板list >发表话题
@@ -87,9 +91,17 @@ export default new Router({
 	   		name:	'yueduInfo',			// 心灵阅读 > 阅读详情
 	   		component: yueduInfo,
 		},
+		{
+				path:'/index2/teacherInfo',
+	   		name:	'teacherInfo',			// index2 > 教师信息
+	   		component: teacherInfo,
+		},
 		
-		
-		
+		{
+				path:'/index2/yuyueJilu',
+	   		name:	'yuyueJilu',			// index2 > 预约记录
+	   		component: yuyueJilu,
+		},
 		
 		
 		{

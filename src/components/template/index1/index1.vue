@@ -17,7 +17,7 @@
 				<div class="swiper-wrapper">
 					<div class="swiper-slide">
 						<!--最新-->
-						<scroller :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+						<scroller :on-refresh="reType && refresh" :on-infinite="reType && infinite" ref="my_scroller">
 
 							<ul class="nav-list">
 								<li v-for="(item, index) in items" @click="goPath(index)">
@@ -52,15 +52,32 @@
 	import Swiper from 'swiper'
 	import yueduInfo from '@/components/template/index1/yueduInfo'		//心灵阅读 > 详情
 	export default({
+		data() {
+			return {
+				reType:true,
+				tabActive: 0,
+				items: [],
+				/*最后的数组*/
+				page: 1,
+				/*当前页码*/
+			}
+		},
 		mounted() {
+			var vm=this;
 			var swiperH = $(window).height() - $('.nav').height() - $('.header').height() - $('.weui-tabbar').height()
 			console.log(swiperH);
 			$('.swiper-wrapper').height(swiperH);
 			var mySwiper = new Swiper('.swiper-container', {
-				touchMoveStopPropagation: true,
-				onSlideChangeEnd: function(event) {
+//				touchMoveStopPropagation: true,
+				onTouchStart: function(even){
+					console.log(even);
+//					alert('111');
+					 vm.reType=false;
+					 
+			   },
+				onTransitionEnd: function(event) {
 					var j = event.activeIndex;
-
+//					event.d
 					$('.nav-btn').removeClass('nav-active').eq(j).addClass('nav-active');
 				}
 			})
@@ -83,15 +100,7 @@
 		components: {
 			yueduInfo
 		},
-		data() {
-			return {
-				tabActive: 0,
-				items: [],
-				/*最后的数组*/
-				page: 1,
-				/*当前页码*/
-			}
-		},
+		
 		methods: {
 			refresh(done) {
 				setTimeout(() => {
@@ -105,10 +114,14 @@
 				}
 				console.log('拉啦啦')
 			},
+			
 			active(index) {
 				this.tabActive = index;
 				console.log(this.tabActive);
 
+			},
+			finishPullToRefresh(){
+				console.log('111')
 			},
 			goPath(i) {
 				this.$router.push({ path: "/index1/yueduInfo/" + i })

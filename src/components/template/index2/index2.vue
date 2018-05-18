@@ -3,20 +3,9 @@
 
 		<header class="header">
 			<h1>预约咨询</h1>
-			<em>预约记录</em>
+			<em @click="goPath({path:'/index2/yuyueJilu'})">预约记录</em>
 		</header>
-		<div class="flexd-nav">
-			<div>
-				<img src="../../../assets/img/s1.png" alt="" />
-			</div>
-			<div>
-				<img src="../../../assets/img/s2.png" alt="" />
-				<p>200</p>
-			</div>
-			<div>
-				<img src="../../../assets/img/s3.png" alt="" />
-			</div>
-		</div>
+
 		<div id="teacher-swiper" class="swiper-container">
 			<div class="swiper-wrapper">
 				<div class="swiper-slide">
@@ -33,6 +22,18 @@
 			<div class="swiper-button-next  swiper-button-black"></div>
 		</div>
 		<div class="teacher-show">
+			<div class="flexd-nav">
+				<div>
+					<img src="../../../assets/img/s1.png" alt="" @click="goPath({path:'/index2/teacherInfo'})" />
+				</div>
+				<div>
+					<img src="../../../assets/img/s2.png" alt="" />
+					<p>200</p>
+				</div>
+				<div>
+					<img src="../../../assets/img/s3.png" alt="" />
+				</div>
+			</div>
 			<h1>李多云老师</h1>
 			<div class="show-div">
 				<h3>擅长</h3>
@@ -48,129 +49,57 @@
 					<ul class="table-init">
 						<li>
 							<div>
-								
+
 							</div>
 							<p>上午</p>
 							<p>下午</p>
 						</li>
 					</ul>
 					<div class="table-action">
-						<ul>
-						<li>
-							<div>
-								<i>周一</i>
-								<em>3-8</em>
-							</div>
-							<p>预约</p>
-							<p>已预约</p>
-						</li>
-						<li>
-							<div>
-								<i>周二</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周三</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周四</i>
-								<em>3-8</em>
-							</div>
-							<p>预约</p>
-							<p>已预约</p>
-						</li>	
-						<li>
-							<div>
-								<i>周五</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周六</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-						<li>
-							<div>
-								<i>周日</i>
-								<em>3-8</em>
-							</div>
-							<p></p>
-							<p></p>
-						</li>	
-					</ul>
+						<div>
+							<ul>
+								<li v-for="(item,index) in items">
+									<div>
+										<!--<i>周一</i>
+										<em>3-8</em>-->
+										{{item.day}}
+									</div>
+									<!--<p v-if='item.data.length==1'>
+										
+									</p>-->
+									<p v-for="itemAm in item.data">
+										
+										<span @click="yuyue(itemAm)" v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")'>
+											预约
+										</span>
+										
+										<span @click="yuyue(itemAm)" v-else-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) > 12) && (itemAm.reg == "true")'>
+											预约
+										</span>
+										
+										
+									</p>
+									<!--<p v-if='item.data.length==1'>
+										
+									</p>-->
+									<!--<p v-for="itemAm in item.data"  v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")' >
+										<span @click="yuyue(itemAm)" >
+											预约
+										</span>
+									</p>
+									
+									<p v-for="itemAm in item.data"   v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) >12) && (itemAm.reg == "true")'>
+										<span @click="yuyue(itemAm)">
+											预约
+										</span>
+										
+									</p>-->
+									
+								</li>
+							</ul>
+						</div>
+
 					</div>
-					
 
 				</div>
 				<p class="table-tips">
@@ -184,16 +113,116 @@
 </template>
 
 <script>
+	import teacherInfo from '@/components/template/index2/teacherInfo' //咨询预约 > 教师信息
+	import yuyueJilu from '@/components/template/index2/teacherInfo' //咨询预约 > 预约记录
 	export default {
 		components: {
 
 		},
-		created(){
-		
+		created() {
+
 		},
 		data() {
 			return {
-				items: [],
+				items: [{
+					"day": "2018-05-15",
+					"data": [{
+						"timeid": "111",
+						"maxnum": "1",
+						"count": "0",
+						"reg": "true",
+						"starttime": "14:00",
+						"endtime": "21:00"
+					}]
+				}, {
+					"day": "2018-05-16",
+					"data": [{
+						"timeid": "118",
+						"maxnum": "2",
+						"count": "0",
+						"reg": "false",
+						"starttime": "08:00",
+						"endtime": "11:00"
+					}]
+				}, {
+					"day": "2018-05-18",
+					"data": [{
+						"timeid": "172",
+						"maxnum": "2",
+						"count": "0",
+						"reg": "true",
+						"starttime": "08:00",
+						"endtime": "11:00"
+					}, {
+						"timeid": "173",
+						"maxnum": "2",
+						"count": "0",
+						"reg": "true",
+						"starttime": "15:00",
+						"endtime": "17:00"
+					}]
+				}, {
+					"day": "2018-05-19",
+					"data": [{
+						"timeid": "174",
+						"maxnum": "2",
+						"count": "0",
+						"reg": "true",
+						"starttime": "08:00",
+						"endtime": "11:00"
+					}, {
+						"timeid": "175",
+						"maxnum": "2",
+						"count": "0",
+						"reg": "true",
+						"starttime": "15:00",
+						"endtime": "17:00"
+					}]
+				}, {
+					"day": "2018-05-20",
+					"data": [{
+						"timeid": "176",
+						"maxnum": "1",
+						"count": "0",
+						"reg": "true",
+						"starttime": "08:00",
+						"endtime": "11:00"
+					}, {
+						"timeid": "177",
+						"maxnum": "1",
+						"count": "0",
+						"reg": "true",
+						"starttime": "15:00",
+						"endtime": "17:00"
+					}]
+				}, {
+					"day": "2018-05-21",
+					"data": [{
+						"timeid": "178",
+						"maxnum": "1",
+						"count": "0",
+						"reg": "true",
+						"starttime": "08:00",
+						"endtime": "11:00"
+					}, {
+						"timeid": "179",
+						"maxnum": "1",
+						"count": "0",
+						"reg": "true",
+						"starttime": "15:00",
+						"endtime": "17:00"
+					}]
+				}, {
+					"day": "2018-05-22",
+					"data": [{
+						"timeid": "181",
+						"maxnum": "20",
+						"count": "0",
+						"reg": "true",
+						"starttime": "08:00",
+						"endtime": "12:00"
+					}]
+				}],
 				/*最后的数组*/
 				page: 1,
 				/*当前页码*/
@@ -204,21 +233,33 @@
 				prevButton: '.swiper-button-prev',
 				nextButton: '.swiper-button-next',
 			})
-				var tabLen=$('.table-action ul li').length;
-				var tabW=$('.table-action ul li').width()*(tabLen+2);
-			$('.table-action ul').css({'minWidth':tabW})
-			console.log(tabW)
+
+			setTimeout(function() {
+				var tabLen = $('.table-action ul li').length;
+				var tabW = $('.table-action ul li').width() * tabLen;
+				$('.table-action ul').css({
+					'width': tabW
+				})
+				$('.table-action ul li').width();
+				console.log('li的宽度' + $('.table-action ul li').width())
+				console.log(tabLen)
+				console.log("ul的宽度---" + tabW)
+			}, 5)
+
 		},
 		methods: {
-
+			goPath(path) {
+				this.$router.push(path)
+			},
+			yuyue(i){
+				alert(i.starttime+'-'+i.endtime)
+			}
 		}
 	}
 </script>
 <style scoped lang="less">
 	#teacher-swiper {
-		height: 5rem;
 		text-align: center;
-		line-height: 5rem;
 		margin: 1rem 0;
 	}
 	
@@ -243,20 +284,20 @@
 	}
 	
 	.swiper-slide>img {
-		width: 4rem;
-		height: 4rem;
+		width: 5rem;
+		height: 5rem;
 		background: paleturquoise;
 		border-radius: 50%;
 	}
 	
 	.flexd-nav {
-		position: fixed;
-		top: 45%;
-		-webkit-transform: translateY(-45%);
+		position: absolute;
+		top: 2rem;
+		/*-webkit-transform: translateY(-45%);
 		-moz-transform: translateY(-45%);
 		-ms-transform: translateY(-45%);
 		-o-transform: translateY(-45%);
-		transform: translateY(-45%);
+		transform: translateY(-45%);*/
 		right: 0.75rem;
 		div {
 			text-align: center;
@@ -277,6 +318,7 @@
 	}
 	
 	.teacher-show {
+		position: relative;
 		padding: 0 0.75rem;
 		padding-right: 3rem;
 		>h1 {
@@ -308,11 +350,10 @@
 				font-weight: bold;
 				border-radius: 0.3rem 0.3rem 0 0;
 			}
-	
-			.show-table{
+			.show-table {
 				position: relative;
 			}
-			.table-tips{
+			.table-tips {
 				text-align: center;
 				color: #666;
 				font-size: 0.6rem;
@@ -320,52 +361,71 @@
 				clear: both;
 				line-height: 1.5rem;
 				border: 1px solid #E4E4E4;
-
 			}
-			.table-init{
+			.table-init {
 				position: absolute;
 				top: 0;
-				left:0;
+				left: 0;
 				width: 2.5rem;
-				>li{
+				>li {
 					border-left: 1px solid #E4E4E4;
 				}
 			}
-			.table-action{
+			.table-action {
 				width: 12.5rem;
+				height: 5.4rem;
+				/*overflow-y: hidden;
+				overflow-x: scroll;*/
 				overflow: hidden;
-				overflow-x: scroll;
 				float: left;
 				margin-left: 2.5rem;
 				border-right: 1px solid #E4E4E4;
-				ul{
+				>div {
+					height: 6.2rem;
+					/* 比里层元素高16px 为了隐藏滚动条*/
+					overflow-x: scroll;
+					/* 定义超出此盒子滚动 */
+					overflow-y: hidden;
+				}
+				ul {
+					width: 12.5rem;
 					overflow: hidden;
-					
+					height: 100%;
 				}
 			}
-			.table-action li,.table-init li{
-				
-					float: left;
-					text-align: center;
-					>p{
-						line-height: 1.8rem;
-					}
-					>p:last-child{
-						border-bottom: none;
-					}
-					>p,div{
-						width: 2.5rem;
-						height: 1.8rem;
-						font-size: 0.6rem;
-						border-bottom: 1px solid #E4E4E4;
-						border-right: 1px solid #e4e4e4;
-					}
-					>div>em{
+			.table-action li,
+			.table-init li {
+				width: 2.5rem;
+				float: left;
+				text-align: center;
+				>p {
+					line-height: 1.8rem;
+					>span{
 						display: block;
+						height: 100%;
 					}
-				
+				}
+				>p:last-child {
+					border-bottom: none;
+				}
+				>p,
+				div {
+					width: 2.5rem;
+					height: 1.8rem;
+					font-size: 0.6rem;
+					border-bottom: 1px solid #E4E4E4;
+					border-right: 1px solid #e4e4e4;
+				}
+				>div>em {
+					display: block;
+				}
+			}
+			.table-action li:last-child {
+				>p,
+				div {
+					border-right: none;
+				}
 			}
 		}
-		
 	}
 </style>
