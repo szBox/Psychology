@@ -10,14 +10,25 @@ body {
 
 .weui-tabbar__icon {
     display: inline-block;
-    width: 2rem !important;
-    height: 2rem !important;
+//  width: 1.8rem !important;
 }
 
 .weui-tabbar {
     position: fixed !important;
+    background-color: #fff !important;
+     box-shadow: 0 0 26px #E3E3E3;
 }
+.weui-tabbar:before{
+    border-top: none !important;
+}
+.weui-tabbar__icon img{
+    width: 1.8rem;
+}
+.weui-tabbar__item{
+    padding: 0.4rem 0 0 !important;
+   
 
+}
 //恶心的背景条
 .bgg {
     height: 0.5rem;
@@ -28,39 +39,52 @@ body {
 /*头部*/
 
 .header {
-    background: #fff;
+//  background: #fff;
+    background: -webkit-linear-gradient(left, #31c4ff , #3991f4); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #31c4ff, #3991f4); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #31c4ff, #3991f4); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #31c4ff , #3991f4); /* 标准的语法（必须放在最后） */
     z-index: 999;
     border-bottom: 1px solid #C9C9C9;
     width: 100%;
     position: relative;
     h1 {
-        height: 2.75rem;
-        line-height: 2.75rem;
+        height: 2.5rem;
+        line-height: 2.5rem;
         text-align: center;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
+        color: #fff;
     }
-    img,
+    div,
     em {
+        height: 100%;
         position: absolute;
-        width: 1rem;
-        height: 1rem;
-        top: 50%;
-        -webkit-transform: translateY(-50%);
-        -moz-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        -o-transform: translateY(-50%);
-        transform: translateY(-50%);
+        top:0%;
+        color:#fff;
+        line-height: 2.5rem;
     }
-    img {
-        left: 0.75rem;
+    div{
+        padding-left: 0.5rem;
+        width: 1.8rem;
+    }
+    div img {
+        
+        width: 0.6rem;
     }
     em {
         width: auto;
         right: 0.75rem;
+       
+        
+        
+    
     }
 }
 
-
+.b-content{
+    padding-top: 2.5rem;
+//  padding-bottom: 3.3rem;
+}
 /*固定 定位  小图标跳转*/
 
 .flexd-go {
@@ -99,10 +123,10 @@ body {
 
 //组团活动
 ul.activitys-ul {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem ;
     li {
         border-radius: 0.5rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.4rem;
         background: #fff;
         >h1 {
             overflow: hidden;
@@ -138,6 +162,11 @@ ul.activitys-ul {
     
     .time-div>em {
         margin-left: 1.5rem;
+        float: right;
+        >img{
+            width: 0.7rem;
+            margin-right: 0.2rem;
+        }
     }
     
     .nav-list li {
@@ -154,103 +183,25 @@ ul.activitys-ul {
     }
     .nav-list li>div>div{
         -webkit-line-clamp: 2;
+        font-size: 0.8rem;
+        color: #333;
     }
     .time-div {
-        font-size: 0.6rem;
-        color: #666;
+        font-size: 0.7rem;
+        color: #999;
         font-weight: normal;
-        margin-top: 0.3rem;
+        margin-top: 0.6rem;
     }
     
     .nav-list img {
-        width: 5rem;
-        height: 3rem;fold
-        border: 1px solid red;
+        width: 4rem;
+ 
     }
     
     .row {
         background: lemonchiffon;
     }
-//心灵阅读 info
-.yueduInfo{
-        background: #F2F2F2;
-    }
-    .yuedu-content,header,.yuedu-bbox{
-        background: #fff;
-    }
-    .yuedu-content{
-        padding: 0.75rem;
-        h1{
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
-        em{
-            display: block;
-            text-align: right;
-            font-size: 0.6rem;
-            color: #666;
-        }
-        div{
-            width: 100%;
-            height: 6rem;
-            border: 1px solid red;
-            margin: 0.5rem 0 ;
-        }
-        p{
-            font-size: 0.65rem;
-            color: #000;
-            line-height: 1.2rem;
-            >span{
-                margin-left: 1.3rem;
-            }
-        }
-        
-    }
-    
-    .yuedu-bbox{
-        margin: 0.5rem 0 2rem;
-        ul>li{
-            padding: 0.75rem;
-        }
-        div.pinglun{
-            border-bottom: 1px solid #e4e4e4;
-            padding: 0.2rem 0.75rem 0.75rem;
-            padding-left: 3.25rem;
-        }
-        h1{
-            padding: 0.5rem 0.75rem;
-            border-bottom: 1px solid #E4E4E4;
-        }
-    }
-    
-    
-    .pinglun-user{
-        overflow: hidden;
-        >img{
-            float: left;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            background: hotpink;
-        }
-        >div{
-            float: left;
-            margin-left: 0.75rem;
-            height: 2.5rem;
-            line-height: 1.25rem;
-            p{
-                font-size: 0.6rem;
-                color: #555;
-            }
-        }
-        >p{
-            float: right;
-            color: #555;
-            margin-right: 0.75rem;
-            font-size: 0.6rem;
-        }
-        
-    }
+
 //index3 互动    list
 .index3-list{
         padding:1.5rem 1rem;
@@ -296,10 +247,19 @@ ul.activitys-ul {
             height: 1.5rem;
             line-height: 1.5rem;
             text-align: center;
+         
         }
         >a:first-child{
             border-right: 1px solid #C9C9C9;
         }
+        a.router-link-exact-active.router-link-active>span{
+                 display: block;
+                height: 0.15rem;
+                border-radius: 0.15rem;
+                width: 1.6rem;
+                background: #3991f4;
+                margin: 0.32rem auto 0;
+            }
     }
     
 //组团活动 所有的    
@@ -309,6 +269,7 @@ ul.activitys-ul {
 //组团活动 info   
 .activitys-ul li {
         position: relative;
+        overflow: hidden;
         >p {
             position: absolute;
             top: 0;
@@ -353,73 +314,7 @@ ul.activitys-ul {
     }    
     
 //index4 我的
-.my-top {
-    padding: 2.5rem 0 1rem;
-    background: #F2F2F2;
-    text-align: center;
-}
 
-.img-div {
-    width: 5rem;
-    margin: 0 auto;
-}
-
-.img-div>img {
-    width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 50%;
-    background: red;
-}
-
-.img-div>p {
-    font-size: 0.9rem;
-    color: #000;
-    font-weight: 600;
-    margin: 0.75rem auto;
-}
-
-.ov-div {
-    text-align: center;
-}
-
-.ov-div>img {
-    width: 1rem;
-    height: 1rem;
-}
-
-.ov-div>span {
-    display: inline-block;
-    font-size: 0.6rem;
-    line-height: 1rem;
-    height: 1rem;
-}
-
-.my-list {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 5px 0.75rem 1.5rem;
-}
-
-.my-list li {
-    overflow: hidden;
-    border-bottom: 1px solid #E4E4E4;
-    padding: 0.5rem 0;
-}
-
-.my-list li img {
-    width: 1.2rem;
-    height: 1.2rem;
-    float: left;
-    margin-left: 1rem;
-    margin-right: 0.8rem;
-}
-
-.my-list li span {
-    float: left;
-    height: 1.2rem;
-    line-height: 1.2rem;
-    /*font-size: 0.7rem;*/
-}
 
 
 /*我的资料*/
@@ -428,27 +323,35 @@ ul.activitys-ul {
     position: fixed;
     top: 0.75rem;
     left: 0.75rem;
-    width: 1rem;
-    height: 1rem;
+    width: 0.6rem;
 }
 
 .ziliao-box {
-    padding-left: 0.75rem;
+    background: #fff;
     .ziliao-div {
-        border-bottom: 1px solid #E4E4E4;
+        border-bottom: 1px solid #F5F5F5;
+        padding-left: 0.75rem;
         overflow: hidden;
         span {
             float: left;
             line-height: 2.5rem;
         }
-        input {
+        input{
             float: right;
             text-align: right;
             height: 2.5rem;
-            padding-right: 0.75rem;
             margin-right: 0.75rem;
             border: none;
             width: 78%;
+        }
+        
+        img{
+             float: right;
+             width: 2rem;
+             height: 2rem;
+             border-radius: 50%;
+              margin-right: 0.75rem;
+              margin-top: 0.25rem;
         }
     }
 }
@@ -457,28 +360,40 @@ ul.activitys-ul {
         padding: 0.75rem;
         .mima-div{
             border-radius: 0.25rem;
-            margin-top: 0.75rem;
+//          margin-top: 0.75rem;
+            padding: 0.35rem 0;
             overflow:hidden;
+            border-bottom: 1px solid #EEEEEE;
             span{
                 float: left;
                 width: 3.8rem;
                 line-height: 2rem;
                 font-size: 0.65rem;
             }
+            img{
+                float: left;
+                width: 1.2rem;
+                margin-top: 0.3rem;
+            }
             input{
                 float: left;
                 width: 77%;
                 height: 2rem;
+                border: none;
             }
         }
         .yzm-div{
             position: relative;
             >em{
                 position: absolute;
+                background: #F46464;
+                color: #fff;
                 top: 50%;
                 right: 0.5rem;
-                font-size: 0.6rem;
-                color: mediumblue;
+                font-size: 0.7rem;
+                padding: 0.15rem 0.5rem;
+                color: #fff;
+                border-radius: 0.3rem;
                 -webkit-transform: translateY(-50%);
                 -moz-transform: translateY(-50%);
                 -ms-transform: translateY(-50%);

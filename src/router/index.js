@@ -2,88 +2,145 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /* 公共组件 */
 import footBar from '@/components/common/footBar'
+import login from '@/components/common/login'
+import forget from '@/components/common/mimaForget'
+import chat from '@/components/common/chat' //聊天 (公共的)
+import indexA1 from '@/components/common/index1/index1'		//心灵阅读 (公共的)
+import yueduInfo from '@/components/common/index1/yueduInfo'		//心灵阅读 > 详情 (公共的)
+import newsInfo from '@/components/common/newsInfo'		//弹幕 > 详情 (公共的)
+import index3 from '@/components/common/index3/index3'		//互动   (公共的)
+import index4 from '@/components/common/index4/index4'		//我的    (管理员-老师 公共的)
+import setting from '@/components/common/index4/setting/setting'		//我的 > 设置 (公共的)
+import changeMima from '@/components/common/index4/setting/changeMima'		//我的  >设置 >修改密码 (公共的)
+import ziliao from '@/components/common/index4/ziliao/ziliao'		//我的  >详细资料  (公共的)
 
+/*index3 互动  (公共的)*/
+import speakList from '@/components/common/index3/speak/speakList'		//互动 > 留言板list
+import speakWrite from '@/components/common/index3/speak/speakWrite'		//互动 > 留言板list >发表话题
+import speakInfo from '@/components/common/index3/speak/speakInfo'		//互动 > 留言板list >话题详情
 
+import mp3List from '@/components/common/index3/mp3/mp3List'		//互动 > 点歌台list
+import mp3Choose from '@/components/common/index3/mp3/mp3Choose' //互动 > 点歌台list >我要点歌
+
+import booksList from '@/components/common/index3/books/booksList'		//互动 > 图书漂流list
+import booksWrite from '@/components/common/index3/books/booksWrite'		//互动 > 图书漂流list >发起漂流
+
+import activitysList from '@/components/common/index3/activitys/activitysList'		//互动 > 组团活动list
+import activitysNav1 from '@/components/common/index3/activitys/activitysNav1'		//互动 > 组团活动list 所有活动
+import activitysNav2 from '@/components/common/index3/activitys/activitysNav2'		//互动 > 组团活动list 我的参与
+import activitysInfo from '@/components/common/index3/activitys/activitysInfo'		//互动 > 组团活动list 活动详情  发起的
+import activitysInfo2 from '@/components/common/index3/activitys/activitysInfo2'		//互动 > 组团活动list 活动详情  参与的
+import activitysInfo3 from '@/components/common/index3/activitys/activitysInfo3'		//互动 > 组团活动list 活动详情   还没报名的
+import activitysWrite from '@/components/common/index3/activitys/activitysWrite'		//互动 > 组团活动list 发起组团
+
+import gamesList from '@/components/common/index3/games/gamesList'		//互动 > 游戏擂台list
+
+import shenhe from '@/components/common/index4/shenhe/shenhe'		//我的> 我的审核
+import shenheNav1 from '@/components/common/index4/shenhe/shenheNav1'		//我的> 我的审核 话题审核
+import shenheNav2 from '@/components/common/index4/shenhe/shenheNav2'		//我的> 我的审核 组团审核
+import shoucang from '@/components/common/index4/shoucang/shoucangList'		//我的  >我的收藏
 /* template */
-import index1 from '@/components/template/index1/index1'		//心灵阅读
-import index2 from '@/components/template/index2/index2'		//咨询预约
-import index3 from '@/components/template/index3/index3'		//互动
-import index4 from '@/components/template/index4/index4'		//我的
+
+import indexA2 from '@/components/student/index2/index2'		//咨询预约
+
+import indexA4 from '@/components/student/index4/index4'		//我的
 
 
+import indexB2 from '@/components/teacher/index2/index2'		//咨询预约
+
+
+
+//学生端
 /*index1心灵阅读里面的详情*/
-import yueduInfo from '@/components/template/index1/yueduInfo'		//心灵阅读 > 详情
+///
+
+
 
 
 /*index2 里面的教师信息*/
-import teacherInfo from '@/components/template/index2/teacherInfo'		//咨询预约 > 教师信息
-import yuyueJilu from '@/components/template/index2/yuyueJilu'		//咨询预约 > 预约记录
+import teacherInfo from '@/components/student/index2/teacherInfo'		//咨询预约 > 教师信息
+import yuyueJilu from '@/components/student/index2/yuyueJilu'		//咨询预约 > 预约记录
 
-/*index3 互动*/
-import speakList from '@/components/template/index3/speak/speakList'		//互动 > 留言板list
-import speakWrite from '@/components/template/index3/speak/speakWrite'		//互动 > 留言板list >发表话题
-import speakInfo from '@/components/template/index3/speak/speakInfo'		//互动 > 留言板list >话题详情
 
-import mp3List from '@/components/template/index3/mp3/mp3List'		//互动 > 点歌台list
-import mp3Choose from '@/components/template/index3/mp3/mp3Choose' //互动 > 点歌台list >我要点歌
-
-import booksList from '@/components/template/index3/books/booksList'		//互动 > 图书漂流list
-import booksWrite from '@/components/template/index3/books/booksWrite'		//互动 > 图书漂流list >发起漂流
-
-import activitysList from '@/components/template/index3/activitys/activitysList'		//互动 > 组团活动list
-import activitysNav1 from '@/components/template/index3/activitys/activitysNav1'		//互动 > 组团活动list 所有活动
-import activitysNav2 from '@/components/template/index3/activitys/activitysNav2'		//互动 > 组团活动list 我的参与
-import activitysInfo from '@/components/template/index3/activitys/activitysInfo'		//互动 > 组团活动list 活动详情
-import activitysWrite from '@/components/template/index3/activitys/activitysWrite'		//互动 > 组团活动list 发起组团
-
-import gamesList from '@/components/template/index3/games/gamesList'		//互动 > 游戏擂台list
 
 
 /*index4 我的*/
-import setting from '@/components/template/index4/setting/setting'		//我的 > 设置
-import changeMima from '@/components/template/index4/setting/changeMima'		//我的  >设置 >修改密码
 
-import ziliao from '@/components/template/index4/ziliao/ziliao'		//我的  >详细资料 
 
-import zixunList from '@/components/template/index4/zixun/zixunList'		//我的  >我的咨询 
 
-import shoucang from '@/components/template/index4/shoucang/shoucangList'		//我的  >我的收藏
+
+import zixunList from '@/components/student/index4/zixun/zixunList'		//我的  >我的咨询 
+
+
+
+
+
+//教师端
+//indexB2
+import yuyueName from '@/components/teacher/index2/yuyueName'		//咨询预约 > 预约名单
 Vue.use(Router)
 
 export default new Router({
   routes: [
-//  {
-//    path: '/',
-//    name: 'HelloWorld',
-//    component: HelloWorld
-//  },
+    {
+      path: '/',
+      name: 'login',
+      component: login
+    },
+    {
+      path: '/forget',
+      name: 'forget',
+      component: forget
+    },
+    {
+    	path: '/chat',
+      name: 'chat',
+      component: chat
+    },
+    {
+			path:'/newsInfo/:id',
+   		name:	'newsInfo',			// 弹幕 > 详情
+   		component: newsInfo,
+		},
     /* 公共的footBar */
    	{
-   		path:'/',
+   		path:'/home',
    		name:	'footBar',
    		component: footBar,
    		redirect: '/home/index1',
    		children:[
    			{
-   				path:'/home/index1',						
-		   		name:	'index1',			//心灵阅读
-		   		component: index1,
+   				path:'/index1',						
+		   		name:	'indexA1',			//心灵阅读 (公共的)
+		   		component: indexA1,
+		   		meta: { keepAlive: true },
    			},
    			{
-   				path:'/home/index2',
-		   		name:	'index2',			//咨询预约
-		   		component: index2,
-   			},
-   			{
-   				path:'/home/index3',		
-		   		name:	'index3',			//互动
+   				path:'/index3',		
+		   		name:	'index3',			//互动  (公共的)
 		   		component: index3,
    			},
    			{
-   				path:'/home/index4',
-		   		name:	'index4',			//我的
+   				path:'/index4',
+		   		name:	'index4',			//我的  (管理员-教师 公共的)
 		   		component: index4,
-   			}
+   			},
+   			{
+   				path:'/student/index4',
+		   		name:	'indexA4',			//我的
+		   		component: indexA4,
+   			},
+   			{
+   				path:'/student/index2',
+		   		name:	'indexA2',			//咨询预约
+		   		component: indexA2,
+   			},
+   			
+   			{
+   				path:'/teacher/index2',
+		   		name:	'indexB2',			//咨询预约
+		   		component: indexB2,
+   			},
    		]
    	},
    	{
@@ -99,10 +156,14 @@ export default new Router({
 		
 		{
 				path:'/index2/yuyueJilu',
-	   		name:	'yuyueJilu',			// index2 > 预约记录
+	   		name:	'yuyueJilu',			// index2 > 预约记录    (学生端)
 	   		component: yuyueJilu,
 		},
-		
+		{
+				path:'/index2/yuyueName',
+	   		name:	'yuyueName',			// index2 > 预约名单   (教师端)
+	   		component: yuyueName,
+		},
 		
 		{
 				path:'/index3/speakList',
@@ -168,6 +229,16 @@ export default new Router({
 	   		component: activitysInfo,
 		},
 		{
+				path:'/activitysList/activitysInfo2/:id',
+	   		name:	'activitysInfo2',			// 互动 > 组团活动list 活动详情
+	   		component: activitysInfo2,
+		},
+		{
+				path:'/activitysList/activitysInfo3/:id',
+	   		name:	'activitysInfo3',			// 互动 > 组团活动list 活动详情
+	   		component: activitysInfo3,
+		},
+		{
 				path:'/activitysList/activitysWrite',
 	   		name:	'activitysWrite',			// 互动 > 组团活动list 发起组团
 	   		component: activitysWrite,
@@ -205,6 +276,33 @@ export default new Router({
 				path:'/index4/shoucang',
 	   		name:	'shoucang',			///我的  >我的收藏 
 	   		component: shoucang,
+		},
+		{
+				path:'/index4/shenhe',
+	   		name:	'shenhe',			///我的  >我的审核 
+	   		component: shenhe,
+	   		children:[
+	   			{
+							path:'/index4/shenhe/',
+				   		name:	'shenheNav1',			// 我的 > 我的审核 话题审核
+				   		component: shenheNav1,
+					},
+					{
+							path:'/index4/shenhe/shenheNav2',
+				   		name:	'shenheNav2',			// 我的 > 我的审核 组团审核
+				   		component: shenheNav2,
+					}
+	   		]
 		}
-  ]
+  ],
+   scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      if (from.meta.keepAlive) {
+        from.meta.savedPosition = document.body.scrollTop
+      }
+      return { x: 0, y: to.meta.savedPosition || 0 }
+    }
+  }
 })
