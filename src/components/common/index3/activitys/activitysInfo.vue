@@ -96,7 +96,7 @@
 						</div>
 						<h6>
 							<i>通过</i>
-							<i>不通过</i>
+							<i @click="noGo()">不通过</i>
 						</h6>
 						
 					</li>
@@ -116,6 +116,8 @@
 					</li>
 				</ul>
 			</div>
+			
+			<myalert :alertProps='alertType' :type='type'></myalert>
 			<!--<div class="btn-box">
 				<div class="btn-init">我要退出</div>
 			</div>-->
@@ -125,11 +127,17 @@
 </template>
 
 <script>
+	import myalert from '../../alert'
 	export default({
 		data(){
 			return{
-				types:1
+				types:1,
+				alertType:false,
+				type:2
 			}
+		},
+		components:{
+			myalert
 		},
 		methods: {
 			back() {
@@ -138,6 +146,10 @@
 			typeToggle(i){
 				var self=this;
 				self.types=i;
+			},
+			noGo(){
+				var self=this;
+				self.alertType=true
 			}
 		}
 	})

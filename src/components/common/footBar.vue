@@ -40,7 +40,7 @@ export default {
 					link:'/index1',img1:'/src/assets/img/icon1_1.png',img2:'/src/assets/img/icon1.png',label:'心灵阅读'
 				},
 				{
-					link:'/student/index2',img1:'/src/assets/img/icon2_1.png',img2:'/src/assets/img/icon2.png',label:'心理预约'
+					link:'/index2',img1:'/src/assets/img/icon2_1.png',img2:'/src/assets/img/icon2.png',label:'心理预约'
 				},
 				{
 					link:'/index3',img1:'/src/assets/img/icon3_1.png',img2:'/src/assets/img/icon3.png',label:'社交互动'
@@ -54,7 +54,7 @@ export default {
 					link:'/index1',img1:'/src/assets/img/icon1_1.png',img2:'/src/assets/img/icon1.png',label:'心灵阅读'
 				},
 				{
-					link:'/teacher/index2',img1:'/src/assets/img/icon2_1.png',img2:'/src/assets/img/icon2.png',label:'心理预约'
+					link:'/index2',img1:'/src/assets/img/icon2_1.png',img2:'/src/assets/img/icon2.png',label:'心理预约'
 				},
 				{
 					link:'/index3',img1:'/src/assets/img/icon3_1.png',img2:'/src/assets/img/icon3.png',label:'社交互动'
@@ -72,7 +72,11 @@ export default {
 </script>
 <style type="text/css">
 	.tabbar{
-		position: fixed
+		position: fixed;
+	
+	}
+	.weui-tabbar{
+			height: 3rem;
 	}
 	.weui-tabbar__item.weui-bar__item_on .weui-tabbar__label{
 		color: #31C4FF !important;

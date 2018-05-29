@@ -7,23 +7,23 @@
 		<section class="index3-section">
 			<ul class="index3-list">
 				<li>
-					<img @click="goPath({path:'/index3/speakList'})" src="../../../assets/img/exchange_icon_a-market_n.png"  alt="" />
+					<img @click="speak()" src="../../../assets/img/index3_1.png"  alt="" />
 					<p>留言板</p>
 				</li>
 				<li>
-					<img @click="goPath({path:'/index3/mp3List'})" src="../../../assets/img/exchange_icon_recharge_n.png" alt="" />
+					<img @click="goPath({path:'/index3/mp3List'})" src="../../../assets/img/index3_2.png" alt="" />
 					<p>点歌台</p>
 				</li>
 				<li>
-					<img  @click="goPath({path:'/index3/booksList'})"  src="../../../../build/logo.png"/>
+					<img  @click="goPath({path:'/index3/booksList'})"  src="../../../assets/img/index3_3.png"/>
 					<p>图书漂流</p>
 				</li>
 				<li>
-					<img  @click="goPath({path:'/index3/activitysList'})"  src="../../../assets/img/exchange_icon_my_n.png" alt="" />
+					<img  @click="goPath({path:'/index3/activitysList'})"  src="../../../assets/img/index3_4.png" alt="" />
 					<p>组团活动</p>
 				</li>
 				<li>
-					<img  @click="goPath({path:'/index3/gamesList'})"  src="../../../assets/img/exchange_icon_game-interaction_n.png" alt="" />
+					<img  @click="goPath({path:'/index3/gamesList'})"  src="../../../assets/img/index3_5.png" alt="" />
 					<p>游戏擂台</p>
 				</li>
 				
@@ -40,6 +40,11 @@
 	import gamesList from '@/components/common/index3/games/gamesList'		//互动 > 组团活动list
 	export default({
 		methods:{
+			speak(){
+				this.$router.push({
+					path:'/index3/speakListA'
+				})
+			},
 			goPath(path){
 				this.$router.push(path)
 			}
@@ -48,6 +53,32 @@
 </script>
 
 <style scoped>
-	
-	
+	.header{
+		border: none;
+	}
+	.index3-list{
+		/*display: none;*/
+		
+	}
+	.index3{
+		
+		
+		height: 100%;
+	    overflow-x: hidden;
+	    position: absolute;
+	    width: 100%;
+	   
+	}
+	.index3-section{
+		 background: url(../../../assets/img/index3_bg.png);
+		background-size: 100% 100%;
+		position: absolute;
+		top: 2.4rem;
+		left: 0;
+		right: 0;
+		bottom: 3rem;
+	}
+	.index3-list{
+		
+	}
 </style>

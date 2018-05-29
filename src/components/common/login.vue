@@ -1,18 +1,14 @@
 <template>
   <!--<transition name="slideIn">-->
   <div class="login-box">
-    <div class="tips-div">
-      <p>2018年丰台区中小学国家体质健康</p>
-      <p>标准测试赛查询平台</p>
-    </div>
+    
     <div class="login-img">
-      <img src="../../assets/img/exchange_icon_my_n.png" alt="" />
-      <p>菁菁达人</p>
+      <img src="../../assets/img/loginT.png"/>
     </div>
 
     <div class="form-login">
       <div class="form-div">
-        <img src="../../assets/img/exchange_icon_a-market_n.png"/>
+        <img src="../../assets/img/icon4_1.png"/>
         <div>
           <input type="text" @input="YZphone(phone)"  v-model="phone" placeholder="请输入您的账号" @keyup.enter="login()" maxlength="11"/>
           <p class="errtips">
@@ -23,7 +19,7 @@
 
       </div>
       <div class="form-div">
-        <img src="../../assets/img/exchange_icon_a-market_n.png"/>
+        <img src="../../assets/img/icon_pwd.png"/>
         <div>
           <input type="password" @input="YZpassword(password)" v-model="password" @keyup.enter="login()"  placeholder="请输入您的密码" />
           <p class="errtips">
@@ -31,9 +27,22 @@
           </p>
         </div>
       </div>
-      <div class="forget" @click="goForget">找回密码?</div>
+      <div class="forget" @click="goForget">忘记密码?</div>
       <div class="btn-login" @click="btnType && login()">登录</div>
+      <div class="reg">直接注册</div>
       
+      <!--<div class="three-box">
+      	<h1>
+      		<i></i>
+      		<span>第三方直接登录</span>
+      		<i></i>
+      	</h1>
+      	<div class="three-img">
+      		<img src="../../assets/img/qq.png"/>
+      		<img src="../../assets/img/wx.png" alt="" />
+      		<img src="../../assets/img/wb.png" alt="" />
+      	</div>
+      </div>-->
     </div>
 		
   </div>
@@ -168,17 +177,15 @@
   .login-box{
     width: 100%;
     height: 100%;
-    padding-top: 1.5rem;
   }
   .login-img{
-    margin: 3rem auto 2rem;
-    width: 5rem;
+    height: 10rem;
     text-align: center;
   }
   .login-img>img{
-    width: 4rem;
-    height: 4rem;
-    border-radius: 1rem;
+    width: 100%;
+    height: 100%;
+
   }
   .login-img>p{
     font-size: 0.9rem;
@@ -186,21 +193,23 @@
     margin-top: 0.75rem
   }
   .form-login{
-    margin: 0 12%;
+    margin: 0 0.75rem;
   }
 
   .btn-login{
-    background: #00b77c;
+    background: linear-gradient(to right, #31c4ff, #3991f4);
     color: #fff;
     height: 2rem;
     line-height: 2rem;
     font-size: 0.8rem;
     text-align: center;
     border-radius: 1.2rem;
-    margin-top: 3.5rem;
+    margin-top: 4.5rem;
   }
   .form-div{
-    margin-bottom: 1.8rem;
+   	margin: 0.8rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #F4F4F4;
   }
 
   .form-div img{
@@ -211,7 +220,7 @@
     float: right;
     width: 88%;
     padding-bottom: 0.4rem;
-    border-bottom: 1px solid #7C7C7E;
+
     position: relative;
   }
   .errtips{
@@ -225,16 +234,61 @@
     width: 100%;
     border: none;
     background: none;
-    color: #fff;
+    color: #333;
   }
-  .tips-div{
-    text-align: center;
-    color: #fff;
-    font-size: 0.8rem;
-    
-  }
+
   .forget{
   	float: right;
+  	color: #999;
+  }
+  .reg{
+  	float: right;
+  	color: #31c4ff;
+  	margin: 0.75rem 0;
+  }
+  .three-box{
+  	margin-top: 3.5rem;
+  	text-align: center;
+  	color: #999;
+  }
+  .three-box h1{
+  	position: relative;
+  	height: 1.5rem;
+  }
+  .three-box	i {
+  			float: left;
+  			width: 28%;
+  			border-bottom: 1px solid #D9D9D9;
+  			position: absolute;
+  			top: 50%;
+  			-webkit-transform: translateY(-50%);
+  			-moz-transform: translateY(-50%);
+  			-ms-transform: translateY(-50%);
+  			-o-transform: translateY(-50%);
+  			transform: translateY(-50%);
+  			
+  	}
+	.three-box h1 span{
+			line-height: 1.5rem;
+			left: 50%;
+			-webkit-transform: translateX(-50%);
+  			-moz-transform: translateX(-50%);
+  			-ms-transform: translateX(-50%);
+  			-o-transform: translateX(-50%);
+  			transform: translateX(-50%);
+	}
+  .three-box	i:first-child{
+  		left: 0.75rem;
+  	}
+  .three-box	i:last-child{
+  		right: 0.75rem;
+  	}
+  .three-img {
+  	margin-top: 1rem;
+  }
+  .three-img img{
+  	width: 2.2rem;
+  	margin: 0 1.2rem;
   }
   ::-webkit-input-placeholder{color: #959595;font-size: 0.7rem;}    /* 使用webkit内核的浏览器 */
   :-moz-placeholder{color: #959595;font-size: 0.7rem;}                  /* Firefox版本4-18 */

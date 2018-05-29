@@ -5,23 +5,83 @@
 			<h1>预约咨询</h1>
 			<em @click="goPath({path:'/index2/yuyueName'})">预约名单</em>
 		</header>
-		<!--<div class="b-content">
-			
-		</div>-->
-		<div id="teacher-swiper" class="swiper-container">
+		<div class="b-content">
+			<div id="teacher-swiper" class="swiper-container">
 			<div class="swiper-wrapper">
 				<div class="swiper-slide">
-					<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
+					<div class="teacher-bg">
+						<div class="teacher-img">
+							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
+						</div>
+						<h1>李多云老师</h1>
+						<div class='teacher-bb'>
+							<p>倾心聆听 唯爱融化</p>
+							<p>天下武功 唯快不破</p>
+						</div>
+					</div>
+					
+					<div class="see-box">
+						<p>
+							<img src="../../../assets/img/see.png"/>
+							查看信息
+						</p>
+						<h4>
+							<img src="../../../assets/img/zan0.png"/>
+							200
+						</h4>
+					</div>
 				</div>
 				<div class="swiper-slide">
-					<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/ren1.png" />
+					<div class="teacher-bg">
+						<div class="teacher-img">
+							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
+						</div>
+						<h1>李多云老师</h1>
+						<div class='teacher-bb'>
+							<p>倾心聆听 唯爱融化</p>
+							<p>天下武功 唯快不破</p>
+						</div>
+					</div>
+					
+					<div class="see-box">
+						<p>
+							<img src="../../../assets/img/see.png"/>
+							查看信息
+						</p>
+						<h4>
+							<img src="../../../assets/img/zan0.png"/>
+							200
+						</h4>
+					</div>
+				</div>
+				<div class="swiper-slide swiper-slide-active">
+					<div class="teacher-bg">
+						<div class="teacher-img">
+							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
+						</div>
+						<h1>李多云老师</h1>
+						<div class='teacher-bb'>
+							<p>倾心聆听 唯爱融化</p>
+							<p>天下武功 唯快不破</p>
+						</div>
+					</div>
+					
+					<div class="see-box">
+						<p>
+							<img src="../../../assets/img/see.png"/>
+							查看信息
+						</p>
+						<h4>
+							<img src="../../../assets/img/zan0.png"/>
+							200
+						</h4>
+					</div>
 				</div>
 				<div class="swiper-slide">
-					<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/ren3.png" />
+					
 				</div>
 			</div>
-			<div class="swiper-button-prev  swiper-button-black"></div>
-			<div class="swiper-button-next  swiper-button-black"></div>
+			
 		</div>
 		<div class="teacher-show">
 			<div class="flexd-nav">
@@ -39,11 +99,11 @@
 			
 			<div class="show-div">
 				<h3>擅长</h3>
-				<p>心理治疗</p>
+				<p>心理治疗</p><p>个人成长</p><p>心理治疗</p>
 			</div>
 			<div class="show-div">
 				<h3>预约地点</h3>
-				<p>阳光中学三栋三单元101</p>
+				<h5>阳光中学三栋三单元101</h5>
 			</div>
 			<div class="show-tableBox" style="margin-bottom: 2rem;">
 				<h2>预约时间</h2>
@@ -104,12 +164,15 @@
 					</div>
 
 				</div>
-				<p class="table-tips">
+				<div class="table-tips">
 					左右滑动可以查看其他预约时间
-				</p>
+				</div>
 			</div>
 
 		</div>
+		</div>
+		
+		
 	</div>
 
 </template>
@@ -118,6 +181,7 @@
 	import teacherInfo from '@/components/teacher/index2/teacherInfo' //咨询预约 > 教师信息
 	import yuyueJilu from '@/components/teacher/index2/teacherInfo' //咨询预约 > 预约记录
 	import chat from '@/components/common/chat' //聊天
+	import Swiper from 'swiper'
 	export default {
 		components: {
 
@@ -233,11 +297,24 @@
 			}
 		},
 		mounted() {
-			var mySwiper1 = new Swiper('#teacher-swiper', {
-				prevButton: '.swiper-button-prev',
-				nextButton: '.swiper-button-next',
+			var mySwiper1 = new Swiper('.swiper-container', {
+				effect : 'coverflow',
+				  slidesPerView: 3,
+				  centeredSlides: true,
+				  coverflowEffect: {
+				  	loop:true,
+				    rotate: 0,
+				    stretch: 10,
+				    depth: 260,
+				    modifier: 1,
+				    slideShadows : false
+				  },
 			})
-
+			var mySwiper = new Swiper('#teacher-container',{
+				 onSliderMove: function(swiper, event){
+				 		alert('111')
+				   }
+				})
 			setTimeout(function() {
 				var tabLen = $('.table-action ul li').length;
 				var tabW = $('.table-action ul li').width() * tabLen;
@@ -262,31 +339,65 @@
 	}
 </script>
 <style scoped lang="less">
+.header{
+	position: fixed;
+}
 	#teacher-swiper {
 		text-align: center;
 		margin: 1rem 0;
 	}
 	
-	.swiper-button-next,
-	.swiper-button-prev {
-		height: 1.4rem;
-		margin-top: 0;
-		background-size: auto;
-		-webkit-transform: translateY(-50%);
-		-moz-transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
-		-o-transform: translateY(-50%);
-		transform: translateY(-50%);
+	#teacher-swiper .swiper-slide{
+		
+		background: url(../../../assets/img/teacherbg1.png);
+		background-size: cover;
+		width: 45% !important;
+		border-radius: 0.4rem;
+		.teacher-bg{
+			background: #fff;
+			margin: 0.6rem;
+			border-radius: 0.4rem;
+			padding: 0.75rem 0;
+		}
+		.teacher-img{
+			img{
+				width: 4rem;
+				height: 4rem;
+				border-radius: 50%;
+			}
+		}
+		h1{
+				margin: 0.5rem 0;
+		}
+		.teacher-bb{
+			color: #666;
+			font-size: 0.65rem;
+		}
+		.see-box{
+			padding: 0.6rem;
+			padding-top: 0;
+			overflow: hidden;
+			color: #fff;
+			p{
+				float: left;
+			}
+			h4{
+				float: right;
+			}
+			img{
+				width: 0.8rem;
+				margin-top: -2px;
+			}
+		}
 	}
-	
-	.swiper-button-next {
-		right: 1rem;
+	/*#teacher-swiper .swiper-slide:nth-child(2){
+		background: url(../../../assets/img/teacherbg2.png);
+		background-size: cover;
 	}
-	
-	.swiper-button-prev {
-		left: 1rem;
-	}
-	
+	#teacher-swiper .swiper-slide:nth-child(3){
+		background: url(../../../assets/img/teacherbg3.png);
+		background-size: cover;
+	}*/
 	.swiper-slide>img {
 		width: 5rem;
 		height: 5rem;
@@ -325,25 +436,37 @@
 		position: relative;
 		padding: 0 0.75rem;
 		padding-right: 3rem;
-		
+	
 		>div.show-div,
 		.show-tableBox {
-			background: #F2F2F2;
+			/*background: #F2F2F2;*/
 			border-radius: 0.3rem;
 			margin: 0.5rem 0;
-			padding: 0.5rem;
+			padding:0.3rem 0.5rem;
 			>h3 {
 				color: #000;
 				font-weight: bold;
+				margin: 0.5rem 0;
 			}
 			>p {
-				color: #666;
-				font-size: 0.65rem;
-			}
+				    float: left;
+				    margin-right: 0.5rem;
+				   	background:url(../../../assets/img/qian1.png);
+				    width: 4rem;
+				    height: 1.5rem;
+				    line-height: 1.5rem;
+				    padding-left: 0.3rem;
+				    background-size: 100% 100%;
+				    color: #fff;
+				}
+		}
+		div.show-div{
+			overflow: hidden;
 		}
 		.show-tableBox {
 			padding: 0;
 			background: none;
+			border: 1px solid #199ED8;
 			>h2 {
 				padding: 0.35rem 0.5rem;
 				background: #f2f2f2;

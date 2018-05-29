@@ -13,7 +13,7 @@
 						<h1>
 							<em>王大力</em>
 							<span>
-								<img src="../../../../assets/img/icon_wo1.png" alt="" />
+								<img src="../../../../assets/img/mp3.png" alt="" />
 								<i>今天下午三点</i>
 							</span>
 						</h1>
@@ -112,7 +112,7 @@
 						float: right;
 						color: #666;
 						img{
-							width: 0.8rem;
+							width: 0.9rem;
 							
 						}
 					}

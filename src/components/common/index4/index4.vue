@@ -121,12 +121,14 @@
 .ov-div {
     text-align: center;
     background: #fff;
-    opacity: 0.5;
+    background:rgba(255,255,255,0.8);
+    /*opacity: 0.5;*/
  	padding: 2rem 0 0;
     position: absolute;
     top: 5rem;
     left: 8%;
      width: 84%;
+     border-radius: 0.2rem;
      
 }
 .ov-div >p{

@@ -5,9 +5,11 @@ import footBar from '@/components/common/footBar'
 import login from '@/components/common/login'
 import forget from '@/components/common/mimaForget'
 import chat from '@/components/common/chat' //聊天 (公共的)
+import myalert from '@/components/common/alert' //弹窗 (公共的)
 import indexA1 from '@/components/common/index1/index1'		//心灵阅读 (公共的)
 import yueduInfo from '@/components/common/index1/yueduInfo'		//心灵阅读 > 详情 (公共的)
 import newsInfo from '@/components/common/newsInfo'		//弹幕 > 详情 (公共的)
+import index2 from '@/components/common/index2/index2'		//咨询预约  (老师和学生 通用的)
 import index3 from '@/components/common/index3/index3'		//互动   (公共的)
 import index4 from '@/components/common/index4/index4'		//我的    (管理员-老师 公共的)
 import setting from '@/components/common/index4/setting/setting'		//我的 > 设置 (公共的)
@@ -16,6 +18,7 @@ import ziliao from '@/components/common/index4/ziliao/ziliao'		//我的  >详细
 
 /*index3 互动  (公共的)*/
 import speakList from '@/components/common/index3/speak/speakList'		//互动 > 留言板list
+import speakListA from '@/components/student/index3/speak/speakList'		//互动 > 留言板list  (学生的)
 import speakWrite from '@/components/common/index3/speak/speakWrite'		//互动 > 留言板list >发表话题
 import speakInfo from '@/components/common/index3/speak/speakInfo'		//互动 > 留言板list >话题详情
 
@@ -97,6 +100,11 @@ export default new Router({
       name: 'chat',
       component: chat
     },
+     {
+    	path: '/alert',
+      name: 'myalert',
+      component: myalert
+    },
     {
 			path:'/newsInfo/:id',
    		name:	'newsInfo',			// 弹幕 > 详情
@@ -116,6 +124,11 @@ export default new Router({
 		   		meta: { keepAlive: true },
    			},
    			{
+   				path:'/index2', 
+		   		name:	'index2',			//咨询预约 (老师  学生 通用的)
+		   		component: index2,
+   			},
+   			{
    				path:'/index3',		
 		   		name:	'index3',			//互动  (公共的)
 		   		component: index3,
@@ -130,17 +143,9 @@ export default new Router({
 		   		name:	'indexA4',			//我的
 		   		component: indexA4,
    			},
-   			{
-   				path:'/student/index2',
-		   		name:	'indexA2',			//咨询预约
-		   		component: indexA2,
-   			},
+   		
    			
-   			{
-   				path:'/teacher/index2',
-		   		name:	'indexB2',			//咨询预约
-		   		component: indexB2,
-   			},
+   			
    		]
    	},
    	{
@@ -169,6 +174,11 @@ export default new Router({
 				path:'/index3/speakList',
 	   		name:	'speakList',			// 互动 > 留言板list
 	   		component: speakList,
+		},
+		{
+				path:'/index3/speakListA',
+	   		name:	'speakListA',			// 互动 > 留言板list (学生的)
+	   		component: speakListA,
 		},
 		{
 				path:'/index3/speakWrite',
