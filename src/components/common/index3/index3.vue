@@ -22,10 +22,10 @@
 					<img  @click="goPath({path:'/index3/activitysList'})"  src="../../../assets/img/index3_4.png" alt="" />
 					<p>组团活动</p>
 				</li>
-				<li>
+				<!--<li>
 					<img  @click="goPath({path:'/index3/gamesList'})"  src="../../../assets/img/index3_5.png" alt="" />
 					<p>游戏擂台</p>
-				</li>
+				</li>-->
 				
 			</ul>
 		</section>
@@ -33,17 +33,22 @@
 </template>
 
 <script>
-	import speakList from '@/components/common/index1/yueduInfo'		//互动 > 留言板list
-	import mp3List from '@/components/common/index3/mp3/mp3List'		//互动 > 点歌台list
-	import booksList from '@/components/common/index3/books/booksList'		//互动 > 图书漂流list
-	import activitysList from '@/components/common/index3/activitys/activitysList'		//互动 > 组团活动list
-	import gamesList from '@/components/common/index3/games/gamesList'		//互动 > 组团活动list
+	
 	export default({
 		methods:{
 			speak(){
-				this.$router.push({
-					path:'/index3/speakListA'
-				})
+				//判断角色,进入不同的路由  老师,管理员一样, 学生A
+				var role=localStorage.getItem('role');
+				if(role=='老师'||role=='管理员'){
+					this.$router.push({
+						path:'/index3/speakList'
+					})
+				}else{
+					this.$router.push({
+						path:'/index3/speakListA'
+					})
+				}
+				
 			},
 			goPath(path){
 				this.$router.push(path)

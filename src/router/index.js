@@ -9,7 +9,7 @@ import myalert from '@/components/common/alert' //弹窗 (公共的)
 import indexA1 from '@/components/common/index1/index1'		//心灵阅读 (公共的)
 import yueduInfo from '@/components/common/index1/yueduInfo'		//心灵阅读 > 详情 (公共的)
 import newsInfo from '@/components/common/newsInfo'		//弹幕 > 详情 (公共的)
-import index2 from '@/components/common/index2/index2'		//咨询预约  (老师和学生 通用的)
+
 import index3 from '@/components/common/index3/index3'		//互动   (公共的)
 import index4 from '@/components/common/index4/index4'		//我的    (管理员-老师 公共的)
 import setting from '@/components/common/index4/setting/setting'		//我的 > 设置 (公共的)
@@ -57,7 +57,7 @@ import indexB2 from '@/components/teacher/index2/index2'		//咨询预约
 /*index1心灵阅读里面的详情*/
 ///
 
-
+import index2A from '@/components/student/index2/index2'		//咨询预约  (学生的)
 
 
 /*index2 里面的教师信息*/
@@ -65,7 +65,13 @@ import teacherInfo from '@/components/student/index2/teacherInfo'		//咨询预�
 import yuyueJilu from '@/components/student/index2/yuyueJilu'		//咨询预约 > 预约记录
 
 
+//老师端
+import index2B from '@/components/teacher/index2/index2'		//咨询预约  (老师的)
 
+//管理员
+import index2C from '@/components/admini/index2/index2'		//咨询预约  (管理员)
+import index2Set from '@/components/common/index2/index2Set'		//咨询预约  >设置 (老师  管理员)
+import index2CInfo from '@/components/admini/index2/index2Info'		//咨询预约 -查看单个老师  (管理员)
 
 /*index4 我的*/
 
@@ -124,9 +130,19 @@ export default new Router({
 		   		meta: { keepAlive: true },
    			},
    			{
-   				path:'/index2', 
-		   		name:	'index2',			//咨询预约 (老师  学生 通用的)
-		   		component: index2,
+   				path:'/index2A', 
+		   		name:	'index2A',			//咨询预约 (学生的)
+		   		component: index2A,
+   			},
+   			{
+   				path:'/index2B', 
+		   		name:	'index2B',			//咨询预约 (老师)
+		   		component: index2B,
+   			},
+   			{
+   				path:'/index2C', 
+		   		name:	'index2C',			//咨询预约 (管理员)
+		   		component: index2C,
    			},
    			{
    				path:'/index3',		
@@ -169,7 +185,16 @@ export default new Router({
 	   		name:	'yuyueName',			// index2 > 预约名单   (教师端)
 	   		component: yuyueName,
 		},
-		
+		{
+				path:'/index2CInfo/:Tid',
+	   		name:	'index2CInfo',			// index2C > 查看单个老师   (管理员)
+	   		component: index2CInfo,
+		},
+		{
+				path:'/index2Set/:Tid',
+	   		name:	'index2Set',			// 心理咨询  > 设置  (管理员 老师) 
+	   		component: index2Set,
+		},
 		{
 				path:'/index3/speakList',
 	   		name:	'speakList',			// 互动 > 留言板list

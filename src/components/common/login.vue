@@ -66,7 +66,9 @@
         phone_tips:'',
         password_tips:'',
         btnType:true,
-        type:'学生'
+//      role:'学生',
+//      role:'老师',
+//      role:'管理员',
 
       }
     },
@@ -112,21 +114,28 @@
       login(){
       	var self=this;
       	
-      	if(self.type=='学生'){
-//    		this.store.types='学生'
-      		this.$router.push({
-      			path:'/index1'
-      		})
-      	}else if(self.type=='老师'){
-//    		this.store.types='学生'
-      		this.$router.push({
-      			path:'/index1'
-      		})
-      	}
       	
         if(!this.phone){
           this.phone_tips='请输入账号'
         }
+        if(this.phone=='1'){
+//    		this.store.types='学生'
+					localStorage.setItem('role','学生')
+      		this.$router.push({
+      			path:'/index1'
+      		})
+      	}else if(this.phone=='2'){
+      		localStorage.setItem('role','老师')
+      		this.$router.push({
+      			path:'/index1'
+      		})
+      	}
+      	else if(this.phone=='3'){
+      		localStorage.setItem('role','管理员')
+      		this.$router.push({
+      			path:'/index1'
+      		})
+      	}
 //        else if(!/^(13[0-9]\d{8}|17[0-9]\d{8}|15[0-35-9]\d{8}|18[0-9]\d{8}|14[0-9]\d{8})$/.test(this.phone)){
 //          this.phone_tips='账号格式不对'
 //        }
@@ -207,8 +216,8 @@
     margin-top: 4.5rem;
   }
   .form-div{
-   	margin: 0.8rem 0;
-    padding-bottom: 1rem;
+   	margin: 1.8rem 0;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid #F4F4F4;
   }
 
@@ -226,12 +235,13 @@
   .errtips{
     color: #fff;
     position: absolute;
-    bottom:-1rem;
+    bottom:-1.6rem;
     left: 0;
     color: #F7C108;
   }
   .form-div input{
     width: 100%;
+    height: 100%;
     border: none;
     background: none;
     color: #333;

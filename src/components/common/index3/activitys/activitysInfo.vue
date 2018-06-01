@@ -3,7 +3,7 @@
 	<div class="activitysInfo">
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
-			<h1>植树活动(发起的)</h1>
+			<h1>{{play}}</h1>
 		</header>
 		<div class="b-content">
 			<div class="activi-li">
@@ -15,7 +15,7 @@
 					</div>
 				</div>
 				<p class="activi-type">
-					我发起
+					{{playType}}
 				</p>
 			</div>
 			<div class="activi-li">
@@ -131,13 +131,21 @@
 	export default({
 		data(){
 			return{
+				play:'',
+				playType:'',
 				types:1,
 				alertType:false,
-				type:2
+				type:2,
 			}
 		},
 		components:{
 			myalert
+		},
+		created(){
+			var self=this;
+			console.log(self.$route)
+			self.play=self.$route.query.play
+			self.playType=self.$route.query.playType
 		},
 		methods: {
 			back() {

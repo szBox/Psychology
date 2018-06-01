@@ -3,35 +3,39 @@
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
 			<h1>话题列表</h1>
+			<em @click="goWrite()">发布</em>
 		</header>
 
 		<scroller style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
-			<ul class="speakList-ul">
-				<li v-for="(item, index) in items" @click="goPath(1)">
-					<div class="speakList-img">
-						<img src="../../../../assets/img/exchange_icon_a-market_n.png" />
+			<ul class="activitys-ul">
+				<li  @click="goPath(index)" v-for="(item, index) in items">
+					<div class="lf zutuan-img">
+						<img  class="imgz"src="../../../../assets/img/x7.png" alt="" />
+						
 					</div>
-					<div class="speakList-div">
-						<h3 class="ellipsis">不好玩了，回去睡觉去，附上我睡觉的图片</h3>
+					<div class="lf zutuan-info">
+						<h2 class="ellipsis">不好玩回去睡觉了,附上我睡觉的照片,不好玩回去睡觉了</h2>
 						<div>
-							<span>2018-03-16 12:00:00</span>
-							<em>留言:<i>25</i></em>
+							<p>2018-08-17 08:00</p>
+							<h5>
+								<img src="../../../../assets/img/pinglun.png"/>
+								<span>20</span>
+							</h5>
 						</div>
+						
+						
 					</div>
+					
 				</li>
-
 			</ul>
 		</scroller>
 
-		<div class="flexd-go speak-go" @click="goWrite()">
-			<span>发布话题</span>
-		</div>
+		
 	</div>
 </template>
 
 <script>
-	import speakWrite from '@/components/common/index3/speak/speakWrite' //互动 > 留言板list >发表话题
-	import speakInfo from '@/components/common/index3/speak/speakInfo' //互动 > 留言板list >话题详情
+	
 	export default({
 		data() {
 			return {
@@ -43,7 +47,7 @@
 			}
 		},
 		created(){
-			this.bottom = 10; //一页展示10个
+			this.bottom = 3; //一页展示10个
 			this.result = '';
 			for(let i = 1; i <= this.bottom; i++) {
 				this.result = ``
@@ -84,46 +88,52 @@
 </script>
 
 <style scoped lang="less">
-	.speakList-ul {
-		/*padding-top: 2.75rem;*/
-		li {
-			overflow: hidden;
-			border-bottom: 1px solid #c9c9c9;
-			padding: 0.75rem;
-		}
-		.speakList-img {
-			float: left
-		}
-		.speakList-img>img {
-			width: 3rem;
-			height: 3rem;
-			border: 1px solid lightblue;
-		}
-		.speakList-div {
-			width: 75%;
-			float: left;
-			margin-left: 0.8rem;
-			h3 {
-				color: #000;
-				font-weight: bold;
-				-webkit-line-clamp: 1;
-				margin-top: 0.25rem;
-			}
-			>div {
-				margin-top: 0.3rem;
-			}
-			>div>span {
-				color: #666;
-				margin-right: 1rem;
-				font-size: 0.6rem;
-			}
-			>div>em {
-				font-size: 0.6rem;
-				color: #666;
-			}
-		}
+	.speakList{
+		background: #f4f4f4;
 	}
-	
+	.activitys-ul li{
+			padding: 0.5rem 0 0.5rem 0.5rem;
+		}
+		.zutuan-img{
+			
+			border-radius: 0.4rem 0 0 0.4rem;
+			text-align: center;
+			width: 5.5rem;
+			height: 4.5rem;
+		}
+		.zutuan-info{
+			width: 64%;
+			margin-left: 4%;
+			
+			padding:0.1rem 0.5rem  0.5rem 0;
+
+			>h2{
+				-webkit-line-clamp: 2;
+				font-size: 0.8rem;
+				
+			}
+			
+			>div{
+				overflow: hidden;
+				line-height: 1.5rem;
+				>p{
+					float: left;
+					font-size: 0.65rem;
+					color: #A1A1A1;
+					margin: 0.5rem 0;
+				}
+				>h5{
+					float: right;
+					margin: 0.5rem 0;
+					img{
+						width: 0.7rem;
+					}
+					span{
+						color: #999;
+					}
+				}
+			}
+		}
 		
 
 </style>

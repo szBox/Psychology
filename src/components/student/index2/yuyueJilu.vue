@@ -1,13 +1,13 @@
 <template>
 	<div class="yuyueJilu">
 		<header class="header">
-			<img src="../../../assets/img/exchange_icon_my_n.png" alt="" @click="back()"/>
+			<div  @click="back()"><img src="../../../assets/img/goback.png" alt=""/></div>
 			<h1>预约记录</h1>
 		</header>
 		
 		<ul>
 			<li>
-				<img src="../../../assets/img/exchange_icon_a-market_n.png" alt="" />
+				<img src="../../../assets/img/teacher2.png" alt="" />
 				<div class="xiaoxi-div">
 					<h4>王老师</h4>
 					<h5>2018/3/29 17:00</h5>
@@ -16,7 +16,7 @@
 				
 			</li>
 			<li>
-				<img src="../../../assets/img/exchange_icon_game-interaction_n.png" alt="" />
+				<img src="../../../assets/img/teacher3.png" alt="" />
 				<div class="xiaoxi-div">
 					<h4>王老师</h4>
 					<h5>2018/3/29 17:00</h5>
@@ -42,25 +42,27 @@
 <style scoped lang="less">
 	.yuyueJilu ul{
 		li{
-			border-bottom: 1px solid #E4E4E4;
+			border-bottom: 1px solid #F7F7F7;
 			overflow: hidden;
 			padding: 0.5rem 0;
 			>img{
 				float: left;
-				width: 2.25rem;
-				height: 2.25rem;
+				width: 3rem;
+				height: 3rem;
 				border-radius: 50%;
-				background: #333;
 				margin-left: 0.75rem;
 			}
 			>.xiaoxi-div{
 				float: left;
 				width: 65%;
 				margin-left: 0.5rem;
-				>h5,>p{
-					color: #666;
-					font-size: 0.6rem;
-					
+				>h4{
+					font-size: 0.75rem;
+				}
+				>h5{
+					color: #999;
+					font-size: 0.65rem;
+					margin: 0.3rem 0;
 				}
 
 			}

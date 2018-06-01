@@ -3,16 +3,16 @@
 
 		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li v-for="(item, index) in items" @click="goPath(index)">
+				<li v-for="(item, index) in items" @click="goPath(index,item.play,item.type)">
 					<div class="lf zutuan-img">
-						<img src="../../../../assets/img/ren1.png" alt="" />
-						<h1>王大力</h1>
-						<p>我发起</p>
-						<h5>30分钟前</h5>
+						<img :src="item.img" alt="" />
+						<h1>{{item.name}}</h1>
+						<p :class="typeClass">{{item.type}}</p>
+						<h5>{{item.timelast}}</h5>
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
-						<span>植树活动</span>
+						<span>{{item.play}}</span>
 						<em>
 							<span>
 								<i>10</i>人/
@@ -26,13 +26,12 @@
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
 							<p>
-								<span>8-17 08:00</span>~
-								<span>8-18 08:00</span>
+								<span>{{item.times}}</span>
 							</p>
 						</div>
 						<div>
 							<img src="../../../../assets/img/icon_money.png" alt="" />
-							<em>20元</em>
+							<em>{{item.money}}</em>
 						</div>
 					</div>
 					</div>
@@ -48,27 +47,46 @@
 	export default({
 		data() {
 			return {
-				//				tab_index:2
+				typeClass:'',
 				items: [],
+				allList:[
+					{name:'王大力',play:'植树活动',bb:"我想组织一次秋游,希望大家积极来参与",
+					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'20元',img:'src/assets/img/teacher2.png',
+					type:'我发起'},
+					{name:'杀马特',play:'聚餐活动',bb:"我想组织一次聚餐,希望大家积极来参与",
+					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'120元',img:'src/assets/img/ren2.png',
+					type:'已参与'},
+					{name:'伏地魔',play:'亲子活动',bb:"我想组织一次亲子活动,希望大家积极来参与",
+					times:"08-16 08:00~08-18",timelast:"40分钟前",money:'10元',img:'src/assets/img/ren3.png',
+					type:'未参与'},
+					{name:'王大力',play:'植树活动',bb:"我想组织一次秋游,希望大家积极来参与",
+					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'20元',img:'src/assets/img/ren1.png',
+					type:'已审核'},
+					{name:'杀马特',play:'聚餐活动',bb:"我想组织一次聚餐,希望大家积极来参与",
+					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'120元',img:'src/assets/img/ren2.png',
+					type:'未审核'},
+				
+					],
 				/*最后的数组*/
 				page: 1,
+				allPage:3,
 				/*当前页码*/
 			}
 		},
 		created() {
-			this.bottom = 4; //一页展示10个
-			this.result = '';
-			for(let i = 1; i <= this.bottom; i++) {
-				this.result = ``
-				this.items.push(this.result);
+			for(let i = 0; i < this.allList.length; i++) {
+				if(this.allList[i].type=='我发起'){
+//					this.typeClass=
+				}
+				this.items.push(this.allList[i]);
 			}
 
 			console.log(this.items);
 		},
 		methods: {
-			goPath(i) {
+			goPath(i,play,type) {
 				this.$router.push({
-					path: "/activitysList/activitysInfo/" + i
+					path: "/activitysList/activitysInfo/" + i+ '?play='+play+ '&playType='+type
 				})
 
 			},
@@ -84,10 +102,13 @@
 				}, 1500)
 			},
 			infinite(done) {
-				if(this.page == 1) {
-					done(true)
-				}
+				this.page++;
+				done(true);
 				console.log('拉啦啦')
+				if(this.page == this.pageAll) {
+					return
+				}
+				
 			}
 		}
 	})
@@ -163,5 +184,23 @@
 						color: #EBAF3B;
 					}
 			}
+		}
+		.zutuan-img p.types-1{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-2{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-3{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-4{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-5{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-6{
+			background: #FFA200;
 		}
 </style>

@@ -17,12 +17,12 @@
 			
 		</ul>
 		<div class="bgg"></div>
-		<ul>
+		<!--<ul>
 			<li>
 				<span>清除缓存</span>
 				<em>9.97M</em>
 			</li>
-		</ul>
+		</ul>-->
 		
 		<div class="esc-btn">
 			退出登录

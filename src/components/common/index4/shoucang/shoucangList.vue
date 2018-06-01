@@ -79,7 +79,7 @@
 			border-radius: 0.4rem 0 0 0.4rem;
 			text-align: center;
 			width: 5.5rem;
-			height: 5.5rem;
+			height: 4.5rem;
 		}
 		.zutuan-info{
 			width: 64%;
