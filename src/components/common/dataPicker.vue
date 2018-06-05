@@ -2,7 +2,7 @@
 	<div class="pickerBox">
 		<div>
 			<div class="picker-div" style="padding-left: 0.75rem;">
-     			<datetime :placeholder='dateTitle' v-model="value7"  start-date='1950-01-01' @on-change="change"  clear-text="today" @on-clear="setToday"></datetime>
+     			<datetime :placeholder='dateTitle' v-model="value7"  start-date='2018' @on-change="change"  clear-text="today" @on-clear="setToday"></datetime>
 				<img src="../../assets/img/sdown.png" alt="" />
 			</div>
 			<div class="picker-div">

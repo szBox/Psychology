@@ -9,6 +9,7 @@ import myalert from '@/components/common/alert' //弹窗 (公共的)
 import indexA1 from '@/components/common/index1/index1'		//心灵阅读 (公共的)
 import yueduInfo from '@/components/common/index1/yueduInfo'		//心灵阅读 > 详情 (公共的)
 import newsInfo from '@/components/common/newsInfo'		//弹幕 > 详情 (公共的)
+import navTop from '@/components/common/navTop'
 
 import index3 from '@/components/common/index3/index3'		//互动   (公共的)
 import index4 from '@/components/common/index4/index4'		//我的    (管理员-老师 公共的)
@@ -67,7 +68,7 @@ import yuyueJilu from '@/components/student/index2/yuyueJilu'		//咨询预约 > 
 
 //老师端
 import index2B from '@/components/teacher/index2/index2'		//咨询预约  (老师的)
-
+import index2BPhP from '@/components/teacher/index2/index2PhP'		//排行榜 (老师的)
 //管理员
 import index2C from '@/components/admini/index2/index2'		//咨询预约  (管理员)
 import index2Set from '@/components/common/index2/index2Set'		//咨询预约  >设置 (老师  管理员)
@@ -86,7 +87,7 @@ import zixunList from '@/components/student/index4/zixun/zixunList'		//我的  >
 
 //教师端
 //indexB2
-import yuyueName from '@/components/teacher/index2/yuyueName'		//咨询预约 > 预约名单
+import yuyueName from '@/components/common/index2/yuyueName'		//咨询预约 > 预约名单
 Vue.use(Router)
 
 export default new Router({
@@ -138,6 +139,11 @@ export default new Router({
    				path:'/index2B', 
 		   		name:	'index2B',			//咨询预约 (老师)
 		   		component: index2B,
+   			},
+   			{
+   				path:'/index2BPhP', 
+		   		name:	'index2BPhP',			//排行榜 (老师)
+		   		component: index2BPhP,
    			},
    			{
    				path:'/index2C', 

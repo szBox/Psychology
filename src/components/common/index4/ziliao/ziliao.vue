@@ -8,7 +8,10 @@
 		<div class="ziliao-box">
 			<div class="ziliao-div">
 				<span>头像</span>
-				<img src="../../../../assets/img/student.png" alt="" />
+				<div class="file-div">
+					<img class="file-img" src="../../../../assets/img/student.png" alt="" />
+					<input type="file" name="file1" id="imgFile" accept="image/*" @change="addPic">
+				</div>
 			</div>
 			<div class="ziliao-div">
 				<span>昵称</span>
@@ -40,6 +43,9 @@
 			back() {
 				this.$router.go(-1);
 			},
+			addPic() {
+				$(".file-img").attr('src', URL.createObjectURL($('#imgFile')[0].files[0]) )
+			}
 		}
 	})
 </script>

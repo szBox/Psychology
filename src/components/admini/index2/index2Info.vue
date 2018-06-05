@@ -13,23 +13,16 @@
 						<div class="teacher-img">
 							<img  src="../../../assets/img/nv.png" />
 						</div>
-						<h1>李多云老师111</h1>
+						<h1>李多云老师111 
+							<span><img src="../../../assets/img/zan_w.png"/>200</span>
+						</h1>
 						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
+							<p>倾心聆听 唯爱融化 陪你走过人生的低谷</p>
+							
 						</div>
 					</div>
 					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/zixun.png"/>
-							学生咨询
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
+					
 					
 			</div>
 		
@@ -307,63 +300,45 @@
 <style scoped lang="less">
 .header{
 	position: fixed;
+	border: none;
 }
 .b-content{
 	padding-bottom: 3rem;
 }
 	
-	.teacher-Top:before{
-		content: '';
-		display: table;
-	}
 	.teacher-Top{
+	    text-align: center;
+	    font-size: 18px;
+    	width: 100%;
+		background: linear-gradient(to right, #31c4ff, #3991f4);
+		padding: 1rem 0;
 		
-	      text-align: center;
-	      font-size: 18px;
-    	width: 8rem;
-    	margin: 0.75rem auto;
-		background: url(../../../assets/img/teacherbg1.png);
-		background-size: 100% 100%;
-		/*width: 45% !important;*/
-		border-radius: 0.4rem;
-		.teacher-bg{
-			background: #fff;
-			margin: 0.6rem;
-			border-radius: 0.4rem;
-			padding: 0.5rem 0;
-		}
 		.teacher-img{
 			img{
-				width: 3.5rem;
-				height: 3.5rem;
+				width: 4.5rem;
+				height: 4.5rem;
 				border-radius: 50%;
 			}
 		}
 		h1{
 				margin: 0.3rem 0;
+				font-size: 0.8rem;
+				color: #fff;
+				span{
+					margin-left: 0.5rem;
+					font-size: 0.6rem;
+				}
+				 img{
+					width: 1rem;
+					margin-top: -0.25rem;
+					margin-right: 0.25rem;
+				}
 		}
 		.teacher-bb{
-			color: #666;
+			color: #F5FAFB;
 			font-size: 0.6rem;
 		}
-		.see-box{
-			padding: 0.6rem;
-			padding-top: 0;
-			overflow: hidden;
-			color: #fff;
-			font-size: 0.6rem;
-			p{
-				float: left;
-			}
-			h4{
-				float: right;
-				font-size: 0.6rem;
-			}
-			img{
-				width: 0.8rem;
-				margin-top: -2px;
-			}
-		}
+		
 	}
 	
 	

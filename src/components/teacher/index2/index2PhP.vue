@@ -2,7 +2,8 @@
 	<div class="index2" style="">
 
 		<header class="header">
-			<h1>预约咨询管理员</h1>
+			<div  @click="back()"><img src="../../../assets/img/goback.png" alt=""/></div>
+			<h1>排行榜</h1>
 
 		</header>
 		<div class="b-content">
@@ -24,7 +25,20 @@
 
 			<div class="paiming-div" v-if='types==1'>
 				<div class="nav-flex">
-					<div v-for='(item,index) in TeacherList' v-if='index==1' @click="goPath(item.Tid)">
+					<div v-for='(item,index) in TeacherList' v-if='index==1' >
+						<div class="nav-flex-img">
+							<div>
+								<img :src="item.img" />
+							</div>
+							
+							<p>
+								<span>NO.{{index+1}}</span>
+							</p>
+						</div>
+						<h2>{{item.name}}</h2>
+						<p>预约数<span>{{item.num}}</span>例</p>
+					</div>
+					<div v-for='(item,index) in TeacherList' v-if='index==0'>
 						<div class="nav-flex-img">
 							<div>
 								<img :src="item.img" />
@@ -36,19 +50,7 @@
 						<h2>{{item.name}}</h2>
 						<p>预约数<span>{{item.num}}</span>例</p>
 					</div>
-					<div v-for='(item,index) in TeacherList' v-if='index==0' @click="goPath(item.Tid)">
-						<div class="nav-flex-img">
-							<div>
-								<img :src="item.img" />
-							</div>
-							<p>
-								<span>NO.{{index+1}}</span>
-							</p>
-						</div>
-						<h2>{{item.name}}</h2>
-						<p>预约数<span>{{item.num}}</span>例</p>
-					</div>
-					<div v-for='(item,index) in TeacherList' v-if='index==2' @click="goPath(item.Tid)">
+					<div v-for='(item,index) in TeacherList' v-if='index==2'>
 						<div class="nav-flex-img">
 							<div>
 								<img :src="item.img" />
@@ -63,14 +65,18 @@
 				</div>
 
 				<ul class="paiming-list">
-					<li v-for="(item,index) in TeacherList" v-if='index>2' @click="goPath(item.Tid)">
+					<li :class="{'my-li':item.name=='我'}" v-for="(item,index) in TeacherList" v-if='index>2'>
 						<h1>{{index+1}}</h1>
 						<img :src="item.img" alt="" />
 						<div class="teacher-name">
 							<h2>{{item.name}}</h2>
 							<p>预约数<span>{{item.num}}</span>例</p>
 						</div>
-						<div class="teacher-icon">
+						<div v-if="item.name=='我'" class="teacher-icon">
+							<p><img src="../../../assets/img/zan_w.png" />200</p>
+							<p><img src="../../../assets/img/chat_w.png" />100</p>
+						</div>
+						<div v-else class="teacher-icon">
 							<p><img src="../../../assets/img/zan0.png" />200</p>
 							<p><img src="../../../assets/img/pinglun.png" />100</p>
 						</div>
@@ -135,6 +141,18 @@
 						num: '109',
 						Tid:5,
 					},
+					{
+						name: '我',
+						img: 'src/assets/img/teacher2.png',
+						num: '109',
+						Tid:5,
+					},
+					{
+						name: '王尼玛',
+						img: 'src/assets/img/teacher2.png',
+						num: '109',
+						Tid:5,
+					},
 				],
 			
 			}
@@ -148,14 +166,10 @@
 //			}
 		},
 		methods: {
-			goPath(i) {
-				
-				this.$router.push({
-						path:'/index2CInfo/'+i
-					}
-				
-				)
+			back() {
+				this.$router.go(-1);
 			},
+		
 			
 			typeToggle(i) {
 				var self = this;

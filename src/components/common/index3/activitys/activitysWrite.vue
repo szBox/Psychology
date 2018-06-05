@@ -40,14 +40,18 @@
 			<div class="write-title">
 				<p>
 					<span>报名时间：</span>
-					<em>
-						<datetime format='YYYY-MM-DD HH:mm'  :placeholder='dateTitle' v-model="value7"  start-date='1950-01-01' ></datetime>
+					<em class="time-sel">
+						<datetime format='YYYY-MM-DD HH:mm' clear-text='确认' :placeholder='dateTitle1' v-model="startTime"  start-date='2018-01-01' @on-clear='change1'></datetime>
 					</em>
-					
+					<span  class="time-sel">
+						<datetime format='YYYY-MM-DD HH:mm' clear-text='确认' :placeholder='dateTitle2' v-model="endTime"  start-date='2018-01-01' @on-clear='change2'></datetime>
+					</span>
 				</p>
 				<p>
 					<span>集合时间：</span>
-					<input type="text" />
+					<em class="time-sel">
+						<datetime format='YYYY-MM-DD HH:mm' clear-text='确认' :placeholder='dateTitle3' v-model="jiheTime"  start-date='2018-01-01' @on-clear='change3'></datetime>
+					</em>
 				</p>
 				<p>
 					<span>集合地点：</span>
@@ -61,7 +65,7 @@
 					<img src="../../../../assets/img/icons_1.png"/>
 					<span>发布之后需要进行审核</span>
 				</p>
-				<div class="btn-init">
+				<div class="btn-init" @click="fabu()">
 					发布
 				</div>
 			</div>
@@ -71,14 +75,21 @@
 </template>
 
 <script>
-	import {  Datetime } from 'vux'
+	import {  Datetime , Toast  } from 'vux'
 	export default({
 		data() {
 			return {
-				value7:'',
+				startTime:'',
+				endTime:'',
+				jiheTime:'',
+				time1num:'', //报名时间1  时间戳
+				time2num:'', //报名时间2  时间戳
+				time3num:'', //集合时间3  时间戳
 				val:'',
 				clear:false,
-				dateTitle:'请选择时间',
+				dateTitle1:'开始时间',
+				dateTitle2:'结束时间',
+				dateTitle3:'集合时间',
 				results: [],
 				sty:{
 					width:'50%'
@@ -86,7 +97,7 @@
 			}
 		},
 		components: {
-	   		
+	   		Toast,
 	   	    Datetime,
 	 	},
 		methods: {
@@ -96,20 +107,40 @@
 			addPic() {
 				$(".imgshow").append("<img style='width: 3rem;height: 3rem;margin-right: 0.75rem;' src=" + URL.createObjectURL($('#imgFile')[0].files[0]) + ">")
 			},
-			change (value) {
+			change1 (value) {
 		       console.log('change', value)
 		       var self=this;
-		      
+		       self.time1num= new Date(value).getTime()
+		       if(value.length>12){
+		       	self.startTime=value.slice(5)
+		       }
 		    },
-		     setToday (value) {
-		      let now = new Date()
-		      let cmonth = now.getMonth() + 1
-		      let day = now.getDate()
-		      if (cmonth < 10) cmonth = '0' + cmonth
-		      if (day < 10) day = '0' + day
-		      this.value7 = now.getFullYear() + '-' + cmonth + '-' + day
-		      
+		    change2 (value) {
+		       console.log('change', value)
+		       var self=this;
+		       self.time2num=new Date(value).getTime()
+		       if(value.length>12){
+		       	self.endTime=value.slice(5)
+		       }
 		    },
+			change3 (value) {
+		       console.log('change', value)
+		       var self=this;
+		       self.time3num=new Date(value).getTime()
+		       if(value.length>12){
+		       	self.jiheTime=value.slice(5)
+		       }
+		    },
+		    fabu(){
+		    	var self=this;
+		    	if(self.time2num<self.time1num){
+		    		self.$vux.toast.show({
+			            type: 'text',
+			            text: '结束时间不能小于开始时间',
+			            position: 'bottom'
+			          })
+		    	}
+		    }
 		}
 	})
 </script>
@@ -164,7 +195,10 @@
 			line-height: 1.5rem;
 			
 		}
-		em{
+		em.time-sel{
+			margin-right: 1.5rem;
+		}
+		em.time-sel, span.time-sel{
 			float: left;
 			width: 32%;
 			padding-left: 0.75rem;
@@ -172,6 +206,7 @@
 			border-radius: 0.5rem;
 			color: #999;
 		}
+		
 		input,textarea {
 			float: left;
 			width: 78%;

@@ -2,129 +2,41 @@
 	<div class="index2" style="">
 
 		<header class="header">
-			<h1>预约咨询</h1>
+			<h1>预约咨询(老师)</h1>
 			<em @click="goPath({path:'/index2/yuyueName'})">预约名单</em>
 		</header>
 		<div class="b-content">
-			<div id="teacher-swiper" class="swiper-container teacher-swiper">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide">
-					<div class="swiper-flex">
-						<div class="teacher-bg">
-						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
-						</div>
-						<h1>李多云老师111</h1>
-						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
-						</div>
-					</div>
-					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/see.png"/>
-							查看信息
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
-					</div>
-					
-				</div>
-				<div class="swiper-slide">
-					<div class="swiper-flex">
-						<div class="teacher-bg">
-						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
-						</div>
-						<h1>李多云老师222</h1>
-						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
-						</div>
-					</div>
-					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/see.png"/>
-							查看信息
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="swiper-flex">
-						<div class="teacher-bg">
-						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
-						</div>
-						<h1>李多云老师333</h1>
-						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
-						</div>
-					</div>
-					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/see.png"/>
-							查看信息
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
-					</div>
-				</div>
-				<!--<div class="swiper-slide">
-					
-				</div>-->
-			</div>
-			
-		</div>
-		<div class="teacher-show">
-			
-			
-			<div class="show-div">
-				<h3>擅长111111111111</h3>
-				<p>11111</p><p>11111111</p><p>1111111</p>
-			</div>
-			<div class="show-div">
-				<h3>预约地点</h3>
-				<h5>阳光中学三栋三单元101</h5>
-			</div>
-			<div class="show-tableBox" style="margin-bottom: 2rem;">
-				<h2>预约时间</h2>
-				<div class="show-table">
-					<ul class="table-init">
-						<li>
-							<div>
-
-							</div>
-							<p>上午</p>
-							<p>下午</p>
-						</li>
-					</ul>
-					<div class="table-action">
+			<div class="teacher-Top">
+				
 						
-
-					</div>
-
-				</div>
-				<div class="table-tips">
-					左右滑动可以查看其他预约时间
-				</div>
+						<div class="teacher-img">
+							<img  src="../../../assets/img/nv.png" />
+						</div>
+						<h1>李多云老师 
+							
+						</h1>
+						<div class='teacher-bb'>
+							<p>倾心聆听 唯爱融化 陪你走过人生的低谷</p>
+							
+						</div>
+						<div class="see-box">
+							
+								<img @click="goPath({path:'/chat'})" src="../../../assets/img/zixun.png"/>
+								<span @click="goPath({path:'/chat'})">学生咨询</span>
+								<img src="../../../assets/img/zan_w.png"/>
+								200
+							
+						</div>
+						<div class="paihan-go" @click="goPhb()">
+							<img src="../../../assets/img/pxp.png"/>
+							<span>排行榜</span>
+						</div>
+					
+					
+					
 			</div>
-
-		</div>
+		
+		
 		<div class="teacher-show">
 			
 			
@@ -223,42 +135,7 @@
 			</div>
 
 		</div>
-		<div class="teacher-show">
-			
-			
-			<div class="show-div">
-				<h3>擅长33333333333</h3>
-				<p>33333333</p><p>3333</p><p>心33333理治疗</p>
-			</div>
-			<div class="show-div">
-				<h3>预约地点</h3>
-				<h5>3333</h5>
-			</div>
-			<div class="show-tableBox" style="margin-bottom: 2rem;">
-				<h2>预约时间</h2>
-				<div class="show-table">
-					<ul class="table-init">
-						<li>
-							<div>
-							</div>
-							<p>上午</p>
-							<p>下午</p>
-						</li>
-					</ul>
-					<div class="table-action">
-						<div>
-							
-						</div>
-
-					</div>
-
-				</div>
-				<div class="table-tips">
-					左右滑动可以查看其他预约时间
-				</div>
-			</div>
-
-		</div>
+		
 		
 		</div>
 		<div class="flexd-nav">
@@ -269,9 +146,9 @@
 					<img src="../../../assets/img/s2.png" alt="" />
 					<p>200</p>
 				</div>-->
-				<div  @click="goPath({path:'/chat'})">
+				<div @click="goSet(1)" >
 					<img src="../../../assets/img/zixun.png" alt="" />
-					<p>咨询</p>
+					<p>设置</p>
 				</div>
 		</div>
 		
@@ -400,21 +277,6 @@
 		},
 		mounted() {
 			
-			var teacherNav = new Swiper('.teacher-swiper', {
-				slidesPerView: 2.5,
-		      initialSlide: 1,
-//		      spaceBetween: 20,
-		      centeredSlides: true,
-				on:{
-				
-				    slideChange: function(){
-				    	console.log('下标',this.activeIndex);
-//				    	$('.b-content').siblings('.teacher-show').hide();
-				    	$('.b-content').find('.teacher-show').eq(this.activeIndex).show().siblings('.teacher-show').hide()
-						
-				    },
-				  },		     
-			})
 			setTimeout(()=>{
 				var table = new Swiper('.table-swiper',{
 			  pagination :{
@@ -423,19 +285,6 @@
 			  }
 			})
 			},2)
-			
-//			setTimeout(function() {
-//				var tabLen = $('.table-action ul li').length;
-//				var tabW = $('.table-action ul li').width() * tabLen;
-//				$('.table-action ul').css({
-//					'width': tabW
-//				})
-//				$('.table-action ul li').width();
-//				console.log('li的宽度' + $('.table-action ul li').width())
-//				console.log(tabLen)
-//				console.log("ul的宽度---" + tabW)
-//			}, 5)
-
 		},
 		methods: {
 			goPath(path) {
@@ -443,114 +292,95 @@
 			},
 			yuyue(i){
 				alert(i.starttime+'-'+i.endtime)
-			}
+			},
+			goPhb(){
+				this.$router.push({
+					path:"/index2BPhP"
+				})
+			},
+			goSet(i){
+				this.$router.push({
+					path:"/index2Set/"+i
+				})
+			},
 		}
 	}
 </script>
 <style scoped lang="less">
 .header{
 	position: fixed;
+	border: none;
 }
 .b-content{
 	padding-bottom: 3rem;
 }
-	#teacher-swiper {
-		text-align: center;
-		padding: 1.5rem 0;
-		
-		/*background: linear-gradient(to right, #31c4ff, #3991f4);*/
+	
+.teacher-Top:before{
+		content: "";
+		display: table;
 	}
-	#teacher-swiper.swiper-container {
-		overflow: initial;
-	}
-	#teacher-swiper .swiper-slide{
-		
-      text-align: center;
-      font-size: 18px;
-      transition: all .4s;
-
-      /* Center slide text vertically */
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-pack: center;
-      -ms-flex-pack: center;
-      -webkit-justify-content: center;
-      justify-content: center;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-      z-index: 199;
-      box-shadow: none;
-    
-		background: url(../../../assets/img/teacherbg1.png);
-		background-size: 100% 100%;
-		/*width: 45% !important;*/
-		border-radius: 0.4rem;
-		.teacher-bg{
-			background: #fff;
-			margin: 0.6rem;
-			border-radius: 0.4rem;
-			padding: 0.5rem 0;
-		}
+	.teacher-Top{
+	    text-align: center;
+	    font-size: 18px;
+    	width: 100%;
+		background: linear-gradient(to right, #31c4ff, #3991f4);
+		padding: 1rem 0;
+		position: relative;
 		.teacher-img{
 			img{
-				width: 3.5rem;
-				height: 3.5rem;
+				width: 4.5rem;
+				height: 4.5rem;
 				border-radius: 50%;
 			}
 		}
 		h1{
 				margin: 0.3rem 0;
+				font-size: 0.8rem;
+				color: #fff;
+				span{
+					margin-left: 0.5rem;
+					font-size: 0.6rem;
+				}
+				 img{
+					width: 1rem;
+					margin-top: -0.25rem;
+					margin-right: 0.25rem;
+				}
 		}
 		.teacher-bb{
-			color: #666;
+			color: #F5FAFB;
 			font-size: 0.6rem;
 		}
 		.see-box{
-			padding: 0.6rem;
-			padding-top: 0;
-			overflow: hidden;
+			text-align: center;
 			color: #fff;
-			font-size: 0.6rem;
-			p{
-				float: left;
-			}
-			h4{
-				float: right;
-				font-size: 0.6rem;
-			}
+			font-size: 0.65rem;
+			margin-top: 0.75rem;
 			img{
-				width: 0.8rem;
-				margin-top: -2px;
+				width: 1rem;
+				margin-right: 0.2rem;
+				margin-top: -0.25rem;
+			}
+			span{
+				margin-right: 2rem;
+			}
+		}
+		.paihan-go{
+			position: absolute;
+			top:1.6rem;
+			right: 0;
+			background: #32C4FF;
+			color: #fff;
+			padding: 0.1rem 0.4rem 0.1rem 0.6rem;
+			border-radius: 1rem 0 0 1rem;
+			img{
+				width: 0.9rem;
+				margin-right: 0.1rem;
 			}
 		}
 	}
-	#teacher-swiper .swiper-slide.swiper-slide-active{
-		 transform: scale(1.2);
-	      z-index: 200;
-	      box-shadow: 3px 3px 20px 4px rgba(0, 0, 0, .3);
-	}
-	
-	#teacher-swiper .swiper-slide.swiper-slide-active .swiper-flex{
-		width: 120%;
-	}
-	#teacher-swiper .swiper-slide:nth-child(2){
-		background: url(../../../assets/img/teacherbg2.png);
-		background-size: 100% 100%;
-	}
-	#teacher-swiper .swiper-slide:nth-child(3){
-		background: url(../../../assets/img/teacherbg3.png);
-		background-size: 100% 100%;
-	}
-	.swiper-slide>img {
-		width: 5rem;
-		height: 5rem;
-		background: paleturquoise;
-		border-radius: 50%;
-	}
+
+
 	
 	.flexd-nav {
 		width:2.5rem;
@@ -592,7 +422,7 @@
 	}
 	
 	.teacher-show {
-		display: none;
+	
 		position: relative;
 		padding: 0 0.75rem;
 

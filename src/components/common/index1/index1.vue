@@ -7,44 +7,52 @@
 
 			<div class="swiper-container" id="nav">
 				<div class="swiper-wrapper">
-					<div class=" swiper-slide">
-						<span  style="color:rgba(255,72,145,1);">热卖</span></div>
+					<div class=" swiper-slide slide-on">
+						<span>心理科普</span></div>
 					<div class="swiper-slide">
-						<span >水果</span></div>
+						<span >心理专题</span></div>
 					<div class="swiper-slide">
-						<span >乳品</span></div>
+						<span >333333</span></div>
 					<div class="swiper-slide">
-						<span >零食</span></div>
+						<span >444444</span></div>
 					<div class="swiper-slide">
-						<span>肉蛋</span></div>
+						<span>555555</span></div>
 				
 					<!--<div class="bar">
         <div class="color"></div>
       </div>-->
 				</div>
 			</div>
+			
+			<h1 class="hao-title">
+				<img src="../../../assets/img/hao.png" alt="" />最新好文
+			</h1>
 		</div>
-		<div class="swiper-container" id="page">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide slidepage">
-					111
-				</div>
-				<div class="swiper-slide slidepage">
-					222
-				</div>
-				<div class="swiper-slide slidepage">
-					333
-				</div>
-				<div class="swiper-slide slidepage">
-					444
-				</div>
-				<div class="swiper-slide slidepage">
-					555
-				</div>
-				
+			
+			<scroller :class='{"zindex":ztype==true}' :on-refresh="reType && refresh" :on-infinite="reType && infinite" ref="my_scroller">
+			
+					
+					<ul class="nav-list">
+						<li v-for="(item, index) in items1" @click="goPath(index)">
+							<div class="lf">
+								<div class="ellipsis">
+									{{item.bb}}
+								</div>
+								<p class="time-div">
+									<span>{{item.times}}</span>
+									<em>
+										<img src="../../../assets/img/pinglun.png" alt="" />30评
+									</em>
+								</p>
+								</div>
+							<img class="rt" :src="item.img" alt="" />
+						</li>
+					</ul>
 
-			</div>
-		</div>
+		</scroller>
+		
+		
+		
 
 	</div>
 </template>
@@ -58,7 +66,37 @@
 				reType: true,
 				tabActive: 0,
 				ztype: false,
-				items: [],
+				items1: [],
+				slidePage1:[
+					{
+						bb:'人性方面的细节调和，是从心理的角度还是从理性的角度思考？',times:'2018-04-15 15:00',num:'20',
+						img:'src/assets/img/x7.png'
+					},
+					{
+						bb:'我想发起一次秋游活动,希望大家积极报名',times:'2018-04-15 15:00',num:'20',
+						img:'src/assets/img/topw1.png'
+					},
+					{
+						bb:'话题333333333',times:'2018-04-15 15:00',num:'20',
+						img:'src/assets/img/topw3.png'
+					},
+					{
+						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
+						img:'src/assets/img/ren6.png'
+					},
+					{
+						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
+						img:'src/assets/img/ren6.png'
+					},
+					{
+						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
+						img:'src/assets/img/ren6.png'
+					},
+					{
+						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
+						img:'src/assets/img/ren6.png'
+					},
+				],
 				/*最后的数组*/
 				page: 1,
 				tSpeed:300, //切换速度300ms
@@ -70,103 +108,39 @@
 				activeSlidePosition:'',
 				pageIndex:'',
 				navActiveSlideLeft:'',//page跟随
-				data_swiper_slide:{
-					'margin':'0 5px',
-				    'text-align':'center',
-				   'display':'block',
-				    'line-height':'4rem',
-				    'font-size':'14px',
-				    'color':'#333333',
-				    'height':'4rem',
-					'width': '5rem  !important',
-					'background': 'url(../../../assets/img/indexNav1.png)',
-					'background-size': '100% 100%',
-				}
+			
 			}
 		},
 		mounted() {
 			var self=this;
+			var swiperH = ($('#nav').height()  +  $('.header').height() +40)/20
+			console.log(swiperH);
+			$('._v-content').css({
+				paddingTop:swiperH+'rem',
+				paddingLeft:'0.75rem',
+				paddingRight:'0.75rem'
+			});
+			
+//			setTimeout(function(){
+//				$('#page').height($('.nav-list').height())
+//			},500)
 			var navSwiper = new Swiper('#nav', {
-				slidesPerView: 6,
 				freeMode: true,
+				slidesPerView:'auto',
 				on: {
-					init: function() {
-						console.log('pp',this.slides.eq(0))
-						self.navSlideWidth = this.slides.eq(0).css('width'); //导航字数需要统一,每个导航宽度
-						self.navSum = this.slides[this.slides.length - 1].offsetLeft //最后一个slide的位置
+				    transitionEnd: function(){
 
-						self.clientWidth = parseInt(this.$wrapperEl.css('width')) //Nav的可视宽度
-						
-						for(var i = 0; i < this.slides.length; i++) {
-							self.navWidth += parseInt(this.slides.eq(i).css('width'))
-						}
-
-						self.topBar = this.$el.parents('body').find('#top') //页头
-
-					},
-
-				},
-			});
-			var pageSwiper = new Swiper('#page', {
-				watchSlidesProgress: true,
-				resistanceRatio: 0,
-				on: {
-					transitionStart: function() {
-
-						self.activeSlidePosition = navSwiper.slides[this.activeIndex].offsetLeft
-						//释放时导航粉色条移动过渡
-						navSwiper.slides.eq(this.activeIndex).find('span').transition(self.tSpeed)
-  						navSwiper.slides.eq(this.activeIndex).find('span').css('color', 'rgba(255,72,145,1)')
-						//释放时文字变色过渡
-						
-						if(this.activeIndex > 0) {
-							navSwiper.slides.eq(this.activeIndex - 1).find('span').transition(self.tSpeed)
-							navSwiper.slides.eq(this.activeIndex - 1).find('span').css('color', 'rgba(51,51,51,1)')
-						}
-						if(this.activeIndex < this.slides.length) {
-							navSwiper.slides.eq(this.activeIndex + 1).find('span').transition(self.tSpeed)
-							navSwiper.slides.eq(this.activeIndex + 1).find('span').css('color', 'rgba(51,51,51,1)')
-						}
-						//导航居中
-						self.navActiveSlideLeft = navSwiper.slides[this.activeIndex].offsetLeft //activeSlide距左边的距离
-						console.log('距离',self.navActiveSlideLeft)
-						console.log('Nav总宽度',self.clientWidth)
-						console.log('span宽度',self.navSlideWidth)
-						navSwiper.setTransition(self.tSpeed)
-						if(self.navActiveSlideLeft < (self.clientWidth - parseInt(self.navSlideWidth)) / 2) {
-							navSwiper.setTranslate(0)
-						} else if(self.navActiveSlideLeft > self.navWidth - (parseInt(self.navSlideWidth) + self.clientWidth) / 2) {
-							navSwiper.setTranslate(self.clientWidth - self.navWidth)
-						} else {
-							navSwiper.setTranslate((self.clientWidth - parseInt(self.navSlideWidth)) / 2 - self.navActiveSlideLeft)
-						}
-
-					},
-				}
+				    },
+				  },
+				
 			});
 
-//			navSwiper.$el.on('touchstart', function(e) {
-//				e.preventDefault() //去掉按压阴影
-//			})
-			navSwiper.on('tap', function(e) {
-				var self=this;
-				console.log(self.clickedIndex)
-				var clickIndex = self.clickedIndex
-				var clickSlide = self.slides.eq(clickIndex)
-				pageSwiper.slideTo(clickIndex, 0);
-				self.slides.find('span').css('color', 'rgba(51,51,51,1)');
-				clickSlide.find('span').css('color', 'rgba(255,72,145,1)');
-			})
 	
 		},
 		created() {
-			this.bottom = 10; //一页展示10个
-			this.result = '';
-			for(let i = 1; i <= this.bottom; i++) {
-				this.items.push(this.result);
+			for(let i = 0; i < this.slidePage1.length; i++) {
+				this.items1.push(this.slidePage1[i]);
 			}
-
-			console.log(this.items);
 		},
 
 		components: {
@@ -177,15 +151,18 @@
 		methods: {
 			refresh(done) {
 				setTimeout(() => {
-					console.log('刷新了')
+
 					done()
 				}, 1500)
 			},
 			infinite(done) {
-				if(this.page == 1) {
-					done(true)
-				}
+				this.page++;
+				done(true);
 				console.log('拉啦啦')
+				if(this.page == this.pageAll) {
+					return
+				}
+				
 			},
 
 			active(index) {
@@ -193,10 +170,7 @@
 				console.log(this.tabActive);
 
 			},
-			finishPullToRefresh(a) {
-				console.log(a)
-				console.log('禁止下拉刷新')
-			},
+			
 			goPath(i) {
 				this.$router.push({
 					path: "/index1/yueduInfo/" + i
@@ -269,12 +243,18 @@
 #nav {
     border-bottom:1px solid #ebebeb;
 }
+#nav .slide-on{
+	border-radius: 0.2rem;
+	border: 2px solid red;
+}
 #nav .swiper-slide{
 	 height:3.5rem;
-	width: 6rem  !important;
+	width: 35% !important;
 	background: url(../../../assets/img/indexNav1.png);
 	background-size: 100% 100%;
 	margin: 0.75rem 0.75rem 0.75rem 0;
+	text-align: center;
+	line-height: 3.5rem;
 }
 #nav .swiper-slide:first-child{
 	margin-left: 0.75rem;
@@ -313,6 +293,10 @@
     position:absolute;
     bottom:0px;
 }
+#nav .swiper-slide-active{
+	/*color: red;
+	font-weight: 600;*/
+}
 #nav .bar .color {
     width:36px;
     margin:0 auto;
@@ -333,10 +317,23 @@
     color:#fff;
     background:rgba(0,0,0,.3);
 }
+
+.nav-list{
+
+}
+.hao-title{
+	padding-left: 0.75rem;
+	
+}
+.hao-title img{
+	width: 1rem;
+	margin: 0.75rem 0.4rem 0.75rem 0;
+}
 #page {
-    margin-bottom:50px;
-    height:100%;
-   padding-top: 5.5rem;
+
+}
+#page .slidepage.swiper-slide-active{
+	height: auto !important;
 }
 #page .slidepage {
     height:100%;
@@ -346,5 +343,8 @@
 }
 .slidescroll {
     height:auto;
+}
+._v-content{
+	padding: 10rem 0.75rem 0 !important;
 }
 </style>

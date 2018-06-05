@@ -34,8 +34,34 @@ body {
     height: 0.5rem;
     background: #f2f2f2;
 }
+//swiper 滑动小点
+.swiper-pagination-bullet-active{
+    width: 1rem !important;
+    background: #32C4FF !important;
+    border-radius: 1rem !important;
+}
 
-
+//vux 时间选择器
+.dp-right.vux-datetime-confirm{
+    display: none;   
+}
+.vux-cell-placeholder{
+    color: #A0A0A0;
+}
+.vux-cell-value{
+    color: #A0A0A0;
+}
+.dp-header{
+    display: inherit !important;
+    .dp-item{
+        float: left;
+        
+    }
+    .dp-item.vux-datetime-clear{
+        float: right;
+        padding-right: 0.75rem;
+    }
+}
 /*头部*/
 
 .header {
@@ -348,6 +374,22 @@ ul.activitys-ul {
              border-radius: 50%;
               margin-right: 0.75rem;
               margin-top: 0.25rem;
+        }
+        .file-div{
+            position: relative;
+            float: right;
+            input{
+                width: 2rem;
+                height: 2rem;
+                position: absolute;
+                right: 0;
+                opacity: 0;
+                margin-top: 0.25rem;
+            }
+            img{
+                position: absolute;
+                right: 0;
+            }
         }
     }
 }
