@@ -3,25 +3,25 @@
 	<div class="activitysInfo">
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
-			<h1>{{play}}</h1>
+			<h1>{{response.name}}</h1>
 		</header>
 		<div class="b-content">
 			<div class="activi-li">
 				<div class="faqi-img">
 					<img src="../../../../assets/img/ren1.png" alt="" />
 					<div>
-						<p>王大力</p>
+						<p>{{response.nickName}}</p>
 						<h6>30分钟前</h6>
 					</div>
 				</div>
 				<p class="activi-type">
-					{{playType}}
+					{{response.state | Types}}
 				</p>
 			</div>
 			<div class="activi-li">
 				<p style="border: none;font-size: 0.8rem;">
 					<span style="font-size: 0.7rem;">活动详情：</span>
-					我想组织一次植树活动,希望大家积极来参与
+					{{response.content}}
 				</p>
 			</div>
 			<div class="activi-li">
@@ -31,11 +31,11 @@
 				</p>
 				<p>
 					<span>联系方式：</span>
-					四年级三班
+					{{response.contactMethod}}
 				</p>
 				<p>
 					<span>人均消费：</span>
-					<em>20元</em>
+					<em>{{response.payPer}}元</em>
 				</p>
 			</div>
 			<div class="activi-li">
@@ -45,7 +45,7 @@
 				</p>
 				<p>
 					<span>集合地点：</span>
-					学校南门口
+					{{response.gatherAddress}}
 				</p>
 			</div>
 			<div class="baoming-ul">
@@ -127,26 +127,54 @@
 </template>
 
 <script>
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
 	import myalert from '../../alert'
 	export default({
 		data(){
 			return{
-				play:'',
-				playType:'',
+			
 				types:1,
 				alertType:false,
 				type:2,
+				response:'',
 			}
 		},
 		components:{
 			myalert
 		},
 		created(){
-			var self=this;
-			console.log(self.$route)
-			self.play=self.$route.query.play
-			self.playType=self.$route.query.playType
+			
 		},
+		mounted(){
+			var self=this;
+			console.log(self.$route);
+			var url=int.activityListInfo+self.$route.params.id;
+			var params={
+				
+			}
+			ajax.get_data(url, params, function(d) {
+//        	_this.$root.eventHub.$emit('Vloading',false)
+            console.log(d);
+			if(d.code==0){
+				self.response=d.data;
+				
+			}
+			
+             
+
+          });
+		},
+		filters: {
+//	   	    ajax.formatDateToTime(val)
+			Types(val){
+				if(val==5){
+					return	'已满'
+				}else if(val==2){
+					return '审核中'
+				}
+			}
+	   },
 		methods: {
 			back() {
 				this.$router.go(-1);

@@ -3,36 +3,36 @@
 
 		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li v-for="(item, index) in items" @click="goPath(index)">
+				<li v-for="(item, index) in items" @click="goPath(item.id)">
 					<div class="lf zutuan-img">
-						<img src="../../../../assets/img/ren2.png" alt="" />
-						<h1>王大力</h1>
-						<p>我参与</p>
-						<h5>1小时前</h5>
+						<img :src="item.headPic" alt="" />
+						<h1>{{item.nickName}}</h1>
+						<p :class="typeClass">{{item.type | Types}}</p>
+						<h5>{{item.timelast}}</h5>
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
-						<span>亲子活动</span>
+						<span>{{item.name}}</span>
 						<em>
 							<span>
-								<i>10</i>人/
+								<i>{{item.count}}</i>人/
 							</span>
-							<i>50</i>人
+							<i>{{item.total}}</i>人
 						</em>
 					
 					</h1>
-					<h2>我想组织一次秋游,希望大家积极来参与</h2>
+					<h2>{{item.content}}</h2>
 					<div class="activitys-info">
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
 							<p>
-								<span>8-17 08:00</span>~
-								<span>8-18 08:00</span>
+								<span>{{item.signupStartTime }}</span>~
+								<span>{{item.signupEndTime}}</span>
 							</p>
 						</div>
 						<div>
 							<img src="../../../../assets/img/icon_money.png" alt="" />
-							<em>20元</em>
+							<em>{{item.payPer}}元</em>
 						</div>
 					</div>
 					</div>
@@ -45,30 +45,56 @@
 </template>
 
 <script>
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
 	export default({
 		data() {
 			return {
-				//				tab_index:2
+				typeClass:'',
 				items: [],
+				allList:[
+//					{name:'王大力',play:'植树活动',bb:"我想组织一次秋游,希望大家积极来参与",
+//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'20元',img:'src/assets/img/teacher2.png',
+//					type:'我发起'},
+//					{name:'杀马特',play:'聚餐活动',bb:"我想组织一次聚餐,希望大家积极来参与",
+//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'120元',img:'src/assets/img/ren2.png',
+//					type:'已参与'},
+//					{name:'伏地魔',play:'亲子活动',bb:"我想组织一次亲子活动,希望大家积极来参与",
+//					times:"08-16 08:00~08-18",timelast:"40分钟前",money:'10元',img:'src/assets/img/ren3.png',
+//					type:'未参与'},
+//					{name:'王大力',play:'植树活动',bb:"我想组织一次秋游,希望大家积极来参与",
+//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'20元',img:'src/assets/img/ren1.png',
+//					type:'已审核'},
+//					{name:'杀马特',play:'聚餐活动',bb:"我想组织一次聚餐,希望大家积极来参与",
+//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'120元',img:'src/assets/img/ren2.png',
+//					type:'未审核'},
+//				
+					],
 				/*最后的数组*/
-				page: 1,
+				page: '',
+				allPage:'',
 				/*当前页码*/
 			}
 		},
 		created() {
-			this.bottom = 4; //一页展示10个
-			this.result = '';
-			for(let i = 1; i <= this.bottom; i++) {
-				this.result = ``
-				this.items.push(this.result);
-			}
+			this.getPage()
 
-			console.log(this.items);
 		},
+		filters: {
+//	   	    ajax.formatDateToTime(val)
+			Types(val){
+				if(val==5){
+					return	'已满'
+				}
+			}
+	   },
+	   mounted(){
+//	   	this.getPage()
+	   },
 		methods: {
 			goPath(i) {
 				this.$router.push({
-					path: "/activitysList/activitysInfo2/" + i
+					path: "/activitysList/activitysInfo/" + i
 				})
 
 			},
@@ -77,18 +103,64 @@
 					path: "/index3/speakWrite"
 				})
 			},
+			getPage(done){
+				var self=this;
+				var mainUrl = int.activityList;
+	         	var role=localStorage.getItem('role');
+	         	var sid=localStorage.getItem('sid');
+	         	 var params = {
+	           		current: 1, //当前页
+					sid: sid,	//学校id
+					size: 2,  //每页展示 几条
+					state: 1 //状态
+	//				type: 0
+	          	};
+	          ajax.post_data(mainUrl, params, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+	            console.log(d);
+	            self.page=d.data.current;
+	            self.allPage=d.data.pages;
+				if(d.code==0){
+					self.allList=d.data.records;
+					if (done) {
+		              done(true)
+		            }
+					for(let i = 0; i < self.allList.length; i++) {
+						self.items.push(self.allList[i]);
+					}
+				}
+				
+	             
+	
+	          });
+			},
 			refresh(done) {
+				var self=this;
 				setTimeout(() => {
-
+					self.getPage();
+					console.log('刷新了',self.page)
 					done()
 				}, 1500)
 			},
 			infinite(done) {
-				if(this.page == 1) {
+				
+				
+				var self=this;
+				
+				self.page++;
+				self.getPage();
+				if(self.page==self.allPage){
 					done(true)
 				}
-				console.log('拉啦啦')
+				
+				
 			}
+			
+		
+    
+			
+			
+			
 		}
 	})
 </script>
@@ -163,5 +235,23 @@
 						color: #EBAF3B;
 					}
 			}
+		}
+		.zutuan-img p.types-1{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-2{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-3{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-4{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-5{
+			background: #FFA200;
+		}
+		.zutuan-img p.types-6{
+			background: #FFA200;
 		}
 </style>

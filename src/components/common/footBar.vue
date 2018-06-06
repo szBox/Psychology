@@ -21,7 +21,8 @@ export default {
     TabbarItem,
   },
   mounted(){
- 
+  	var self=this;
+// 		console.log('vuex',self.$store.state.user)
   },
 	data(){
 		return{
@@ -36,7 +37,6 @@ export default {
 	},
 	created(){
 		var self=this;
-		var role=localStorage.getItem('role');
 		var list1=[
 				{
 					link:'/index1',img1:'/src/assets/img/icon1_1.png',img2:'/src/assets/img/icon1.png',label:'心灵阅读'
@@ -79,11 +79,10 @@ export default {
 					link:'/index4',img1:'/src/assets/img/icon4_1.png',img2:'/src/assets/img/icon4.png',label:'管理员'
 				},
 		]
-//		self.footer=list1;
-			self.footer=list2;
-			if(role=='学生'){
+		var role=localStorage.getItem('role');
+			if(role=='S'){
 				self.footer=list1;
-			}else if(role=='老师'){
+			}else if(role=='T'){
 				self.footer=list2;
 			}else{
 				self.footer=list3;

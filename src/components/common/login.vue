@@ -52,10 +52,9 @@
 <script>
 
 
-//import $ from 'jquery'
-//import api from "../fetch/api";
-//import int from '../assets/js/interface'
-//import loading from '@/assets/commont/loading1'
+
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
   export default({
     name:'login',
     
@@ -79,7 +78,7 @@
       
       
        var hei = $(window).height();
-//    alert(hei);
+
 
      
 			 var _this=this;
@@ -115,62 +114,61 @@
       	var self=this;
       	
       	
-        if(!this.phone){
-          this.phone_tips='请输入账号'
+        if(!self.phone){
+          self.phone_tips='请输入账号'
         }
-        if(this.phone=='1'){
-//    		this.store.types='学生'
-					localStorage.setItem('role','学生')
-      		this.$router.push({
-      			path:'/index1'
-      		})
-      	}else if(this.phone=='2'){
-      		localStorage.setItem('role','老师')
-      		this.$router.push({
-      			path:'/index1'
-      		})
-      	}
-      	else if(this.phone=='3'){
-      		localStorage.setItem('role','管理员')
-      		this.$router.push({
-      			path:'/index1'
-      		})
-      	}
 //        else if(!/^(13[0-9]\d{8}|17[0-9]\d{8}|15[0-35-9]\d{8}|18[0-9]\d{8}|14[0-9]\d{8})$/.test(this.phone)){
 //          this.phone_tips='账号格式不对'
 //        }
-        else if(!this.password){
-          this.password_tips='请输入密码'
+        else if(!self.password){
+          self.password_tips='请输入密码'
         }
 
         else{
-          var _this=this;
 //					_this.$root.eventHub.$emit('Vloading',true)
 //					let md5_password=$.md5(_this.password);
           var mainUrl = int.getlogin;
+          console.log(self.phone+'----'+self.password)
           var params = {
-            username:_this.phone,
-            password:_this.password
+            userName:self.phone,
+            password:self.password
           };
-          api.get_api_data(mainUrl, params, function(d) {
-//        	_this.$root.eventHub.$emit('Vloading',false)
-            console.log(d);
-            if(d.status==1){
-//						跳页面
-//						window.iosParams.stuTid=d.uid
-//						_this.$store.state.e.uid=d.uid;
-              _this.phone=localStorage.setItem('phone',_this.phone);
-              _this.password=localStorage.setItem('password',_this.password);
-              _this.btnType=false;
-              _this.$router.push({ // 你需要接受路由的参数再跳转
-//              path:'/mainSel/'+d.uid
-//                    		 path:'/main'
-// 							 path:'/main'+'?uid='+d.uid
+          $.ajax({
+			      type:'post',
+			      data:params,
+			      url:mainUrl,
+			      dataType:"json",
+			      async:true,
+			      timeout:10000,
+			      success: function (d) {
+			       	console.log(d);
+            if(d.code==1005){
+            	self.phone_tips='该账号未注册';
+            }else if(d.code==1006){
+            	self.password_tips='密码错误'
+            }else if(d.code==0){
+//							console.log(self.$store)
+//          	self.$store.state.user=d.data
+            	
+            	//跳页面
+            	self.phone=localStorage.setItem('phone',self.phone);
+              self.password=localStorage.setItem('password',self.password);
+              localStorage.setItem('token',d.data.token);
+              localStorage.setItem('role',d.data.roleType);
+              localStorage.setItem('sid',d.data.sid);
+              self.btnType=false;
+              self.$router.push({ // 你需要接受路由的参数再跳转
+								path:'/index1'
               });
-            }else{
-              _this.password_tips=d.msg;
-            }
-          });
+			        }
+			      },
+			      error: function (err) {
+			        console.log('错误信息：' + JSON.stringify(err));
+			      }
+		    })
+      
+
+       
 
         }
 

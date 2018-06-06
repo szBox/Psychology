@@ -6,44 +6,42 @@
 		</header>
 		<div class="b-content">
 			<div class="img-top">
-				<img class="" src="../../../../assets/img/topw3.png"/>
+				<img class="" src="../../../../assets/img/topw3.png" />
 			</div>
 			<div class="write-title">
 				<p>
 					<span>活动名称：</span>
-					<input type="text" />
+					<input v-model="play" type="text" />
 				</p>
 				<p>
 					<span>联系方式：</span>
-					<input type="text" />
+					<input v-model="phone" type="text" />
 				</p>
 			</div>
-			
-			
+
 			<div class="write-title">
 				<p>
 					<span>活动人数：</span>
-					<input type="text" />
+					<input v-model="people" type="text" />
 				</p>
 				<p>
 					<span>人均消费：</span>
-					<input type="text" />
+					<input v-model="money" type="text" />
 				</p>
 				<p>
 					<span>活动详情：</span>
-					<textarea rows="3"></textarea>
+					<textarea rows="3" v-model="content"></textarea>
 				</p>
-				
+
 			</div>
-		
-			
+
 			<div class="write-title">
 				<p>
 					<span>报名时间：</span>
 					<em class="time-sel">
 						<datetime format='YYYY-MM-DD HH:mm' clear-text='确认' :placeholder='dateTitle1' v-model="startTime"  start-date='2018-01-01' @on-clear='change1'></datetime>
 					</em>
-					<span  class="time-sel">
+					<span class="time-sel">
 						<datetime format='YYYY-MM-DD HH:mm' clear-text='确认' :placeholder='dateTitle2' v-model="endTime"  start-date='2018-01-01' @on-clear='change2'></datetime>
 					</span>
 				</p>
@@ -55,14 +53,13 @@
 				</p>
 				<p>
 					<span>集合地点：</span>
-					<textarea rows="3"></textarea>
+					<textarea rows="3" v-model="address"></textarea>
 				</p>
 			</div>
-			
 
 			<div class="write-bottom">
 				<p>
-					<img src="../../../../assets/img/icons_1.png"/>
+					<img src="../../../../assets/img/icons_1.png" />
 					<span>发布之后需要进行审核</span>
 				</p>
 				<div class="btn-init" @click="fabu()">
@@ -75,31 +72,40 @@
 </template>
 
 <script>
-	import {  Datetime , Toast  } from 'vux'
+	import { Datetime, Toast } from 'vux'
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
 	export default({
 		data() {
 			return {
-				startTime:'',
-				endTime:'',
-				jiheTime:'',
-				time1num:'', //报名时间1  时间戳
-				time2num:'', //报名时间2  时间戳
-				time3num:'', //集合时间3  时间戳
-				val:'',
-				clear:false,
-				dateTitle1:'开始时间',
-				dateTitle2:'结束时间',
-				dateTitle3:'集合时间',
+				play:'',
+				content:'',
+				money:'',
+				people:'',
+				phone:'',
+				address:'',
+				
+				startTime: '',
+				endTime: '',
+				jiheTime: '',
+				time1num: '', //报名时间1  时间戳
+				time2num: '', //报名时间2  时间戳
+				time3num: '', //集合时间3  时间戳
+				val: '',
+				clear: false,
+				dateTitle1: '开始时间',
+				dateTitle2: '结束时间',
+				dateTitle3: '集合时间',
 				results: [],
-				sty:{
-					width:'50%'
+				sty: {
+					width: '50%'
 				}
 			}
 		},
 		components: {
-	   		Toast,
-	   	    Datetime,
-	 	},
+			Toast,
+			Datetime,
+		},
 		methods: {
 			back() {
 				this.$router.go(-1);
@@ -107,40 +113,130 @@
 			addPic() {
 				$(".imgshow").append("<img style='width: 3rem;height: 3rem;margin-right: 0.75rem;' src=" + URL.createObjectURL($('#imgFile')[0].files[0]) + ">")
 			},
-			change1 (value) {
-		       console.log('change', value)
-		       var self=this;
-		       self.time1num= new Date(value).getTime()
-		       if(value.length>12){
-		       	self.startTime=value.slice(5)
-		       }
-		    },
-		    change2 (value) {
-		       console.log('change', value)
-		       var self=this;
-		       self.time2num=new Date(value).getTime()
-		       if(value.length>12){
-		       	self.endTime=value.slice(5)
-		       }
-		    },
-			change3 (value) {
-		       console.log('change', value)
-		       var self=this;
-		       self.time3num=new Date(value).getTime()
-		       if(value.length>12){
-		       	self.jiheTime=value.slice(5)
-		       }
-		    },
-		    fabu(){
-		    	var self=this;
-		    	if(self.time2num<self.time1num){
-		    		self.$vux.toast.show({
-			            type: 'text',
-			            text: '结束时间不能小于开始时间',
-			            position: 'bottom'
-			          })
-		    	}
-		    }
+			change1(value) {
+				console.log('change', value)
+				var self = this;
+				self.time1num = new Date(value).getTime()
+				if(value.length > 12) {
+					self.startTime = value.slice(5)
+				}
+			},
+			change2(value) {
+				console.log('change', value)
+				var self = this;
+				self.time2num = new Date(value).getTime()
+				if(value.length > 12) {
+					self.endTime = value.slice(5)
+				}
+			},
+			change3(value) {
+				console.log('change', value)
+				var self = this;
+				self.time3num = new Date(value).getTime()
+				if(value.length > 12) {
+					self.jiheTime = value.slice(5)
+				}
+			},
+			fabu() {
+				var self = this;
+				if(!self.play){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请填写活动名称',
+						position: 'bottom'
+					})
+				}
+				else if(!self.phone){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请填写联系方式',
+						position: 'bottom'
+					})
+				}
+				else if(!self.people){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请填写活动人数',
+						position: 'bottom'
+					})
+				}
+				else if(!self.money){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请填写人均消费',
+						position: 'bottom'
+					})
+				}
+				else if(!self.content){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请填写活动详情',
+						position: 'bottom'
+					})
+				}
+				else if(!self.address){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请填写集合地点',
+						position: 'bottom'
+					})
+				}
+				else if(!self.time2num || !self.time1num){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请填写报名时间',
+						position: 'bottom'
+					})
+				}
+				else if(self.time2num < self.time1num) {
+					self.$vux.toast.show({
+						type: 'text',
+						text: '报名时间有误',
+						position: 'bottom'
+					})
+				} 
+				else if(!self.time3num){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请选择集合时间',
+						position: 'bottom'
+					})
+				}
+				else if(self.time3num<self.time1num){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '集合时间有误',
+						position: 'bottom'
+					})
+				}
+				else {
+					var url = int.activityAdd;
+					var params = {
+						name:self.play,
+						contactMethod:self.phone,
+						content:self.content,
+						total:self.people,
+						payPer:self.money,
+						gatherAddress:self.address,
+						signupStartTime:self.time1num,
+						signupEndTime:self.time2num,
+						gatherStartTime:self.time3num,
+					}
+					ajax.post_data(url, params, function(d) {
+						//        	_this.$root.eventHub.$emit('Vloading',false)
+						console.log(d);
+						if(d.code == 0) {
+							self.response = d.data;
+							self.$vux.toast.show({
+								type: 'text',
+								text: '发布成功',
+								position: 'bottom'
+							})
+						}
+
+					});
+				}
+			}
 		}
 	})
 </script>
@@ -149,9 +245,11 @@
 	.activitysWrite {
 		background: #F4F4F4;
 	}
-	.header{
+	
+	.header {
 		position: fixed;
 	}
+	
 	input,
 	textarea {
 		border: none;
@@ -162,21 +260,22 @@
 	.write-bottom {
 		background: #fff;
 	}
-	.img-top{
+	
+	.img-top {
 		text-align: center;
 		padding: 1rem 0;
 		background: #fff;
 		margin-bottom: 0.4rem;
-		img{
+		img {
 			width: 8.5rem;
-			
 		}
 	}
+	
 	.write-title {
 		padding: 0.5rem 0.75rem;
 		margin-bottom: 0.45rem;
 		overflow: hidden;
-		>p{
+		>p {
 			clear: both;
 			overflow: hidden;
 			border-bottom: 1px solid #F7F7F7;
@@ -184,21 +283,21 @@
 			padding-bottom: 0.3rem;
 			line-height: 1.5rem;
 		}
-		>p:first-child{
+		>p:first-child {
 			margin-top: 0;
 		}
-		>p:last-child{
+		>p:last-child {
 			border: none;
 		}
 		span {
 			float: left;
 			line-height: 1.5rem;
-			
 		}
-		em.time-sel{
+		em.time-sel {
 			margin-right: 1.5rem;
 		}
-		em.time-sel, span.time-sel{
+		em.time-sel,
+		span.time-sel {
 			float: left;
 			width: 32%;
 			padding-left: 0.75rem;
@@ -206,13 +305,13 @@
 			border-radius: 0.5rem;
 			color: #999;
 		}
-		
-		input,textarea {
+		input,
+		textarea {
 			float: left;
 			width: 78%;
 			height: 1.5rem;
 		}
-		textarea{
+		textarea {
 			padding-top: 0.35rem;
 			height: auto;
 		}
@@ -235,20 +334,28 @@
 		}
 	}
 	
-	.write-bottom{
-		padding: 0.75rem;
+	.write-bottom {
 		
-		p>img{
+		padding: 0.75rem;
+		p>img {
 			width: 1.2rem;
 		}
-		p>span{
+		p>span {
 			font-size: 0.6rem;
 			color: #555;
 			line-height: 1rem;
 		}
-		div{
+		div {
+			/*position: fixed;*/
+		/*bottom: 0.5rem;
+		left: 50%;
+		-webkit-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		-o-transform: translateX(-50%);
+		transform: translateX(-50%);*/
 			width: 10rem;
-		margin: 2rem auto 1rem;
+			margin: 2rem auto 1rem;
 			background: #31C4FF;
 			border-radius: 1.5rem;
 			color: #fff;
@@ -256,5 +363,4 @@
 			line-height: 2.2rem;
 		}
 	}
-	
 </style>

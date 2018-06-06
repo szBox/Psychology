@@ -114,7 +114,7 @@
 		mounted() {
 			var self=this;
 			var swiperH = ($('#nav').height()  +  $('.header').height() +40)/20
-			console.log(swiperH);
+//			console.log(swiperH);
 			$('._v-content').css({
 				paddingTop:swiperH+'rem',
 				paddingLeft:'0.75rem',

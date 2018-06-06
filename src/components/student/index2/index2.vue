@@ -84,6 +84,56 @@
 					</div>
 					</div>
 				</div>
+				<div class="swiper-slide">
+					<div class="swiper-flex">
+						<div class="teacher-bg">
+						<div class="teacher-img">
+							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
+						</div>
+						<h1>李多云老师333</h1>
+						<div class='teacher-bb'>
+							<p>倾心聆听 唯爱融化</p>
+							<p>天下武功 唯快不破</p>
+						</div>
+					</div>
+					
+					<div class="see-box">
+						<p>
+							<img src="../../../assets/img/see.png"/>
+							查看信息
+						</p>
+						<h4>
+							<img src="../../../assets/img/zan_w.png"/>
+							200
+						</h4>
+					</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="swiper-flex">
+						<div class="teacher-bg">
+						<div class="teacher-img">
+							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
+						</div>
+						<h1>李多云老师333</h1>
+						<div class='teacher-bb'>
+							<p>倾心聆听 唯爱融化</p>
+							<p>天下武功 唯快不破</p>
+						</div>
+					</div>
+					
+					<div class="see-box">
+						<p>
+							<img src="../../../assets/img/see.png"/>
+							查看信息
+						</p>
+						<h4>
+							<img src="../../../assets/img/zan_w.png"/>
+							200
+						</h4>
+					</div>
+					</div>
+				</div>
 				<!--<div class="swiper-slide">
 					
 				</div>-->

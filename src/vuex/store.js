@@ -1,47 +1,20 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as types from '../vuex/type';
 Vue.use(Vuex)
 
-const moduleA = {
-  state: {
-  		
-  },
+const user = {
+ 	base:[],
   mutations: {
-
+   
   },
   actions: {
-
+   
   }
-}
-const moduleB = {
-  state: {
-  		
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  }
-}
-const moduleC = {
-  state: {
-  		
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  }
-}
+};
 const store = new Vuex.Store({
-  modules: {
-    a: moduleA,
-    b: moduleB,
-    c: moduleC,
-  },
-  types:''
+	user
+	
 })
 
 export default store
