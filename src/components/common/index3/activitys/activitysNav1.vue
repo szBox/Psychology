@@ -108,10 +108,28 @@
 
 		},
 		filters: {
-//	   	    ajax.formatDateToTime(val)
+//	   	    formatDateToTime(val)
 			Types(val){
-				if(val==5){
+				if(val==1){
+					return '我发起'
+				}
+				else if(val==2){
+					return '审核中'
+				}
+				else if(val==3){
+					return '我参与'
+				}
+				else if(val==4){
+					return '驳回'
+				}
+				else if(val==5){
 					return	'已满'
+				}
+				else if(val==6){
+					return	'不在报名时间内'
+				}
+				else if(val==7){
+					return '未参与'
 				}
 			}
 	   },

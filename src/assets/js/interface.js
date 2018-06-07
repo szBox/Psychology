@@ -13,6 +13,10 @@ export default {
   activityList:host+'activity/list/page',
   //组团列表 -详情
   activityListInfo:host+'activity/app/get/',
+  //组团列表 -详情 - 报名列表
+  activityInfoBaoming:host+'activityDetail/list/page',
+  //组团列表 -详情 - 报名
+  activityInfoBao:host+'activityDetail/add',
   //组团 发起
   activityAdd:host+'activity/add',
 }

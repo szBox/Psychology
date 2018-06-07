@@ -3,7 +3,7 @@
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
 			<h1>组团活动</h1>
-			<em @click="goWrite()">发起组团</em>
+			<em @click="goWrite()">{{role}}</em>
 		</header>
 		<div class="b-content">
 			<div class="activitysBar">
@@ -37,12 +37,21 @@
 	export default({
 		data() {
 			return {
-				
+				role:'',
 			}
 		},
 		components:{
 			activitysNav1,
 			activitysNav2
+		},
+		created(){
+			var self=this;
+			self.role=localStorage.getItem('role');
+			if(self.role!='S'){
+				self.role='发起组团'
+			}else{
+				self.role=''
+			}
 		},
 		methods: {
 			back() {

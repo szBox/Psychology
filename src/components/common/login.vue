@@ -156,6 +156,7 @@
               localStorage.setItem('token',d.data.token);
               localStorage.setItem('role',d.data.roleType);
               localStorage.setItem('sid',d.data.sid);
+              localStorage.setItem('loginName',d.data.loginName);
               self.btnType=false;
               self.$router.push({ // 你需要接受路由的参数再跳转
 								path:'/index1'

@@ -14,8 +14,8 @@
 						<h6>30分钟前</h6>
 					</div>
 				</div>
-				<p class="activi-type">
-					{{response.state | Types}}
+				<p class="activi-type" :style="{color:type_color}">
+					{{response.type | Types}}
 				</p>
 			</div>
 			<div class="activi-li">
@@ -48,79 +48,118 @@
 					{{response.gatherAddress}}
 				</p>
 			</div>
-			<div class="baoming-ul">
-				<div>
-					<h1 @click="typeToggle(1)" :class="{'baoming-active':types==1}" class="baoming-type">
-						<span>已报名&nbsp;&nbsp;(10)</span>
+			<div class="baoming-ul"  v-if='response.type=="1"'>
+				<div class="h-faqi">
+					<h1 @click="typeToggle(1),getList2()" :class="{'baoming-active':types==1}" class="baoming-type">
+						<span>已报名&nbsp;&nbsp;({{response.count}})</span>
 						<em></em>
 					</h1>
-					<h1  @click="typeToggle(2)":class="{'baoming-active':types==2}" class="baoming-type">
-						<span>待审核&nbsp;&nbsp;(5)</span>
+					<h1  @click="typeToggle(2),getList3()":class="{'baoming-active':types==2}" class="baoming-type">
+						<span>待审核&nbsp;&nbsp;</span>
 						<em></em>
 					</h1>
 				</div>
-				
 				<ul v-if='types==1'>
-					<li>
+					<li v-for='(item,index) in baominList'>
+						<!--{{item}}-->
 						<p>
-							<img src="../../../../assets/img/ren2.png" alt="" />
-							<span>李玉</span>
+							<!--<img src="../../../../assets/img/ren3.png" alt="" />-->
+							<span v-if='item[0].type==1'>{{item[0].nickName}}</span>
+							<span v-if='item[0].type==2'>{{item[0].name}}</span>
 						</p>
 						<div>
-							<p>150****4172</p>
-							<h4>三年级二班</h4>
+							<p v-if='item.type==1'>{{item.userPhone}}</p>
+							<p v-if='item.type==2'>{{item.phone}}</p>
+							<h4>{{item.className}}</h4>
 						</div>
 					</li>
-					<li>
-						<p>
-							<img src="../../../../assets/img/ren3.png" alt="" />
-							<span>李玉</span>
-						</p>
-						<div>
-							<p>150****4172</p>
-							<h4>三年级二班</h4>
-						</div>
-					</li>
+					<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
 				</ul>
-				<ul v-if='types==2'>
-					<li>
+				
+				<ul v-if='types==2' v-for='(item,index) in shenheList'>
+					<li v-for='(item3,index) in item'>
+
 						<p>
-							<img src="../../../../assets/img/ren3.png" alt="" />
-							
-							<span>李sss玉</span>
+							<img :src='item3.headPic'/>
+							<span v-if='item3.type==1'>{{item3.nickName}}</span>
+							<span v-if='item3.type==2'>{{item3.name}}</span>
 						</p>
 						<div>
-							<p>18874159636</p>
-							<h4>三年级二班</h4>
+							<p v-if='item3.type==1'>{{item3.userPhone}}</p>
+							<p v-if='item3.type==2'>{{item3.phone}}</p>
+							<h4>{{item3.className}}</h4>
 							
 						</div>
 						<h6>
 							<i>通过</i>
 							<i @click="noGo()">不通过</i>
 						</h6>
-						
 					</li>
-					<li>
-						<p>
-							<img src="../../../../assets/img/ren2.png" alt="" />
-							<span>李玉</span>
-						</p>
-						<div>
-							<p>1888888888</p>
-							<h4>三年级二班</h4>
-						</div>
-						<h6>
-							<i>通过</i>
-							<i>不通过</i>
-						</h6>
-					</li>
+					
+					<p  class="more-btn" @click="next3 && more3() ">{{next3_text}}</p>
 				</ul>
 			</div>
 			
-			<myalert :alertProps='alertType' :type='type'></myalert>
-			<!--<div class="btn-box">
-				<div class="btn-init">我要退出</div>
-			</div>-->
+			
+			<!------------------------>
+			<div class="baoming-ul"  v-if='response.type!="1"'>
+				<div class="h-init">
+					<span>已报名&nbsp;&nbsp;({{response.count}})</span>
+					<i><span>{{response.count}}/</span>{{response.total}}</i>
+				</div>
+				
+				<ul>
+					<li v-for='(item,index) in baominList'>
+						<p>
+							<img src="../../../../assets/img/ren3.png" alt="" />
+							<span>{{item.nickName}}</span>
+						</p>
+						<div>
+							<p>18874159636</p>
+							<h4>三年级二班</h4>
+						</div>
+					</li>
+				</ul>
+				<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
+			</div>
+			<!--<myalert :alertProps='alertType' :type='type'></myalert>-->
+			
+			<div v-if='response.type=="5"' class="huifu-div">
+				<h2>信息回复</h2>
+				<p>当前报名人员已满,请下次再来</p>
+			</div>
+			<div class="btn-box" v-if='response.type!="1"'>
+				<div :style="{background:btn_bgcolor}" class="btn-init" @click='baomin()'>{{response.type | baominBtn}}</div>
+			</div>
+		</div>
+		<!--我要报名-->
+		<div class="alert-bg" v-if="mybao">
+			<div class="alert-box">
+				<h1>我要报名</h1>
+				<img @click="closeAlert()" src="../../../../assets/img/closebig.png" alt="" />
+				<div class="alert-inp">
+					<p>
+						<span>姓名:</span>
+						<input v-model="myname" type="text" :placeholder="errname"/>
+					</p>
+					<p>
+						<span v-if="mybaoType==1">班级:</span>
+						<input v-model="myclass" :placeholder="errclass" type="text" />
+					</p>
+					<p v-if="mybaoType==2">
+						<span>联系电话:</span>
+						<input maxlength="11" v-model="mytel" :placeholder="errtel" class="alert-phone" type="text" />
+					</p>
+					<div class="form-btn" @click="myadd()">确定</div>
+				</div>
+				
+			</div>
+		</div>
+		
+		<div class="alert-bg" v-if='baoYes' @click="coverYes()">
+			<div class="baoming-yes">
+					报名成功啦!
+			</div>
 		</div>
 		
 	</div>
@@ -133,11 +172,22 @@
 	export default({
 		data(){
 			return{
-			
-				types:1,
-				alertType:false,
-				type:2,
-				response:'',
+				btn_bgcolor:'',  //报名 按钮 样式
+				types:1,	//我发起状态  切换nav
+				alertType:false,	//弹窗 
+				playType:'',       //状态   返回的，后面做判断的
+				type_color:'',	//头部状态 样式
+				response:'',	//详情 返回数据
+				page:1,	page3:1,		//当前页1
+				baominList:[],	//报名记录  返回数据
+				shenheList:[],	//待审核记录  返回数据
+				next2_text:'加载更多',	next3_text:'加载更多',	
+				next2:true,	next3:true,	//加载更多 状态
+				mybao:false,    //我要报名  弹窗
+				mybaoType:'',   //自己报名为1，
+				baoYes:false,   //报名成功 弹窗
+				myname:'',myclass:'',mytel:'', 
+				errname:'',errclass:'',errtel:'', //错误提示
 			}
 		},
 		components:{
@@ -146,34 +196,50 @@
 		created(){
 			
 		},
+		
 		mounted(){
 			var self=this;
-			console.log(self.$route);
-			var url=int.activityListInfo+self.$route.params.id;
-			var params={
-				
-			}
-			ajax.get_data(url, params, function(d) {
-//        	_this.$root.eventHub.$emit('Vloading',false)
-            console.log(d);
-			if(d.code==0){
-				self.response=d.data;
-				
-			}
 			
-             
-
-          });
+			this.getList1()
+			this.getList2()
+//			this.getList3()
 		},
 		filters: {
 //	   	    ajax.formatDateToTime(val)
 			Types(val){
-				if(val==5){
-					return	'已满'
-				}else if(val==2){
+				 if(val==1){
+					return '我发起'
+				}
+				else if(val==2){
 					return '审核中'
 				}
-			}
+				else if(val==3){
+					return '我参与'
+				}
+				else if(val==4){
+					return '驳回'
+				}
+				else if(val==5){
+					return	'已满'
+				}
+				else if(val==6){
+					return	'不在报名时间内'
+				}
+				else if(val==7){
+					return '未参与'
+				}
+			},
+			baominBtn(val){
+				
+				if(val==5){
+					return	'我要报名'
+				}else if(val==2){
+					return '审核中'
+				}else if(val==7){
+					return '我要报名'
+					
+				}
+			},
 	   },
 		methods: {
 			back() {
@@ -186,7 +252,192 @@
 			noGo(){
 				var self=this;
 				self.alertType=true
-			}
+			},
+			getList1(){
+					var self=this;
+				console.log(self.$route);
+				var url1=int.activityListInfo+self.$route.params.id;
+				var params1={
+					
+				}
+			ajax.get_data(url1, params1, function(d) {
+//        	_this.$root.eventHub.$emit('Vloading',false)
+	            console.log(d);
+				if(d.code==0){
+					self.response=d.data;
+					self.playType=d.data.type;
+					if(d.data.type==5){ //报名人数已满
+						self.btn_bgcolor='#D7D5D6'
+					}
+					else if(d.data.type==7){ //未参与
+						self.type_color='#666'
+					}
+				}
+			
+             
+
+          	});
+			},
+			getList2(){
+				var self=this;
+          		//查看 详情的 报名记录列表
+	          	var url2=int.activityInfoBaoming;
+	          	var params2={
+					activityId:self.$route.params.id,
+					current:self.page,
+					size:10,
+					state:2,
+					
+				} 
+	          	ajax.post_data(url2, params2, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('报名记录',d);
+					if(d.code==0){
+					
+						if(d.data.current==d.data.total){
+							self.next2=false;
+							self.next2_text='没有更多了'
+						}else{
+							self.baominList.push(d.data.records);
+						}
+					
+							
+						
+					}
+				
+	             
+	
+	          	});
+          	},
+          	getList3(){
+				var self=this;
+          		//查看 详情的 未审核记录列表
+	          	var url2=int.activityInfoBaoming;
+	          	var params2={
+					activityId:self.$route.params.id,
+					current:self.page3,
+					size:10,
+					state:1,
+					
+				} 
+	          	ajax.post_data(url2, params2, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('待审核',d);
+					if(d.code==0){
+						
+						if(d.data.current==d.data.total){
+							self.next3=false;
+							self.next3_text='没有更多了'
+						}else{
+							self.shenheList.push(d.data.records);
+						}
+					}
+				
+	             
+	
+	          	});
+          	},
+			more2(){
+				//加载更多
+				var vm = this;
+				vm.page++;
+				vm.getList2();
+
+			},
+			more3(){
+				//加载更多
+				var vm = this;
+				vm.page3++;
+				vm.getList3();
+
+			},
+			closeAlert(){
+				//关闭弹窗
+				var self=this;
+				self.mybao=false
+			},
+			coverYes(){
+				//关闭   报名成功弹窗
+				var self=this;
+				self.baoYes=false;
+			},
+			baomin(){
+				var self=this;
+				var loginName=localStorage.getItem('loginName');
+				var sid=localStorage.getItem('sid');
+				if(self.playType==7){//未参与
+//					self.mybao=true //开启报名弹窗
+					var url=int.activityInfoBao;
+					var params={
+						activityId:self.$route.params.id,
+						nickName:loginName,
+						sid:sid,
+						type:1,
+					} 
+					ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+			            console.log('报名成功了',d);
+						if(d.code==0){
+							self.baoYes=true;
+							self.getList1();
+							self.getList2();
+						}
+		          	});
+				}
+			},
+			myadd(){
+				//自己报名
+				var self=this;
+				console.log(self.mybaoType)
+				var url2=int.activityInfoBao;
+				var sid=localStorage.getItem('sid');
+//					先判断是自己报名1,还是帮别人报名2
+					if(self.mybaoType==1){
+						if(!self.myname){
+							self.errname='请输入姓名'
+						}else if(!self.myclass){
+							self.errclass='请输入班级'
+						}else{
+							var params={
+								activityId:self.$route.params.id,
+								nickName:self.myname,
+								sid:sid,
+								type:1,
+							} 
+						}
+					}
+					if(self.mybaoType==2){
+						if(!self.myname){
+							self.errname='请输入姓名'
+						}else if(!self.myctel){
+							self.errtel='请输入联系电话'
+						}else{
+							var params={
+								activityId:self.$route.params.id,
+								name:self.myname,
+								phone:self.tel,
+								type:2,
+								sid:sid
+							} 
+						}
+					}
+		          	
+		          	ajax.post_data(url2, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+			            console.log('',d);
+						if(d.code==0){
+							self.baominList.push(d.data.records);
+							if(d.data.current==d.data.total){
+								self.next2=false;
+								self.next2_text='没有更多了'
+							}
+						}
+					
+		             
+		
+		          	});
+				
+			},
 		}
 	})
 </script>
@@ -194,6 +445,7 @@
 <style scoped lang="less">
 	.header{
 		position: fixed;
+		border: none;
 	}
 	.activitysInfo{
 		background: #f4f4f4;
@@ -344,16 +596,148 @@
 
 	}
 	.btn-box{
+		
 		background: #fff;
-		padding: 0.75rem 0 1.5rem;
+		padding: 2.5rem 0 1.5rem;
 		.btn-init{
-			background: #FE6637;
+			position: fixed;
+			bottom: 0.5rem;
+			left: 50%;
+			-webkit-transform: translateX(-50%);
+			-moz-transform: translateX(-50%);
+			-ms-transform: translateX(-50%);
+			-o-transform: translateX(-50%);
+			transform: translateX(-50%);
+			background: #32C4FF;
 			border-radius: 1rem;
 			color: #fff;
 			line-height: 2rem;
 			width: 60%;
 			margin: 0 auto;
 		}
+	
+	}
+	.h-init{
+		overflow: hidden;
+		    padding: 0.5rem 0 ;
+		>span{
+			float: left;
+		}
+		i{
+			float: right;
+			span{
+				color: #EA2722;
+			}
+		}
+	}
+	.huifu-div{
+		margin-top: 0.3rem;
+		
+		background: #fff;
+		h2{
+			padding: 0.5rem 0.75rem;
+			border-bottom: 1px solid #F7F7F7;
+		}
+		p{
+			font-size: 0.75rem;
+			padding: 0.3rem 1.5rem 2rem;
+		}
+	}
+	.more-btn{
+		color: #666;
+		text-align: center;
+		/*border: 0.05rem solid;*/
+		width: 5rem;
+		height: 1.5rem;line-height: 1.5rem;
+		margin: 0 auto;
 	}
 	
+	/*弹窗背景*/
+	.alert-bg{
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0,0,0,.5);
+	}
+	.alert-box{
+		width: 12rem;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translate(-50%,-50%);
+		-moz-transform: translate(-50%,-50%);
+		-ms-transform: translate(-50%,-50%);
+		-o-transform: translate(-50%,-50%);
+		transform: translate(-50%,-50%);
+		border-radius: 0.75rem;
+		
+		h1{
+			color: #fff;
+			padding-top: 0.5rem;
+			height: 4rem;
+			text-align: center;
+			background: url(../../../../assets/img/activity_img.png);
+			background-size: 100% 100%;
+		}
+		>img{
+			width: 1.2rem;
+			height: 1.2rem;
+			position: absolute;
+			right: -0.6rem;
+			top: -0.6rem;
+		}
+		.alert-inp{
+			background: #fff;
+			padding:0.2rem  0.5rem;
+			border-radius: 0 0 0.5rem 0.5rem;
+			p{
+				overflow: hidden;
+				border-bottom: 1px solid #F9F9F9;
+				padding: 0.3rem 0;
+			
+				span{
+					float: left;
+					line-height: 1.5rem;
+				}
+				input{
+					float: left;
+					width: 80%;
+					line-height: 1.5rem;
+					border: none;
+				}
+				.alert-phone{
+					width: 70%;
+				}
+			}
+			.form-btn{
+				text-align: center;
+				background: #32C4FF;
+				border-radius: 1rem;
+				color: #fff;
+				width: 8rem;
+				margin: 0.5rem auto;
+				height: 1.5rem;
+				line-height: 1.5rem;
+			}
+		}
+	}
+	.baoming-yes{
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		width: 10rem;
+		height: 10rem;
+		text-align: center;
+		/*color: #fff;*/
+		padding-top: 6rem;
+		-webkit-transform: translate(-50%,-50%);
+		-moz-transform: translate(-50%,-50%);
+		-ms-transform: translate(-50%,-50%);
+		-o-transform: translate(-50%,-50%);
+		transform: translate(-50%,-50%);
+		background: url(../../../../assets/img/baominYes.png);
+		background-size: 100% 100%;
+	}
 </style>
