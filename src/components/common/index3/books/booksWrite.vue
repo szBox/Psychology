@@ -11,37 +11,38 @@
 			<div class="write-title">
 				<p>
 					<span>我的书：</span>
-					<input type="text" />
+					<input v-model="book1" type="text" :placeholder="errbook1"/>
 				</p>
 				
 				<p>
 					<span>我想看的书：</span>
-					<input type="text" />
+					<input v-model="book2" type="text" :placeholder="errbook2"/>
 				</p>
 				
 			</div>
 			
 			<div class="write-title">
-				<span>联系方式：</span>
-				<input type="text" />
+				<span>联系地址：</span>
+				<input v-model="tel" type="text"  :placeholder="errtel"/>
 			</div>
 
 			<div class="write-bbox">
-				<h1>书籍封面：</h1>
+				<h1>书籍封面： <span style="color: red;">{{errimg}}</span></h1>
 				<div class="write-img">
 					<div class="imgshow">
 						<!--放图片-->
 					</div>
 					<div class="file-div">
 						<input type="file" name="file1" id="imgFile" accept="image/*" @change="addPic">
-						<img src="../../../../assets/img/add.png" alt="" />
+						<img class="file-img" :src="bookImg" alt="" />
+						<img :style="{'opacity':num}" src="../../../../assets/img/add.png" alt="" />
 					</div>
 				</div>
 			</div>
 
 		
 			<div class="btn-box">
-				<div class="btn-init">
+				<div class="btn-init" @click="faqi()">
 					发布
 				</div>
 			</div>
@@ -53,23 +54,79 @@
 </template>
 
 <script>
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import { Toast } from 'vux'
 	export default({
 		data() {
 			return {
-				//				tab_index:2
+				num:1,
+				book1:'',book2:'',tel:'',bookImg:'',
+				errbook1:'',errbook2:'',errtel:'',errimg:'',//错误提示
 			}
+		},
+		components:{
+			Toast
 		},
 		methods: {
 			back() {
 				this.$router.go(-1);
 			},
 			addPic() {
-				$(".imgshow").append("<p style='position: relative;float: left;' >" +
-					"<span class='img-close'>" +
-					"<img style=' position: absolute;top: -6px;right: 0;z-index: 999;width: 18px;height: 18px;line-height: 18px;border: 1px solid #666;border-radius: 50%;background: #fff;' src='src/assets/img/clear.png' />" +
-					"</span>" +
-					"<img style='width: 3rem;height: 3rem;margin-right: 0.75rem;' src=" + URL.createObjectURL($('#imgFile')[0].files[0]) + ">" +
-					"</p>")
+				var self=this;
+				self.num=0;
+				self.bookImg=$('#imgFile')[0].files[0];
+				self.errimg='';
+			    self.alyConfig.uploadToAliyun(self.bookImg,function (url) {
+			    	console.log('阿里云 图片地址',url)
+	               self.bookImg=url;
+	            })
+				
+//				$(".file-img").attr('src', URL.createObjectURL($('#imgFile')[0].files[0]) )
+			},
+			faqi(){
+				var self=this;
+				if(!self.book1){
+					self.errbook1='请输入书籍'
+				}else if(!self.book2){
+					self.errbook2='请输入书籍'
+				}else if(!self.tel){
+					self.errtel='请输入联系地址'
+				}
+				else if(!self.bookImg){
+					self.errimg='请上传书籍封面'
+				}
+				else{
+					var url=int.bookFaqi;
+					var sid=localStorage.getItem('sid');
+					var loginId=localStorage.getItem('loginId');
+					var loginName=localStorage.getItem('loginName');
+					
+					var params={
+						contactAddress: self.tel,
+						hasName: self.book1,
+						imageUrl: self.bookImg,
+						nickName: self.loginName,
+						sid: sid,
+						stuId: loginId,
+						wantName: self.book2
+					}
+					ajax.post_data(url, params, function(d) {
+			//        	_this.$root.eventHub.$emit('Vloading',false)
+			            console.log("发布漂流",d);
+						if(d.code==0){
+							self.$vux.toast.show({
+								type: 'text',
+								text: '发布成功',
+								position: 'bottom'
+							})
+							setTimeout(function(){
+								self.back()
+							},1000)
+						}
+						
+		       		});
+				}
 			}
 		}
 	})
@@ -148,9 +205,8 @@
 		.write-img {
 			padding: 0.75rem;
 			.file-div {
-				width: 3rem;
-				height: 3rem;
-				border: 1px dashed #c9c9c9;
+				width: 4rem;
+				height:6rem;
 				overflow: hidden;
 				position: relative;
 			}

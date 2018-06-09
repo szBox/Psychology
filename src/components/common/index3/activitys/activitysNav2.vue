@@ -26,8 +26,8 @@
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
 							<p>
-								<span>{{item.signupStartTime }}</span>~
-								<span>{{item.signupEndTime}}</span>
+								<span>{{item.signupStartTime | niceDate}}</span>~
+								<span>{{item.signupEndTime | niceDate}}</span>
 							</p>
 						</div>
 						<div>
@@ -47,6 +47,7 @@
 <script>
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		data() {
 			return {
@@ -81,7 +82,7 @@
 
 		},
 		filters: {
-//	   	    ajax.formatDateToTime(val)
+			...filter,
 			Types(val){
 				if(val==5){
 					return	'已满'

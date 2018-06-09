@@ -11,13 +11,17 @@
 			</div>
 			<div class="write-title">
 			<span>话题名称：</span>
-			<input type="text" />
-		</div>
+			<input v-model="title" :placeholder="errtitle" type="text" />
+			</div>
+		
 		
 		<div class="write-bbox">
 			<div class="wtire-text">
 				<span>话题简介：</span>
-				<textarea  rows="4"></textarea>
+				<textarea v-model="speak" :placeholder="errspeak" rows="4"></textarea>
+			</div>
+			<div class="err-img">
+				{{errimg}}
 			</div>
 			<div class="write-img">
 				<div class="imgshow">
@@ -25,17 +29,18 @@
 				</div>
 				<div class="file-div">
 					<input type="file" name="file1" id="imgFile" accept="image/*" @change="addPic">
-					<img src="../../../../assets/img/add.png" alt="" />
+					<img class="file-img" :src="speakImg" alt="" />
+					<img :style="{'opacity':num}" src="../../../../assets/img/add.png" alt="" />
 				</div>
 			</div>
 		</div>
 		
 		<div class="write-bottom">
-			<p>
+			<p v-if='tips'>
 				<img src="../../../../assets/img/icons_1.png"/>
 				<span>发布之后需要进行审核</span>
 			</p>
-			<div class="btn-init">
+			<div class="btn-init" @click="faqi()">
 				发布
 			</div>
 		</div>
@@ -45,23 +50,80 @@
 </template>
 
 <script>
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import { Toast } from 'vux'
 	export default({
 		data() {
 			return {
-				//				tab_index:2
+				num:1,
+				title:'',speak:'',speakImg:'',
+				errtitle:'',errspeak:'',errimg:'',//错误提示
+				tips:true,
 			}
+		},
+		created(){
+			var self=this;
+			var role =localStorage.getItem('role')
+			if(role=='M'){
+				self.tips=false
+			}
+		},
+		components:{
+			Toast
 		},
 		methods: {
 			back() {
 				this.$router.go(-1);
 			},
 			addPic() {
-				$(".imgshow").append("<p style='position: relative;float: left;' >" +
-					"<span class='img-close'>" +
-					"<img style=' position: absolute;top: -6px;right: 0;z-index: 999;width: 18px;height: 18px;line-height: 18px;border: 1px solid #666;border-radius: 50%;background: #fff;' src='src/assets/img/clear.png' />" +
-					"</span>" +
-					"<img style='width: 3rem;height: 3rem;margin-right: 0.75rem;' src=" + URL.createObjectURL($('#imgFile')[0].files[0]) + ">" +
-					"</p>")
+				var self=this;
+				self.num=0;
+				self.speakImg=$('#imgFile')[0].files[0];
+				self.errimg='';
+			    self.alyConfig.uploadToAliyun(self.speakImg,function (url) {
+			    	console.log('阿里云 图片地址',url)
+	               self.speakImg=url;
+	            })
+				
+//				$(".file-img").attr('src', URL.createObjectURL($('#imgFile')[0].files[0]) )
+			},
+			faqi(){
+				var self=this;
+				if(!self.title){
+					self.errtitle='请输入话题名称'
+				}else if(!self.speak){
+					self.errspeak='请输入话题简介'
+				}
+				else if(!self.speakImg){
+					self.errimg='请上传话题相关图片'
+				}
+				else{
+					var url=int.speakAdd;
+					var sid=localStorage.getItem('sid');
+					var imageUrl=self.speakImg;
+					var params={
+						summary:self.speak,
+						name:self.title,
+//						sid: sid,
+						imageUrl:self.speakImg
+					}
+					ajax.post_data(url, params, function(d) {
+			//        	_this.$root.eventHub.$emit('Vloading',false)
+			            console.log("发布漂流",d);
+						if(d.code==0){
+							self.$vux.toast.show({
+								type: 'text',
+								text: '发布成功',
+								position: 'bottom'
+							})
+							setTimeout(function(){
+								self.back()
+							},1000)
+						}
+						
+		       		});
+				}
 			}
 		}
 	})
@@ -104,6 +166,13 @@
 	}
 	.write-bbox{
 		margin-bottom: 0.45rem;
+		position: relative;
+		.err-img{
+			position: absolute;
+			top: 4.6rem;
+			left: 0.75rem;
+			color: red;
+		}
 		>div.wtire-text{
 			overflow: hidden;
 			padding: 0.75rem;
@@ -120,9 +189,8 @@
 		.write-img{
 			padding: 0.75rem;
 			.file-div{
-				width: 3rem;
-				height: 3rem;
-				border: 1px dashed #c9c9c9;
+				width: 4rem;
+				height: 5rem;
 				overflow: hidden;
 				position: relative;
 			}

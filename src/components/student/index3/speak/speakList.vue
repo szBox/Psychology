@@ -8,15 +8,15 @@
 
 		<scroller style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="speakList-ul">
-				<li v-for="(item, index) in items" @click="goPath(1)">
-					<h3 class="ellipsis">不好玩了，回去睡觉去，附上我睡觉的图片</h3>
+				<li v-for="(item, index) in allList" @click="goPath(item.id)">
+					<h3 class="ellipsis">{{item.summary}}</h3>
 					<div class="speakList-img">
-						<img src="../../../../assets/img/ren6.png" />
+						<img :src="item.imageUrl" />
 					</div>
 					<div class="speakList-div">
 						<div>
-							<p><span>2018-03-16 12:00</span></p>
-							<p><img src="../../../../assets/img/pinglun.png"/><i>25</i></p>
+							<p><span>{{item.insertTime | niceDate}}</span></p>
+							<p><img src="../../../../assets/img/pinglun.png"/><i>{{item.commentCount}}</i></p>
 						</div>
 					</div>
 				</li>
@@ -29,12 +29,13 @@
 </template>
 
 <script>
-	import speakWrite from '@/components/common/index3/speak/speakWrite' //互动 > 留言板list >发表话题
-	import speakInfo from '@/components/common/index3/speak/speakInfo' //互动 > 留言板list >话题详情
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		data() {
 			return {
-				//				tab_index:2
+				allList:[],
 				items: [],
 				/*最后的数组*/
 				page: 1,
@@ -42,19 +43,39 @@
 			}
 		},
 		created(){
-			this.bottom = 10; //一页展示10个
-			this.result = '';
-			for(let i = 1; i <= this.bottom; i++) {
-				this.result = ``
-				this.items.push(this.result);
-			}
 			
-			console.log(this.items);
+		},
+		filters:{
+			...filter
+		},
+		mounted(){
+			var self=this;
+			self.getList();
 		},
 		methods: {
 			back() {
 				this.$router.go(-1);
-				this.tab_index = 2
+			},
+			getList(){
+				var self=this;
+				var url=int.speakList;
+				var sid=localStorage.getItem('sid');
+				var params={
+					sid:sid,
+					current:self.page,
+					size:10,
+					state:2,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("话题列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.allList.push(d.data.records[i]);
+						}
+					}
+					
+		       });
 			},
 			goPath(i) {
 				this.$router.push({

@@ -7,18 +7,18 @@
 		</header>
 		<scroller style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="mp3-bbox">
-				<li v-for="(item, index) in items">
-					<img src="../../../../assets/img/ren1.png" alt="" />
+				<li v-for="(item, index) in allList">
+					<img :src="item.headPic" alt="" />
 					<div>
 						<h1>
-							<em>王大力</em>
+							<em class="ellipsis">{{item.fromNickName}}</em>
 							<span>
 								<img src="../../../../assets/img/mp3.png" alt="" />
-								<i>今天下午三点</i>
+								<i>{{item.playTime | niceDate}}</i>
 							</span>
 						</h1>
-						<h2 class="ellipsis">我要赠送一首'《王者》'，送给好朋友'王大锤'</h2>
-						<h4 class="ellipsis"> 幸福半辈子</h4>
+						<h2 class="ellipsis">我要赠送一首'《{{item.name}}》'，送给好朋友 '{{item.toNickName}}' </h2>
+						<h4 class="ellipsis"> {{item.content}}</h4>
 						
 					</div>
 					
@@ -32,26 +32,29 @@
 </template>
 
 <script>
-	import mp3Choose from '@/components/common/index3/mp3/mp3Choose' //互动 > 点歌台list >我要点歌
+
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		data() {
 			return {
 				//				tab_index:2
-				items: [],
+				allList: [],
 				/*最后的数组*/
 				page: 1,
 				/*当前页码*/
 			}
 		},
 		created(){
-			this.bottom = 4; //一页展示10个
-			this.result = '';
-			for(let i = 1; i <= this.bottom; i++) {
-				this.result = ``
-				this.items.push(this.result);
-			}
-			
-			console.log(this.items);
+
+		},
+		filters:{
+			...filter
+		},
+		mounted(){
+			var self=this;
+			self.getList()
 		},
 		methods: {
 			back() {
@@ -62,6 +65,28 @@
 				this.$router.push({
 					path: "/index3/speakInfo/" + i
 				})
+			},
+			getList(){
+				var self=this;
+				var url=int.mp3List;
+				var sid=localStorage.getItem('sid');
+				var loginId=localStorage.getItem('loginId');
+				var params={
+					sid:sid,
+//					stuId:loginId,
+					current:self.page,
+					size:10,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("点歌列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.allList.push(d.data.records[i]);
+						}
+					}
+					
+		       });
 			},
 			goWrite() {
 				this.$router.push({
@@ -107,10 +132,13 @@
 						float: left;
 						color: #333;
 						font-size: 0.75rem;
+						width: 4rem;
+						-webkit-line-clamp: 1;
 					}
 					>span{
 						float: right;
 						color: #666;
+						font-size: 0.6rem;
 						img{
 							width: 0.9rem;
 							

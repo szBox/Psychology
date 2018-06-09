@@ -7,67 +7,71 @@
 		</header>
 		<div class="b-content">
 			<div class="info-img">
-			<img class="imgz" src="../../../assets/img/details_img.png" alt="" />
+			<img class="imgz" :src="indexInfo.cover" alt="" />
 		</div>
 		<div class="yuedu-content">
-			<h1>人性方面的细节调和，是从心理的角度还是从理性的角度思考？</h1>
-			<em>2018-03-02 12:00</em>
+			<h1>{{indexInfo.title}}</h1>
+			<em>{{indexInfo.insertTime | niceDate}}</em>
 			
-			<p>
-				<span></span>
-				 学校心理辅导和学校思想品德教育在具体目标上不一致：心理辅导是为了解决心理问题、恢复心理平衡，提高理成熟水平、
-				 心理功能正常化等；德育工作是使个体有正确的社会态度，提高社会化水平、行为符合社会规范。
+			<p v-html="indexInfo.content">
+		
 			</p>
 		</div>
 		
 		<div class="yuedu-bbox">
 			<h1>评论</h1>
 			<ul>
-				<li>
+				<li v-for="(speak,index) in speakList">
 					<div class="pinglun-user">
-						<img src="../../../assets/img/exchange_icon_a-market_n.png"/>
+						<img :src="speak.headPic"/>
 						<div>
-							<h2>王大明</h2>
+							<h2>{{speak.nickName}}</h2>
 							
 						</div>
 						<p>
-							<em>1</em>楼
+							<em>{{speakAll-index}}</em>楼
 						</p>
 					</div>
 					<div class="pinglun">
-						<p>老师说的很有道理，我发现我变了;</p>
+						<p>{{speak.content}}</p>
 						<div>
-							<span>2018-03-16 12:00:00</span>
-							<p class="icon-p">
-								<img src="../../../assets/img/pinglun.png" alt="" />
-								<span>0</span>
-							</p>
-							<p class="icon-p">
+							<span>{{speak.insertTime | niceDate}}</span>
+							<!--<p class="icon-p">
 								<img src="../../../assets/img/zan0.png" alt="" />
-								<span>0</span>
-							</p>
+								<span>{{speak.praise}}</span>
+							</p>-->
 						</div>
 					</div>
 				</li>
 				
 			</ul>
+			<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
 		</div>
 		<div class="component-bbb" v-show="display">
-			<bbb  @quxiao='quxiaoFn' @fabu='fabuFn' v-model='bb' @changes='changesFn'></bbb>
+			<div class="inp-bbBox">
+				<div>
+					<span @click="close()">取消</span>
+					<em @click='fabuFn()'>发布</em>
+				</div>
+			<textarea  autofocus id='textarea'  v-model='value' class="inp-bb" placeholder="写点什么..."></textarea>
+			</div>
+			
 		</div>
 		<div v-show='fixed' class="pinlun-fixed">
 			<input @click="inpshow()" readonly placeholder="发表评论">
 			<div class="icon-fixed">
-				<p>
+				<p @click="zan()">
 					<img src="../../../assets/img/zan0.png"/>
-					<span>11</span>
+					<span>{{zanNum}}</span>
 				</p>
 				<p>
 					<img src="../../../assets/img/pinglun.png"/>
+					{{speakAll}}
 				</p>
 				
-				<p>
-					<img src="../../../assets/img/sc0.png"/>
+				<p @click='Soucang()'>
+					<img style="margin-top: -2px;" src="../../../assets/img/sc0.png"/>
+					<span>{{indexInfo.favorite}}</span>
 				</p>
 			</div>
 		</div>
@@ -78,6 +82,9 @@
 
 <script>
 	import bbb from '../../common/bbb'
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		components:{
 			bbb	
@@ -86,36 +93,166 @@
 			return{
 				display:false,
 				fixed:true,
+				next1_text:'',
+				next1:true,	//加载更多 状态
+				page:1,
 				bb:'',
+				zanNum:'',  //返回的赞
+				indexInfo:'',   
+				speakList:'',
+				value:'',
+				speakAll:'',
 			}
+		},
+		filters:{
+			...filter,
+			
+		},
+		mounted(){
+			var self=this;
+			self.getInfo();
+			self.getList();
 		},
 		methods:{
 			back(){
 				this.$router.go(-1)
 			},
-			inpshow () {
+			getInfo(){
 				var self=this;
-				
-			
-					self.display=true;
-					self.fixed=false;
-
+				var url=int.index1Info+self.$route.params.id;
+				var params={
+					
+				};
+				ajax.get_data(url,params,function(d){
+					console.log('心理预约详情',d)
+					self.indexInfo=d.data;
+					self.zanNum=d.data.praise;
+				})
 			},
-			quxiaoFn(){
+			zan(){
+				var self=this;
+				var url=int.index1Zan+self.$route.params.id;
+				var params={
+
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('点赞',d)
+					self.zanNum+=1
+				})
+			},
+			Soucang(){
+				var self=this;
+				var url=int.index1Soucang+self.$route.params.id;
+				var params={
+					
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('收藏',d)
+					
+				})
+			},
+			more1(){
+				//加载更多
+				var vm = this;
+				vm.page++;
+				vm.getPage();
+	
+			},
+			getList(){
+				var self=this;
+				var url=int.index1InfobbList;
+				var params={
+					current: 1,
+					size: 10,
+					articleId:self.$route.params.id
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('评论列表',d)
+					self.speakAll=d.data.total;
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.speakList=d.data.records;
+						}
+						if(d.data.total==0){
+							self.next1=false;
+							self.next1_text='暂无留言'
+						}
+						else{
+							self.next1=true;
+							self.next1_text='加载更多'
+						}
+						if(d.data.current==d.data.pages){
+							self.next1=false;
+							self.next1_text='没有更多了'
+						}
+					}
+				})
+			},
+			getPage(){
+				var self=this;
+				var url=int.index1InfobbList;
+				var params={
+					current: self.page,
+					size: 10,
+					articleId:self.$route.params.id
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('评论列表',d)
+//					self.speakAll=d.data.total;
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.speakList.push(d.data.records[i]);
+						}
+						if(d.data.total==0){
+							self.next1=false;
+							self.next1_text='暂无留言'
+						}
+						else{
+							self.next1=true;
+							self.next1_text='加载更多'
+						}
+						if(d.data.records.length==d.data.pages){
+							self.next1=false;
+							self.next1_text='没有更多了'
+						}
+					}
+				})
+			},
+			close(){
 				var self=this;
 				self.display=false;
 				self.fixed=true;
+			},
+			inpshow () {
+				var self=this;
+				self.display=true;
+				self.fixed=false;
+
 			},
 			fabuFn(){
 				var self=this;
-				self.display=false;
-				self.fixed=true;
-				self.bb='';
+				if(self.value){
+					
+					var url=int.index1Infobb;
+					var params={
+						content: self.value,
+						articleId:self.$route.params.id
+					};
+					ajax.post_data(url,params,function(d){
+						console.log('评论',d)
+						if(d.code==0){
+							
+							self.getList();
+							self.display=false;
+							self.fixed=true;
+							self.value='';
+						}
+					})
+				}
+				
 				
 			},
-			changesFn(){
-				
-			}
+		
 		}
 	})
 </script>
@@ -170,6 +307,7 @@
     }
     .yuedu-bbox{
         margin: 0.4rem 0 2rem;
+        padding-bottom: 20px;
         ul>li{
             padding: 0.75rem;
         }
@@ -239,7 +377,7 @@
 		background: #fff;
 		position: fixed;
 		bottom: 0;
-		padding-bottom: 10px;
+		padding: 0.5rem 0;
 		left: 0;
 		width: 100%;
 		textarea,input{
@@ -255,13 +393,41 @@
 			float: right;
 			line-height: 1.5rem;
 			img{
-				width: 0.7rem;
+				width: 0.9rem;
 			}
 			>p{
 				float: left;
-				margin-right: 1rem;
+				margin-right: 0.5rem;
 			}
 		}
 	}
+	.more-btn{
+		color: #666;
+		text-align: center;
+		/*border: 0.05rem solid;*/
+		width: 5rem;
+		height: 1.5rem;line-height: 1.5rem;
+		margin: 0 auto;
+	}
 	
+	.inp-bbBox{
+		padding: 0.5rem 0.75rem;
+		>div{
+			margin: 0.5rem 0;
+			overflow: hidden;
+			span{
+				float: left;
+			}
+			em{
+				float: right;
+			}
+		}
+		input,textarea{
+			width: 100%;
+			height: 100%;
+			height: 8rem;
+			background: #E5E5E5;
+			border: none;
+		}
+	}
 </style>

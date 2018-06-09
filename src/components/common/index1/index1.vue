@@ -1,26 +1,15 @@
 <template>
 	<div class="index1">
 		<header class="header">
-			<h1>心灵阅读公共</h1>
+			<h1>{{indexTitle}}</h1>
 		</header>
 		<div id="top">
 
 			<div class="swiper-container" id="nav">
-				<div class="swiper-wrapper">
-					<div class=" swiper-slide slide-on">
-						<span>心理科普</span></div>
-					<div class="swiper-slide">
-						<span >心理专题</span></div>
-					<div class="swiper-slide">
-						<span >333333</span></div>
-					<div class="swiper-slide">
-						<span >444444</span></div>
-					<div class="swiper-slide">
-						<span>555555</span></div>
-				
-					<!--<div class="bar">
-        <div class="color"></div>
-      </div>-->
+				<div class="swiper-wrapper" >
+					<div class=" swiper-slide" v-for="(nav,index) in navList" @click="navOn(nav.id,nav.name)">
+						<span>{{nav.name}}</span>
+					</div>
 				</div>
 			</div>
 			
@@ -33,19 +22,19 @@
 			
 					
 					<ul class="nav-list">
-						<li v-for="(item, index) in items1" @click="goPath(index)">
+						<li v-for="(item, index) in newList" @click="goPath(item.id)">
 							<div class="lf">
 								<div class="ellipsis">
-									{{item.bb}}
+									{{item.title}}
 								</div>
 								<p class="time-div">
-									<span>{{item.times}}</span>
+									<span>{{item.insertTime |niceDate}}</span>
 									<em>
-										<img src="../../../assets/img/pinglun.png" alt="" />30评
+										<img src="../../../assets/img/pinglun.png" alt="" />{{item.comments}}评
 									</em>
 								</p>
 								</div>
-							<img class="rt" :src="item.img" alt="" />
+							<img class="rt" :src="item.cover" alt="" />
 						</li>
 					</ul>
 
@@ -60,63 +49,35 @@
 </script>
 <script>
 	import Swiper from 'swiper'
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		data() {
 			return {
 				reType: true,
+				indexTitle:'心灵阅读',
 				tabActive: 0,
+				newPage:1,
+				nav1Page:1,
+				newList:'',
 				ztype: false,
 				items1: [],
-				slidePage1:[
-					{
-						bb:'人性方面的细节调和，是从心理的角度还是从理性的角度思考？',times:'2018-04-15 15:00',num:'20',
-						img:'src/assets/img/x7.png'
-					},
-					{
-						bb:'我想发起一次秋游活动,希望大家积极报名',times:'2018-04-15 15:00',num:'20',
-						img:'src/assets/img/topw1.png'
-					},
-					{
-						bb:'话题333333333',times:'2018-04-15 15:00',num:'20',
-						img:'src/assets/img/topw3.png'
-					},
-					{
-						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
-						img:'src/assets/img/ren6.png'
-					},
-					{
-						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
-						img:'src/assets/img/ren6.png'
-					},
-					{
-						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
-						img:'src/assets/img/ren6.png'
-					},
-					{
-						bb:'组团444444444444',times:'2018-04-15 15:00',num:'20',
-						img:'src/assets/img/ren6.png'
-					},
-				],
-				/*最后的数组*/
-				page: 1,
-				tSpeed:300, //切换速度300ms
-				navSlideWidth:'',	//span的宽度
-				navSum:'',
-				clientWidth:'',  //nav的总宽度
-				navWidth : 0,
-				topBar:'',
-				activeSlidePosition:'',
-				pageIndex:'',
-				navActiveSlideLeft:'',//page跟随
+				navList:[], //nav头部列表
 			
 			}
 		},
+		filters:{
+			...filter,
+			
+		},
 		mounted() {
 			var self=this;
-			var swiperH = ($('#nav').height()  +  $('.header').height() +40)/20
-//			console.log(swiperH);
+			self.getNav();
+			self.getNew();
+
 			$('._v-content').css({
-				paddingTop:swiperH+'rem',
+				paddingTop:10+'rem',
 				paddingLeft:'0.75rem',
 				paddingRight:'0.75rem'
 			});
@@ -138,9 +99,7 @@
 	
 		},
 		created() {
-			for(let i = 0; i < this.slidePage1.length; i++) {
-				this.items1.push(this.slidePage1[i]);
-			}
+			
 		},
 
 		components: {
@@ -149,6 +108,65 @@
 		},
 
 		methods: {
+			getNav(){
+				var self=this;
+				var url=int.index1Nav;
+				var sid=localStorage.getItem('sid');
+				var params={
+					current:1,
+					size:10,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("nav列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.navList=d.data.records;
+						}
+					}
+		       });
+			},
+			navOn(i,name){
+				var self=this;
+				self.indexTitle=name;
+				var url=int.index1List;
+				var sid=localStorage.getItem('sid');
+				var params={
+					  columnId:i,
+					  current: self.nav1Page,
+					  size: 10,
+//					  state: 0,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("专题i列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.newList=d.data.records;
+						}
+					}
+		       });
+			},
+			getNew(){
+				var self=this;
+				var url=int.index1List;
+				var sid=localStorage.getItem('sid');
+				var params={
+//					  columnId:15,
+					  current: self.newPage,
+					  size: 10,
+//					  state: 0,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("最新列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.newList=d.data.records
+						}
+					}
+		       });
+			},
 			refresh(done) {
 				setTimeout(() => {
 

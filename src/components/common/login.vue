@@ -29,7 +29,7 @@
       </div>
       <div class="forget" @click="goForget">忘记密码?</div>
       <div class="btn-login" @click="btnType && login()">登录</div>
-      <div class="reg">直接注册</div>
+      <!--<div class="reg">直接注册</div>-->
       
       <!--<div class="three-box">
       	<h1>
@@ -157,6 +157,7 @@
               localStorage.setItem('role',d.data.roleType);
               localStorage.setItem('sid',d.data.sid);
               localStorage.setItem('loginName',d.data.loginName);
+              localStorage.setItem('loginId',d.data.id);
               self.btnType=false;
               self.$router.push({ // 你需要接受路由的参数再跳转
 								path:'/index1'

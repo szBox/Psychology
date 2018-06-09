@@ -8,7 +8,25 @@ let host='http://119.23.41.124:8099/';
 export default {
   //登录
   getlogin:host+"auth/app/login",
+  //index1  心灵阅读  头部nav
+  index1Nav:host+'articleColumn/list',
   
+  index1List: host+'article/list',  //最新 第一个参数不传
+  
+  //index1  进入详情
+  index1Info: host+'article/get/',
+  //index1  进入详情 -- 评论列表
+  index1InfobbList: host+'articleComment/list',
+  //index1  进入详情 -- 评论
+  index1Infobb: host+'articleComment/add',
+    //index1  进入详情 -- 点赞
+  index1Zan: host+'articlePraise/add/',
+    //index1  进入详情 -- 取消点赞
+  index1Zanquxiao: host+'articlePraise/delete/',
+    //index1  进入详情 -- 收藏
+  index1Soucang: host+'articleFavorite/add/',
+    //index1  进入详情 -- 取消收藏
+  index1SQuxiao: host+'articleFavorite/delele/',
   //组团列表
   activityList:host+'activity/list/page',
   //组团列表 -详情
@@ -17,6 +35,32 @@ export default {
   activityInfoBaoming:host+'activityDetail/list/page',
   //组团列表 -详情 - 报名
   activityInfoBao:host+'activityDetail/add',
-  //组团 发起
+  //组团列表 -详情 - 审核操作
+  activityCaozuo:host+'activityDetail/edit',
+  //组团  - 发起
   activityAdd:host+'activity/add',
+  
+  
+  //图书漂流 -- 列表
+  bookList:host+'bookExchange/list/page',
+  //图书漂流 - 发起
+  bookFaqi: host+'bookExchange/add',
+  
+  //点歌台 -- 列表
+  mp3List:host+'song/list/page',
+  //点歌台 -- 发布
+  mp3Add:host+'song/add',
+  
+  //留言板 -- 列表
+  speakList:host+'topic/list/page',
+  //留言板 -- 发布
+  speakAdd:host+'topic/add',
+  //留言板 -- 详情
+  speakInfo:host+'topic/get/',
+  
+  //留言板 -- 分页信息
+  speakPage:host+'topicComment/list/page',
+  
+  //留言板-- 留言
+  speakBB:host+'topicComment/add',
 }

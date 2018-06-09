@@ -39,13 +39,14 @@
 			speak(){
 				//判断角色,进入不同的路由  老师,管理员一样, 学生A
 				var role=localStorage.getItem('role');
-				if(role=='老师'||role=='管理员'){
+				console.log(role)
+				if(role=='S'){
 					this.$router.push({
-						path:'/index3/speakList'
+						path:'/index3/speakListA'  //进入学生的
 					})
 				}else{
 					this.$router.push({
-						path:'/index3/speakListA'
+						path:'/index3/speakList'
 					})
 				}
 				

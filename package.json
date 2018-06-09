@@ -12,6 +12,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "ali-oss": "^5.2.0",
     "fastclick": "^1.0.6",
     "jquery": "^3.3.1",
     "swiper": "^3.4.2",

@@ -8,18 +8,18 @@
 
 		<scroller style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li  @click="goPath(index)" v-for="(item, index) in items">
+				<li  @click="goPath(item.id)" v-for="(item, index) in allList">
 					<div class="lf zutuan-img">
-						<img  class="imgz"src="../../../../assets/img/x7.png" alt="" />
+						<img  class="imgz" :src="item.imageUrl" alt="" />
 						
 					</div>
 					<div class="lf zutuan-info">
-						<h2 class="ellipsis">不好玩回去睡觉了,附上我睡觉的照片,不好玩回去睡觉了</h2>
+						<h2 class="ellipsis">{{item.summary}}</h2>
 						<div>
-							<p>2018-08-17 08:00</p>
+							<p>{{item.insertTime | niceDate}}</p>
 							<h5>
 								<img src="../../../../assets/img/pinglun.png"/>
-								<span>20</span>
+								<span>{{item.commentCount}}</span>
 							</h5>
 						</div>
 						
@@ -35,26 +35,28 @@
 </template>
 
 <script>
-	
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		data() {
 			return {
-				//				tab_index:2
+				allList:[],
 				items: [],
 				/*最后的数组*/
 				page: 1,
 				/*当前页码*/
 			}
 		},
+		filters:{
+			...filter
+		},
 		created(){
-			this.bottom = 3; //一页展示10个
-			this.result = '';
-			for(let i = 1; i <= this.bottom; i++) {
-				this.result = ``
-				this.items.push(this.result);
-			}
 			
-			console.log(this.items);
+		},
+		mounted(){
+			var self=this;
+			self.getList();
 		},
 		methods: {
 			back() {
@@ -70,6 +72,27 @@
 				this.$router.push({
 					path: "/index3/speakWrite"
 				})
+			},
+			getList(){
+				var self=this;
+				var url=int.speakList;
+				var sid=localStorage.getItem('sid');
+				var params={
+					sid:sid,
+					current:self.page,
+					size:10,
+					state:2,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("话题列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.allList.push(d.data.records[i]);
+						}
+					}
+					
+		       });
 			},
 			refresh(done) {
 				setTimeout(() => {

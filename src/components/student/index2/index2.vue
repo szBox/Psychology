@@ -587,11 +587,15 @@
 	#teacher-swiper .swiper-slide.swiper-slide-active .swiper-flex{
 		width: 120%;
 	}
-	#teacher-swiper .swiper-slide:nth-child(2){
+	#teacher-swiper .swiper-slide:nth-child(3n-2){
+		background: url(../../../assets/img/teacherbg1.png);
+		background-size: 100% 100%;
+	}
+	#teacher-swiper .swiper-slide:nth-child(3n-1){
 		background: url(../../../assets/img/teacherbg2.png);
 		background-size: 100% 100%;
 	}
-	#teacher-swiper .swiper-slide:nth-child(3){
+	#teacher-swiper .swiper-slide:nth-child(3n-3){
 		background: url(../../../assets/img/teacherbg3.png);
 		background-size: 100% 100%;
 	}

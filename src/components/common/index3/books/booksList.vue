@@ -6,66 +6,30 @@
 			<em @click="goWrite()">发起漂流</em>
 		</header>
 		<div class="b-content">
+			<scroller style="padding-top: 2.8rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="speakList-ul">
-			<li>
+			<li v-for='(item,index) in allList'>
 				<div class="book-left">
-					<h1>王小明：<span>《鲁冰逊漂流记》</span></h1>
+					<h1>{{item.nickName}}：<span>《{{item.hasName}}》</span></h1>
 					<div class="think-div">
-						<h1>想换：<span class="think-book">《西游记》</span></h1>
+						<h1>想换：<span class="think-book">《{{item.wantName}}》</span></h1>
 						<div>
 							<p>
 								<img src="../../../../assets/img/dz.png" alt="" />
-								<span>二年级三班</span>
+								<span>{{item.contactAddress}}</span>
 							</p>
-							<p>发布日期：2017-08-25 14:00</p>
+							<p>发布日期：{{item.insertTime | niceDate}}</p>
 						</div>
 					</div>
 				</div>
 				
 				<div class="think-img">
-					<img src="../../../../assets/img/book1.png" />
-				</div>
-			</li>
-			<li>
-				<div class="book-left">
-					<h1>王小明：<span>《秘密花园》</span></h1>
-					<div class="think-div">
-						<h1>想换：<span class="think-book">《西游记》</span></h1>
-						<div>
-							<p>
-								<img src="../../../../assets/img/dz.png" alt="" />
-								<span>二年级三班</span>
-							</p>
-							<p>发布日期：2017-08-25 14:00</p>
-						</div>
-					</div>
-				</div>
-				
-				<div class="think-img">
-					<img src="../../../../assets/img/book2.png" />
+					<img :src="item.imageUrl" />
 				</div>
 			</li>
 			
-			<li>
-				<div class="book-left">
-					<h1>王小明：<span>《鲁冰逊漂流记》</span></h1>
-					<div class="think-div">
-						<h1>想换：<span class="think-book">《西游记》</span></h1>
-						<div>
-							<p>
-								<img src="../../../../assets/img/dz.png" alt="" />
-								<span>二年级三班</span>
-							</p>
-							<p>发布日期：2017-08-25 14:00</p>
-						</div>
-					</div>
-				</div>
-				
-				<div class="think-img">
-					<img src="../../../../assets/img/book1.png" />
-				</div>
-			</li>
 		</ul>
+		</scroller>
 		</div>
 		
 		
@@ -73,17 +37,23 @@
 </template>
 
 <script>
-	import booksWrite from '@/components/common/index3/books/booksWrite'		//互动 > 图书漂流list >发起漂流
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		data() {
 			return {
-			
+				page:1,
+				items:[],
+				allList:[],
 			}
 		},
 		mounted() {
-//			var mH=$(window).height()-$('.header').height();
-//			console.log(mH);
-//			$('.speakList-ul').css({'minHeight':mH})
+			var self=this;
+			self.getList()
+		},
+		filters:{
+			...filter
 		},
 		methods: {
 			back() {
@@ -94,7 +64,46 @@
 					path: "/index3/booksWrite"
 				})
 			},
-			
+			getList(){
+				var self=this;
+				var url=int.bookList;
+				var sid=localStorage.getItem('sid');
+				var loginId=localStorage.getItem('loginId');
+				var params={
+					sid:sid,
+					stuId:loginId,
+					current:self.page,
+					size:10,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("书籍列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.allList.push(d.data.records[i]);
+						}
+					}
+					
+		       });
+			},
+			refresh(done) {
+				setTimeout(() => {
+					console.log('刷新了')
+					done()
+				}, 1500)
+			},
+			infinite(done) {
+				var self=this;
+				self.page++;
+				console.log(self.page)
+				done(true);
+				console.log('拉啦啦')
+				if(self.page == self.pageAll) {
+//					return
+									
+				}
+				
+			}
 		}
 	})
 </script>

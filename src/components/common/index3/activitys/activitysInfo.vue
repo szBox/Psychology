@@ -3,25 +3,25 @@
 	<div class="activitysInfo">
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
-			<h1>{{response.name}}</h1>
+			<h1>{{userInfo.name}}</h1>
 		</header>
 		<div class="b-content">
 			<div class="activi-li">
 				<div class="faqi-img">
 					<img src="../../../../assets/img/ren1.png" alt="" />
 					<div>
-						<p>{{response.nickName}}</p>
-						<h6>30分钟前</h6>
+						<p>{{userInfo.nickName}}</p>
+						<h6>{{userInfo.insertTime | niceDate}}</h6>
 					</div>
 				</div>
-				<p class="activi-type" :style="{color:type_color}">
-					{{response.type | Types}}
+				<p class="activi-type" :style="{color:TypesName_color}">
+					{{userInfo.type | TypesName}}
 				</p>
 			</div>
 			<div class="activi-li">
 				<p style="border: none;font-size: 0.8rem;">
 					<span style="font-size: 0.7rem;">活动详情：</span>
-					{{response.content}}
+					{{userInfo.content}}
 				</p>
 			</div>
 			<div class="activi-li">
@@ -31,11 +31,11 @@
 				</p>
 				<p>
 					<span>联系方式：</span>
-					{{response.contactMethod}}
+					{{userInfo.contactMethod}}
 				</p>
 				<p>
 					<span>人均消费：</span>
-					<em>{{response.payPer}}元</em>
+					<em>{{userInfo.payPer}}元</em>
 				</p>
 			</div>
 			<div class="activi-li">
@@ -45,27 +45,27 @@
 				</p>
 				<p>
 					<span>集合地点：</span>
-					{{response.gatherAddress}}
+					{{userInfo.gatherAddress}}
 				</p>
 			</div>
-			<div class="baoming-ul"  v-if='response.type=="1"'>
+			<div class="baoming-ul"  v-if='userInfo.type=="1"'>
 				<div class="h-faqi">
-					<h1 @click="typeToggle(1),getList2()" :class="{'baoming-active':types==1}" class="baoming-type">
-						<span>已报名&nbsp;&nbsp;({{response.count}})</span>
+					<h1 @click="typeToggle(1),getList1()" :class="{'baoming-active':toggleNav==1}" class="baoming-type">
+						<span>已报名&nbsp;&nbsp;({{userInfo.count}})</span>
 						<em></em>
 					</h1>
-					<h1  @click="typeToggle(2),getList3()":class="{'baoming-active':types==2}" class="baoming-type">
+					<h1  @click="typeToggle(2),getList2()":class="{'baoming-active':toggleNav==2}" class="baoming-type">
 						<span>待审核&nbsp;&nbsp;</span>
 						<em></em>
 					</h1>
 				</div>
-				<ul v-if='types==1'>
+				<ul v-if='toggleNav==1'>
 					<li v-for='(item,index) in baominList'>
 						<!--{{item}}-->
 						<p>
-							<!--<img src="../../../../assets/img/ren3.png" alt="" />-->
-							<span v-if='item[0].type==1'>{{item[0].nickName}}</span>
-							<span v-if='item[0].type==2'>{{item[0].name}}</span>
+							<img :src="item.headPic" alt="" />
+							<span v-if='item.type==1'>{{item.nickName}}</span>
+							<span v-if='item.type==2'>{{item.name}}</span>
 						</p>
 						<div>
 							<p v-if='item.type==1'>{{item.userPhone}}</p>
@@ -73,39 +73,40 @@
 							<h4>{{item.className}}</h4>
 						</div>
 					</li>
-					<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
+					<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
 				</ul>
 				
-				<ul v-if='types==2' v-for='(item,index) in shenheList'>
-					<li v-for='(item3,index) in item'>
+				<ul v-if='toggleNav==2'>
+					<li v-for='(item2,index) in shenheList'>
 
 						<p>
-							<img :src='item3.headPic'/>
-							<span v-if='item3.type==1'>{{item3.nickName}}</span>
-							<span v-if='item3.type==2'>{{item3.name}}</span>
+							<img :src='item2.headPic'/>
+							<span v-if='item2.type==1'>{{item2.nickName}}</span>
+							<span v-if='item2.type==2'>{{item2.name}}</span>
 						</p>
 						<div>
-							<p v-if='item3.type==1'>{{item3.userPhone}}</p>
-							<p v-if='item3.type==2'>{{item3.phone}}</p>
-							<h4>{{item3.className}}</h4>
+							<p v-if='item2.type==1'>{{item2.userPhone}}</p>
+							<p v-if='item2.type==2'>{{item2.phone}}</p>
+							<h4>{{item2.className}}</h4>
 							
 						</div>
 						<h6>
-							<i>通过</i>
-							<i @click="noGo()">不通过</i>
+							<i @click="shenheGo(item2.id,2)">通过</i>
+							<i @click="shenheGo(item2.id,3)">不通过</i>
 						</h6>
 					</li>
 					
-					<p  class="more-btn" @click="next3 && more3() ">{{next3_text}}</p>
+					
 				</ul>
+				<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
 			</div>
 			
 			
 			<!------------------------>
-			<div class="baoming-ul"  v-if='response.type!="1"'>
+			<div class="baoming-ul"  v-if='userInfo.type!="1"'>
 				<div class="h-init">
-					<span>已报名&nbsp;&nbsp;({{response.count}})</span>
-					<i><span>{{response.count}}/</span>{{response.total}}</i>
+					<span>已报名&nbsp;&nbsp;({{userInfo.count}})</span>
+					<i><span>{{userInfo.count}}/</span>{{userInfo.total}}</i>
 				</div>
 				
 				<ul>
@@ -120,16 +121,17 @@
 						</div>
 					</li>
 				</ul>
-				<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
+				<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
 			</div>
 			<!--<myalert :alertProps='alertType' :type='type'></myalert>-->
 			
-			<div v-if='response.type=="5"' class="huifu-div">
+			<div v-if='userInfo.type=="5"' class="huifu-div">
 				<h2>信息回复</h2>
 				<p>当前报名人员已满,请下次再来</p>
 			</div>
-			<div class="btn-box" v-if='response.type!="1"'>
-				<div :style="{background:btn_bgcolor}" class="btn-init" @click='baomin()'>{{response.type | baominBtn}}</div>
+			<div class="btn-box" v-if='userInfo.type!=1'>
+				<div v-if='userInfo.type!=1'  :style="{background:TypesBtn_bgcolor}" class="btn-init" @click='baomin()'>{{userInfo.type | TypesBtn}}</div>
+				<!--<div v-if='userInfo.type!=1'  :class="{'btnColor':colorFn(userInfo.type)}" class="btn-init" @click='baomin()'>{{userInfo.type | TypesBtn}}</div>-->
 			</div>
 		</div>
 		<!--我要报名-->
@@ -169,20 +171,23 @@
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import myalert from '../../alert'
+	import { Toast } from 'vux'
+	import filter from '@/assets/js/filters'
 	export default({
 		data(){
 			return{
-				btn_bgcolor:'',  //报名 按钮 样式
-				types:1,	//我发起状态  切换nav
-				alertType:false,	//弹窗 
-				playType:'',       //状态   返回的，后面做判断的
-				type_color:'',	//头部状态 样式
-				response:'',	//详情 返回数据
-				page:1,	page3:1,		//当前页1
+				TypesName_color:'',	//头部状态 样式
+				TypesBtn_bgcolor:'',  //报名 按钮 样式
+				userInfo:"",      //发起作者 信息
 				baominList:[],	//报名记录  返回数据
 				shenheList:[],	//待审核记录  返回数据
-				next2_text:'加载更多',	next3_text:'加载更多',	
-				next2:true,	next3:true,	//加载更多 状态
+				toggleNav:1,	//我发起状态  切换nav
+				alertType:false,	//弹窗 
+				
+				page1:1,	page2:1,		//当前页1
+				
+				next1_text:'',	next2_text:'',	
+				next1:true,	next2:true,	//加载更多 状态
 				mybao:false,    //我要报名  弹窗
 				mybaoType:'',   //自己报名为1，
 				baoYes:false,   //报名成功 弹窗
@@ -191,7 +196,7 @@
 			}
 		},
 		components:{
-			myalert
+			Toast
 		},
 		created(){
 			
@@ -199,14 +204,20 @@
 		
 		mounted(){
 			var self=this;
-			
+			this.getUser()
 			this.getList1()
-			this.getList2()
 //			this.getList3()
 		},
+		computed:{
+			colorFn(val){
+				if(val==6){
+					
+				}
+			}
+		},
 		filters: {
-//	   	    ajax.formatDateToTime(val)
-			Types(val){
+			...filter,
+			TypesName(val){
 				 if(val==1){
 					return '我发起'
 				}
@@ -229,15 +240,12 @@
 					return '未参与'
 				}
 			},
-			baominBtn(val){
+			TypesBtn(val){
 				
-				if(val==5){
+				if(val ==3||val==4||val==5||val==6||val==7){
 					return	'我要报名'
 				}else if(val==2){
 					return '审核中'
-				}else if(val==7){
-					return '我要报名'
-					
 				}
 			},
 	   },
@@ -247,45 +255,62 @@
 			},
 			typeToggle(i){
 				var self=this;
-				self.types=i;
+				self.toggleNav=i;
 			},
-			noGo(){
+			getUser(){
 				var self=this;
-				self.alertType=true
+					var url1=int.activityListInfo+self.$route.params.id;
+					var params1={
+						
+					}
+				ajax.get_data(url1, params1, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('发起作者信息',d);
+					if(d.code==0){
+						self.userInfo=d.data;
+						if(d.data.type==5||d.data.type==6){ //报名人数已满,不在时间内
+							self.Typestn_bgcolor='#D7D5D6'
+						}
+						else if(d.data.type==7){ //未参与
+							self.TypesName_color='#666'
+						}
+					}
+				
+	             
+	
+	          	});
 			},
-			getList1(){
-					var self=this;
-				console.log(self.$route);
-				var url1=int.activityListInfo+self.$route.params.id;
-				var params1={
-					
+			shenheGo(i,s){
+				var self=this;
+				console.log(i,s)
+				var url=int.activityCaozuo;
+				var params={
+					state:s,
+					id:i
 				}
-			ajax.get_data(url1, params1, function(d) {
-//        	_this.$root.eventHub.$emit('Vloading',false)
-	            console.log(d);
-				if(d.code==0){
-					self.response=d.data;
-					self.playType=d.data.type;
-					if(d.data.type==5){ //报名人数已满
-						self.btn_bgcolor='#D7D5D6'
-					}
-					else if(d.data.type==7){ //未参与
-						self.type_color='#666'
-					}
-				}
-			
-             
+				ajax.put_data(url, params, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('操作',d);
+		            if(d.code==0){
+		            	self.$vux.toast.show({
+						type: 'text',
+						text: '操作成功',
+						position: 'bottom'
+						})
+		            }
+	          	});
+			},
 
-          	});
-			},
-			getList2(){
+					
+	
+			getList1(){
 				var self=this;
           		//查看 详情的 报名记录列表
 	          	var url2=int.activityInfoBaoming;
 	          	var params2={
 					activityId:self.$route.params.id,
-					current:self.page,
-					size:10,
+					current:self.page1,
+					size:1,
 					state:2,
 					
 				} 
@@ -293,29 +318,34 @@
 	//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log('报名记录',d);
 					if(d.code==0){
-					
-						if(d.data.current==d.data.total){
-							self.next2=false;
-							self.next2_text='没有更多了'
-						}else{
-							self.baominList.push(d.data.records);
+						for(var i = 0; i < d.data.records.length; i++) {
+							self.baominList.push(d.data.records[i]);
+							}
+						if(d.data.total==0){
+							self.next1=false;
+							self.next1_text='暂无留言'
 						}
-					
-							
+						else{
+							self.next1=true;
+							self.next1_text='加载更多'
+						}
+						if(d.data.current==d.data.total){
+							self.next1=false;
+							self.next1_text='没有更多了'
+						}
 						
 					}
-				
 	             
 	
 	          	});
           	},
-          	getList3(){
+          	getList2(){
 				var self=this;
           		//查看 详情的 未审核记录列表
 	          	var url2=int.activityInfoBaoming;
 	          	var params2={
 					activityId:self.$route.params.id,
-					current:self.page3,
+					current:self.page2,
 					size:10,
 					state:1,
 					
@@ -324,31 +354,40 @@
 	//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log('待审核',d);
 					if(d.code==0){
-						
-						if(d.data.current==d.data.total){
-							self.next3=false;
-							self.next3_text='没有更多了'
-						}else{
-							self.shenheList.push(d.data.records);
+						for(var i = 0; i < d.data.records.length; i++) {
+							self.shenheList.push(d.data.records[i]);
+							}
+						if(d.data.total==0){
+							self.next2=false;
+							self.next2_text='暂无留言'
 						}
+						else{
+							self.next2=true;
+							self.next2_text='加载更多'
+						}
+						if(d.data.current==d.data.total){
+							self.next2=false;
+							self.next2_text='没有更多了'
+						}
+						
 					}
 				
 	             
 	
 	          	});
           	},
+			more1(){
+				//加载更多
+				var vm = this;
+				vm.page1++;
+				vm.getList1();
+
+			},
 			more2(){
 				//加载更多
 				var vm = this;
-				vm.page++;
+				vm.page2++;
 				vm.getList2();
-
-			},
-			more3(){
-				//加载更多
-				var vm = this;
-				vm.page3++;
-				vm.getList3();
 
 			},
 			closeAlert(){
@@ -365,7 +404,7 @@
 				var self=this;
 				var loginName=localStorage.getItem('loginName');
 				var sid=localStorage.getItem('sid');
-				if(self.playType==7){//未参与
+				if(self.userInfo.type==7){//未参与
 //					self.mybao=true //开启报名弹窗
 					var url=int.activityInfoBao;
 					var params={
@@ -379,8 +418,8 @@
 			            console.log('报名成功了',d);
 						if(d.code==0){
 							self.baoYes=true;
+							self.getUser();
 							self.getList1();
-							self.getList2();
 						}
 		          	});
 				}
@@ -428,8 +467,8 @@
 						if(d.code==0){
 							self.baominList.push(d.data.records);
 							if(d.data.current==d.data.total){
-								self.next2=false;
-								self.next2_text='没有更多了'
+								self.next1=false;
+								self.next1_text='没有更多了'
 							}
 						}
 					
