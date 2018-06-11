@@ -8,16 +8,16 @@
 		<div class="b-content">
 			<div id="teacher-swiper" class="swiper-container teacher-swiper">
 			<div class="swiper-wrapper">
-				<div class="swiper-slide">
-					<div class="swiper-flex">
+				<div class="swiper-slide" v-for="(teacher,index) in teachNav">
+					<div class="swiper-flex" :teacher-id="teacher.id">
 						<div class="teacher-bg">
 						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
+							<img  @click="goPath({path:'/index2/teacherInfo'})" :src="teacher.headPic" />
 						</div>
-						<h1>李多云老师111</h1>
+						<h1>{{ teacher.name }}</h1>
 						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
+							<p>{{teacher.presonSign | gexing}} </p>
+							<p></p>
 						</div>
 					</div>
 					
@@ -28,112 +28,13 @@
 						</p>
 						<h4>
 							<img src="../../../assets/img/zan_w.png"/>
-							200
+							{{teacher.praiseCount}}
 						</h4>
 					</div>
 					</div>
 					
 				</div>
-				<div class="swiper-slide">
-					<div class="swiper-flex">
-						<div class="teacher-bg">
-						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
-						</div>
-						<h1>李多云老师222</h1>
-						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
-						</div>
-					</div>
-					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/see.png"/>
-							查看信息
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="swiper-flex">
-						<div class="teacher-bg">
-						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
-						</div>
-						<h1>李多云老师333</h1>
-						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
-						</div>
-					</div>
-					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/see.png"/>
-							查看信息
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="swiper-flex">
-						<div class="teacher-bg">
-						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
-						</div>
-						<h1>李多云老师333</h1>
-						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
-						</div>
-					</div>
-					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/see.png"/>
-							查看信息
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="swiper-flex">
-						<div class="teacher-bg">
-						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" src="../../../assets/img/nv.png" />
-						</div>
-						<h1>李多云老师333</h1>
-						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化</p>
-							<p>天下武功 唯快不破</p>
-						</div>
-					</div>
-					
-					<div class="see-box">
-						<p>
-							<img src="../../../assets/img/see.png"/>
-							查看信息
-						</p>
-						<h4>
-							<img src="../../../assets/img/zan_w.png"/>
-							200
-						</h4>
-					</div>
-					</div>
-				</div>
+				
 				<!--<div class="swiper-slide">
 					
 				</div>-->
@@ -144,47 +45,14 @@
 			
 			
 			<div class="show-div">
-				<h3>擅长111111111111</h3>
-				<p>11111</p><p>11111111</p><p>1111111</p>
+				<h3>擅长</h3>
+				<div v-for='(skill,index) in skillArr' >
+					<p>{{skill}}</p>
+				</div>
 			</div>
 			<div class="show-div">
 				<h3>预约地点</h3>
-				<h5>阳光中学三栋三单元101</h5>
-			</div>
-			<div class="show-tableBox" style="margin-bottom: 2rem;">
-				<h2>预约时间</h2>
-				<div class="show-table">
-					<ul class="table-init">
-						<li>
-							<div>
-
-							</div>
-							<p>上午</p>
-							<p>下午</p>
-						</li>
-					</ul>
-					<div class="table-action">
-						
-
-					</div>
-
-				</div>
-				<div class="table-tips">
-					左右滑动可以查看其他预约时间
-				</div>
-			</div>
-
-		</div>
-		<div class="teacher-show">
-			
-			
-			<div class="show-div">
-				<h3>擅长22222222222</h3>
-				<p>心理治疗</p><p>个人成长</p><p>心理治疗</p>
-			</div>
-			<div class="show-div">
-				<h3>预约地点</h3>
-				<h5>阳光中学三栋三单元101</h5>
+				<h5>{{address}}</h5>
 			</div>
 			<div class="show-div">
 				<h3>预约时间</h3>
@@ -273,52 +141,10 @@
 			</div>
 
 		</div>
-		<div class="teacher-show">
-			
-			
-			<div class="show-div">
-				<h3>擅长33333333333</h3>
-				<p>33333333</p><p>3333</p><p>心33333理治疗</p>
-			</div>
-			<div class="show-div">
-				<h3>预约地点</h3>
-				<h5>3333</h5>
-			</div>
-			<div class="show-tableBox" style="margin-bottom: 2rem;">
-				<h2>预约时间</h2>
-				<div class="show-table">
-					<ul class="table-init">
-						<li>
-							<div>
-							</div>
-							<p>上午</p>
-							<p>下午</p>
-						</li>
-					</ul>
-					<div class="table-action">
-						<div>
-							
-						</div>
-
-					</div>
-
-				</div>
-				<div class="table-tips">
-					左右滑动可以查看其他预约时间
-				</div>
-			</div>
-
-		</div>
+		
 		
 		</div>
 		<div class="flexd-nav">
-				<!--<div>
-					<img src="../../../assets/img/s1.png" alt="" @click="goPath({path:'/index2/teacherInfo'})" />
-				</div>
-				<div>
-					<img src="../../../assets/img/s2.png" alt="" />
-					<p>200</p>
-				</div>-->
 				<div  @click="goPath({path:'/chat'})">
 					<img src="../../../assets/img/zixun.png" alt="" />
 					<p>咨询</p>
@@ -330,9 +156,9 @@
 </template>
 
 <script>
-	import teacherInfo from '@/components/teacher/index2/teacherInfo' //咨询预约 > 教师信息
-	import yuyueJilu from '@/components/teacher/index2/teacherInfo' //咨询预约 > 预约记录
-	import chat from '@/components/common/chat' //聊天
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	import Swiper from 'swiper'
 	export default {
 		components: {
@@ -343,7 +169,20 @@
 		},
 		data() {
 			return {
+				theachPage:1,
+				starTime:'',
+				endTime:'',
+				teachNav:[],//  返回老师列表
+				skillArr:[], //返回的技能
+				address:'',
 				value:'',
+				weekInfo:[],
+				xxlist:[
+					{name:'123'},
+					{name:'123'},
+					{name:'123'},
+					{name:'123'}
+				],
 				items: [{
 					"day": "2018-05-15",
 					"data": [{
@@ -448,48 +287,113 @@
 				/*当前页码*/
 			}
 		},
+		filters:{
+			...filter,
+			gexing(val){
+				if(!val){
+					return '什么也没留下'
+				}
+			}
+		},
 		mounted() {
+			var self=this;
+			self.getTeachList();
+			self.getWeek();
 			
-			var teacherNav = new Swiper('.teacher-swiper', {
-				slidesPerView: 2.5,
-		      initialSlide: 1,
-//		      spaceBetween: 20,
-		      centeredSlides: true,
-				on:{
-				
-				    slideChange: function(){
-				    	console.log('下标',this.activeIndex);
-//				    	$('.b-content').siblings('.teacher-show').hide();
-				    	$('.b-content').find('.teacher-show').eq(this.activeIndex).show().siblings('.teacher-show').hide()
-						
-				    },
-				  },		     
-			})
-			setTimeout(()=>{
-				var table = new Swiper('.table-swiper',{
-			  pagination :{
-			    el: '.swiper-pagination',
-			    clickable :true,
-			  }
-			})
-			},2)
 			
-//			setTimeout(function() {
-//				var tabLen = $('.table-action ul li').length;
-//				var tabW = $('.table-action ul li').width() * tabLen;
-//				$('.table-action ul').css({
-//					'width': tabW
-//				})
-//				$('.table-action ul li').width();
-//				console.log('li的宽度' + $('.table-action ul li').width())
-//				console.log(tabLen)
-//				console.log("ul的宽度---" + tabW)
-//			}, 5)
 
 		},
 		methods: {
 			goPath(path) {
 				this.$router.push(path)
+			},
+			getTeachList(){
+				var self=this;
+				var url=int.navTeacher;
+				var params={
+					current: self.theachPage,
+				    type: 2,
+				    size:5,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('老师列表',d)
+					if(d.code==0){
+						self.teachNav=d.data.records;
+//						for(var i=0; i<d.data.records.length; i++){
+//							self.skillArr=d.data.records[i].skill.split(',');
+//							console.log(self.skillArr)
+//						}
+						self.$nextTick(function(){
+						 	var teacherNav = new Swiper('.teacher-swiper', {
+								slidesPerView: 2.5,
+						      initialSlide: 1,
+						      centeredSlides: true,
+								on:{
+								    slideChange: function(){
+								    	
+								    	var index=this.activeIndex;
+								    	self.skillArr=self.teachNav[index].skill.split(',')
+								    	console.log(self.skillArr)
+								    	var Tid=$('.swiper-flex').eq(index).attr('teacher-id');
+								    	console.log('老师ID',Tid)
+										self.getTable(Tid)
+								    },
+								  },		     
+							})
+						 	var table = new Swiper('.table-swiper',{
+							  pagination :{
+							    el: '.swiper-pagination',
+							    clickable :true,
+							  }
+							})
+						})
+					}
+				})
+			},
+			getTable(tid){
+				var self=this;
+				var url=int.tableWeek;
+				var sid=localStorage.getItem('sid')
+				console.log(self.starTime+'/'+self.endTime)
+				var params={
+					teacherId:tid,
+					sid:sid,
+					startDate:self.starTime,
+					endDate:self.endTime,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('week详情',d)
+					if(d.code==0){
+						self.weekInfo=d.data;
+						self.address=d.data[0].address
+					}
+				})
+			},
+			getWeek(star,end){
+				var self=this;
+				var week = new Date().getDay(); 
+				if(week==1){
+					star=(new Date()).getTime();
+					end=new Date().getTime() + 24*11*60*60*1000
+				}
+				else if(week==2){
+					star=new Date().getTime() - 24*60*60*1000
+					end=new Date().getTime() + 24*10*60*60*1000
+				}
+				else if(week==3){
+					star=new Date().getTime() - 24*2*60*60*1000
+					end=new Date().getTime() + 24*9*60*60*1000
+				}
+				else if(week==4){
+					star=new Date().getTime() - 24*3*60*60*1000
+					end=new Date().getTime() + 24*8*60*60*1000
+				}
+				else if(week==5){
+					star=new Date().getTime() - 24*4*60*60*1000
+					end=new Date().getTime() + 24*7*60*60*1000
+				}
+				self.starTime="2018-06-11";
+		       	self.endTime='2018-06-22'
 			},
 			yuyue(i){
 				alert(i.starttime+'-'+i.endtime)
@@ -646,7 +550,6 @@
 	}
 	
 	.teacher-show {
-		display: none;
 		position: relative;
 		padding: 0 0.75rem;
 
@@ -663,7 +566,11 @@
 				font-weight: bold;
 				margin: 0.5rem 0;
 			}
-			>p {
+			
+		}
+		div.show-div{
+			overflow: hidden;
+			>div {
 				    float: left;
 				    margin-right: 0.5rem;
 				   	background:url(../../../assets/img/qian1.png);
@@ -674,17 +581,14 @@
 				    background-size: 100% 100%;
 				    color: #fff;
 				}
-			>p:nth-child(2) {
+			>div:nth-child(2) {
 				   	background:url(../../../assets/img/qian2.png);
 				    background-size: 100% 100%;
 			}
-			>p:nth-child(3) {
+			>div:nth-child(3) {
 				   	background:url(../../../assets/img/qian3.png);
 				    background-size: 100% 100%;
 			}
-		}
-		div.show-div{
-			overflow: hidden;
 		}
 		.show-tableBox {
 			padding: 0;

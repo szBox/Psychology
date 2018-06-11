@@ -53,15 +53,20 @@
 					<span @click="close()">取消</span>
 					<em @click='fabuFn()'>发布</em>
 				</div>
-			<textarea  autofocus id='textarea'  v-model='value' class="inp-bb" placeholder="写点什么..."></textarea>
+			<textarea  autofocus id='textarea' @input="maxLen(value)" maxlength="100"  v-model='value' class="inp-bb" placeholder="写点什么..."></textarea>
+			<em class="em-max">{{maxL}}</em>
 			</div>
 			
 		</div>
 		<div v-show='fixed' class="pinlun-fixed">
 			<input @click="inpshow()" readonly placeholder="发表评论">
 			<div class="icon-fixed">
-				<p @click="zan()">
+				<p v-if='indexInfo.selfPraise==0' @click="zan()">
 					<img src="../../../assets/img/zan0.png"/>
+					<span>{{zanNum}}</span>
+				</p>
+				<p v-else="" @click="zanQx()">
+					<img src="../../../assets/img/zan1.png"/>
 					<span>{{zanNum}}</span>
 				</p>
 				<p>
@@ -69,9 +74,13 @@
 					{{speakAll}}
 				</p>
 				
-				<p @click='Soucang()'>
+				<p v-if='indexInfo.selfFavorite==0' @click='Soucang()'>
 					<img style="margin-top: -2px;" src="../../../assets/img/sc0.png"/>
-					<span>{{indexInfo.favorite}}</span>
+					<!--<span>{{indexInfo.favorite}}</span>-->
+				</p>
+				<p v-else @click='SoucangQx()'>
+					<img style="margin-top: -2px;" src="../../../assets/img/sc1.png"/>
+					<!--<span>{{indexInfo.favorite}}</span>-->
 				</p>
 			</div>
 		</div>
@@ -102,6 +111,7 @@
 				speakList:'',
 				value:'',
 				speakAll:'',
+				maxL:100,
 			}
 		},
 		filters:{
@@ -116,6 +126,10 @@
 		methods:{
 			back(){
 				this.$router.go(-1)
+			},
+			maxLen(val){
+				var self=this;
+				self.maxL=100-val.length
 			},
 			getInfo(){
 				var self=this;
@@ -138,17 +152,43 @@
 				ajax.post_data(url,params,function(d){
 					console.log('点赞',d)
 					self.zanNum+=1
+					self.getInfo();
+				})
+			},
+			zanQx(){
+				var self=this;
+				var url=int.index1Zanquxiao+self.$route.params.id;
+				var params={
+
+				};
+				ajax.delete_data(url,params,function(d){
+					console.log('取消点赞',d)
+					self.zanNum-=1
+					self.getInfo();
 				})
 			},
 			Soucang(){
 				var self=this;
 				var url=int.index1Soucang+self.$route.params.id;
 				var params={
-					
 				};
 				ajax.post_data(url,params,function(d){
 					console.log('收藏',d)
-					
+					if(d.code==0){
+						self.getInfo();
+					}
+				})
+			},
+			SoucangQx(){
+				var self=this;
+				var url=int.index1SQuxiao+self.$route.params.id;
+				var params={
+				};
+				ajax.delete_data(url,params,function(d){
+					console.log('取消收藏',d)
+					if(d.code==0){
+						self.getInfo();
+					}
 				})
 			},
 			more1(){
@@ -175,11 +215,11 @@
 						}
 						if(d.data.total==0){
 							self.next1=false;
-							self.next1_text='暂无留言'
+							self.next1_text='暂无评论'
 						}
 						else{
 							self.next1=true;
-							self.next1_text='加载更多'
+							self.next1_text='查看更多'
 						}
 						if(d.data.current==d.data.pages){
 							self.next1=false;
@@ -205,13 +245,13 @@
 						}
 						if(d.data.total==0){
 							self.next1=false;
-							self.next1_text='暂无留言'
+							self.next1_text='暂无评论'
 						}
 						else{
 							self.next1=true;
-							self.next1_text='加载更多'
+							self.next1_text='查看更多'
 						}
-						if(d.data.records.length==d.data.pages){
+						if(d.data.current==d.data.pages){
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}
@@ -246,6 +286,7 @@
 							self.display=false;
 							self.fixed=true;
 							self.value='';
+							self.maxL=100;
 						}
 					})
 				}
@@ -309,7 +350,7 @@
         margin: 0.4rem 0 2rem;
         padding-bottom: 20px;
         ul>li{
-            padding: 0.75rem;
+            padding:0.25rem 0.75rem;
         }
         div.pinglun{
             border-bottom: 1px solid #e4e4e4;
@@ -429,5 +470,10 @@
 			background: #E5E5E5;
 			border: none;
 		}
+	}
+	.em-max{
+		position: absolute;
+		bottom: 0.5rem;
+		right: 0.75rem;
 	}
 </style>

@@ -20,9 +20,9 @@
 			</div>
 			<div class="bgg"></div>
 			
-			<div class="dan-box">
+			<div class="dan-box" v-show="danTitle">
 				<span>留言<em>({{speakAll}})</em></span>
-				<img src="../../../../assets/img/dan_n.png"/>
+				<img @click="danOn()" src="../../../../assets/img/dan_n.png"/>
 			</div>
 			<div class="speak-box">
 				<ul class="speak-ul">
@@ -43,10 +43,41 @@
 			</div>
 		</div>
 
-		<div class="speak-bb">
-			<input v-model="bb" placeholder="我来说两句..." type="text" />
-			<p @click="speakBB()">发布</p>
+		
+		
+		<div v-show='fixed' class="pinlun-fixed speak-bb">
+			<input @click="inpshow()" readonly placeholder="发表评论">
 		</div>
+		<div class="component-bbb" v-show="display">
+			<div class="inp-bbBox">
+				<div>
+					<span @click="close()">取消</span>
+					<em @click='speakBB()'>发布</em>
+				</div>
+			<textarea  autofocus="autofocus" id='textarea' @input="maxLen(bb)" maxlength="100"  v-model='bb' class="inp-bb" placeholder="写点什么..."></textarea>
+			<em class="em-max">{{maxL}}</em>
+			</div>
+			
+		</div>
+		<div v-show='danmu' class="danmu-cover">
+			<div class="danmu-box">
+			 	<h1>20条弹幕来袭</h1>
+				 <p @click="danOff()">
+				 	<img src="../../../../assets/img/dan_y.png"/>
+				 </p>
+				 <div>
+				 	<ul class="danmu-ul">
+				 		<li>
+				 			123456
+				 		</li>
+				 		<li>
+				 			123456
+				 		</li>
+				 	</ul>
+				 </div>
+			</div>
+		</div>
+		
 	</div>
 </template>
 
@@ -64,7 +95,12 @@
 				speakList:[],  //话题列表
 				next1_text:'',
 				next1:true,	//加载更多 状态
-				bb:''  //留言 BB
+				bb:'',  //留言 BB
+				fixed:true,
+				display:false,
+				maxL:100,
+				danTitle:true,
+				danmu:false,
 			}
 		},
 		created(){
@@ -84,6 +120,23 @@
 		methods: {
 			back() {
 				this.$router.go(-1);
+			},
+			maxLen(val){
+				var self=this;
+				self.maxL=100-val.length
+			},
+			danOn(){
+				//开启弹幕
+				var self=this;
+				self.danmu=true;
+				self.danTitle=false;
+				$('.danmu-ul li').addClass('danmuLeft')
+			},
+			danOff(){
+				//关闭弹幕
+				var self=this;
+				self.danmu=false;
+				self.danTitle=true;
 			},
 			getInfo(){
 				var self=this;
@@ -174,14 +227,28 @@
 					ajax.post_data(url,params,function(d){
 						console.log('BB详情',d)
 						if(d.code==0){
+							self.display=false;
+							self.fixed=true;
 							self.bb='';
-							self.getList()
+							self.maxL=100;
+							self.getList();
+							
 						}
 					})
 				}
 				
-			}
-	
+			},
+			inpshow () {
+				var self=this;
+				self.display=true;
+				self.fixed=false;
+
+			},
+			close(){
+				var self=this;
+				self.display=false;
+				self.fixed=true;
+			},
 		}
 	})
 </script>
@@ -239,7 +306,7 @@
 			li{
 				padding: 0.75rem;
 				background: #fff;
-				margin: 10px 0;
+				border-bottom: 1px solid #E4E4E4;
 				>div{
 					overflow: hidden;
 					height: 2rem;
@@ -287,12 +354,13 @@
 		bottom:0;
 		left: 0;
 		width: 100%;
-		height: 2.25rem;
+		height: 2.5rem;
 		padding: 0 0.75rem ;
 		background: #fff;
+		padding-top: 0.4rem;
 		input{
 			line-height: 1.5rem;
-			width: 88%;
+			width: 100%;
 			background: #E5E5E5;
 			border-radius: 1rem;
 			height: 1.5rem;
@@ -304,5 +372,99 @@
 			height: 1.5rem;
 			color: #555;
 		}
+	}
+	  .component-bbb{
+    	position: fixed;
+    	bottom: 0;
+    	left: 0;
+    	width: 100%;
+    	height: 10rem;
+    	background: #E5E5E5;
+    }
+    .inp-bbBox{
+		padding: 0.5rem 0.75rem;
+		>div{
+			margin: 0.5rem 0;
+			overflow: hidden;
+			span{
+				float: left;
+			}
+			em{
+				float: right;
+			}
+		}
+		input,textarea{
+			width: 100%;
+			height: 100%;
+			height: 8rem;
+			background: #E5E5E5;
+			border: none;
+		}
+	}
+	.em-max{
+		position: absolute;
+		bottom: 0.5rem;
+		right: 0.75rem;
+	}
+	.danmu-cover{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 14rem;
+		background: rgba(0,0,0,.5);
+		div.danmu-box{
+			padding: 0.75rem 0 0;
+			overflow: hidden;
+			h1{
+				float: left;
+				margin-left: 0.75rem;
+				color: #fff;
+			}
+			p{
+				margin-right: 0.75rem;
+				float: right;
+				img{
+					width: 1.2rem;
+				}
+			}
+			>div{
+				clear: both;
+				color: #fff;
+			}
+		}
+		
+		
+		
+	}
+	.danmuLeft{
+		-webkit-animation:myfirst 3000 linear;
+		-moz-animation:myfirst  3000 linear;
+		animation:myfirst  3000 linear;
+	}
+	@keyframes myfirst
+	{
+		0 {left: 500px;}
+		100% {left: 0;}
+	}
+	
+	@-moz-keyframes myfirst /* Firefox */
+	{
+		0 {left: 500px;}
+		100% {left: 0;}
+	}
+		
+	@-webkit-keyframes myfirst /* Safari 和 Chrome */
+	{
+		0 {left: 500px;}
+		100% {left: 0;}
+	}
+	
+
+	.danmu-ul li{
+		position: absolute;
+		top: 0.75rem;
+		left: 500px;
+	
 	}
 </style>

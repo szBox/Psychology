@@ -63,4 +63,14 @@ export default {
   
   //留言板-- 留言
   speakBB:host+'topicComment/add',
+  
+  
+  
+  //index2
+  //学生  头部
+  navTeacher:host+'teacher/list/page',
+  //预约周期
+  tableWeek:host+'subscribe/list/week',
+  
+  
 }

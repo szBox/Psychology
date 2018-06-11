@@ -95,10 +95,10 @@
 							<i @click="shenheGo(item2.id,3)">不通过</i>
 						</h6>
 					</li>
-					
+					<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
 					
 				</ul>
-				<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
+				
 			</div>
 			
 			
@@ -205,6 +205,7 @@
 		mounted(){
 			var self=this;
 			this.getUser()
+			//this.getPage1()  //获取的 已报名分页 列表
 			this.getList1()
 //			this.getList3()
 		},
@@ -300,17 +301,14 @@
 		            }
 	          	});
 			},
-
-					
-	
-			getList1(){
+			getPage1(){
 				var self=this;
           		//查看 详情的 报名记录列表
 	          	var url2=int.activityInfoBaoming;
 	          	var params2={
 					activityId:self.$route.params.id,
 					current:self.page1,
-					size:1,
+					size:2,
 					state:2,
 					
 				} 
@@ -329,12 +327,87 @@
 							self.next1=true;
 							self.next1_text='加载更多'
 						}
-						if(d.data.current==d.data.total){
+						if(d.data.current==d.data.pages){
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}
 						
 					}
+	             
+	
+	          	});
+          	},
+					
+	
+			getList1(){
+				var self=this;
+          		//查看 详情的 报名记录列表
+	          	var url2=int.activityInfoBaoming;
+	          	var params2={
+					activityId:self.$route.params.id,
+					current:self.page1,
+					size:2,
+					state:2,
+					
+				} 
+	          	ajax.post_data(url2, params2, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('报名记录',d);
+					if(d.code==0){
+						for(var i = 0; i < d.data.records.length; i++) {
+							self.baominList=d.data.records;
+							}
+						if(d.data.total==0){
+							self.next1=false;
+							self.next1_text='暂无留言'
+						}
+						else{
+							self.next1=true;
+							self.next1_text='加载更多'
+						}
+						if(d.data.current==d.data.pages){
+							self.next1=false;
+							self.next1_text='没有更多了'
+						}
+						
+					}
+	             
+	
+	          	});
+          	},
+          	getPage2(){
+				var self=this;
+          		//查看 详情的 未审核记录列表
+	          	var url2=int.activityInfoBaoming;
+	          	var params2={
+					activityId:self.$route.params.id,
+					current:self.page2,
+					size:10,
+					state:1,
+					
+				} 
+	          	ajax.post_data(url2, params2, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('待审核',d);
+					if(d.code==0){
+						for(var i = 0; i < d.data.records.length; i++) {
+							self.shenheList.push(d.data.records[i]);
+							}
+						if(d.data.total==0){
+							self.next2=false;
+							self.next2_text='暂无数据'
+						}
+						else{
+							self.next2=true;
+							self.next2_text='加载更多'
+						}
+						if(d.data.current==d.data.pages){
+							self.next2=false;
+							self.next2_text='没有更多了'
+						}
+						
+					}
+				
 	             
 	
 	          	});
@@ -355,17 +428,17 @@
 		            console.log('待审核',d);
 					if(d.code==0){
 						for(var i = 0; i < d.data.records.length; i++) {
-							self.shenheList.push(d.data.records[i]);
+							self.shenheList=d.data.records;
 							}
 						if(d.data.total==0){
 							self.next2=false;
-							self.next2_text='暂无留言'
+							self.next2_text='暂无数据'
 						}
 						else{
 							self.next2=true;
 							self.next2_text='加载更多'
 						}
-						if(d.data.current==d.data.total){
+						if(d.data.current==d.data.pages){
 							self.next2=false;
 							self.next2_text='没有更多了'
 						}
@@ -380,14 +453,14 @@
 				//加载更多
 				var vm = this;
 				vm.page1++;
-				vm.getList1();
+				vm.getPage1();
 
 			},
 			more2(){
 				//加载更多
 				var vm = this;
 				vm.page2++;
-				vm.getList2();
+				vm.getPage2();
 
 			},
 			closeAlert(){
@@ -466,7 +539,7 @@
 			            console.log('',d);
 						if(d.code==0){
 							self.baominList.push(d.data.records);
-							if(d.data.current==d.data.total){
+							if(d.data.current==d.data.pages){
 								self.next1=false;
 								self.next1_text='没有更多了'
 							}

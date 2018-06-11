@@ -64,6 +64,9 @@
 				ztype: false,
 				items1: [],
 				navList:[], //nav头部列表
+				navList2:[
+				{name:1},{name:2},{name:3},{name:4},{name:5},
+				]
 			
 			}
 		},
@@ -85,16 +88,7 @@
 //			setTimeout(function(){
 //				$('#page').height($('.nav-list').height())
 //			},500)
-			var navSwiper = new Swiper('#nav', {
-				freeMode: true,
-				slidesPerView:'auto',
-				on: {
-				    transitionEnd: function(){
-
-				    },
-				  },
-				
-			});
+			
 
 	
 		},
@@ -114,7 +108,7 @@
 				var sid=localStorage.getItem('sid');
 				var params={
 					current:1,
-					size:10,
+					size:5,
 				}
 				 ajax.post_data(url, params, function(d) {
 		//        	_this.$root.eventHub.$emit('Vloading',false)
@@ -123,10 +117,18 @@
 						for(let i = 0; i < d.data.records.length; i++) {
 							self.navList=d.data.records;
 						}
+						 self.$nextTick(function(){
+						 	var navSwiper = new Swiper('#nav', {
+							freeMode: true,
+							slidesPerView:'auto',
+						});
+						 })
+						
 					}
 		       });
 			},
 			navOn(i,name){
+				
 				var self=this;
 				self.indexTitle=name;
 				var url=int.index1List;
@@ -141,6 +143,9 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("专题i列表",d);
 					if(d.code==0){
+						if(d.data.records.length==0){
+							self.newList='';
+						}
 						for(let i = 0; i < d.data.records.length; i++) {
 							self.newList=d.data.records;
 						}
