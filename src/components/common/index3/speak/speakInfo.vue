@@ -61,20 +61,20 @@
 		</div>
 		<div v-show='danmu' class="danmu-cover">
 			<div class="danmu-box">
-			 	<h1>20条弹幕来袭</h1>
+			 	<h1 v-if='speakAll!=0'>{{speakAll}}条弹幕来袭</h1>
 				 <p @click="danOff()">
 				 	<img src="../../../../assets/img/dan_y.png"/>
 				 </p>
-				 <div>
-				 	<ul class="danmu-ul">
-				 		<li>
-				 			123456
-				 		</li>
-				 		<li>
-				 			123456
-				 		</li>
-				 	</ul>
-				 </div>
+				
+			 	<ul  v-if='speakAll!=0' class="danmu-ul">
+			 		<li v-for="(item,index) in speakList">
+						<p>{{item.content}}</p>
+					</li>
+			 	</ul>
+			 	<h4 class='err-dan' v-if='speakAll==0'>
+			 		暂无弹幕
+			 	</h4>
+				
 			</div>
 		</div>
 		
@@ -103,11 +103,11 @@
 				danmu:false,
 			}
 		},
-		created(){
+		mounted(){
 			var self=this;
 			self.getInfo();
 			self.getPage();
-			
+
 		},
 		filters:{
 			...filter,
@@ -125,18 +125,42 @@
 				var self=this;
 				self.maxL=100-val.length
 			},
+			danStyle(){
+				var margin;
+				var mNum=200
+				var times;
+				console.log('长度',$('.danmu-ul li').length)
+				for(var i=0; i<$('.danmu-ul li').length; i++){
+					var ran=(Math.random()*1)
+					console.log('随机数',ran)
+					if((ran*(i+1))<5){
+						times=5
+					}else if((ran*(i+1))>10){
+						times=10
+					}else{
+						times=ran*(i+1)
+					}
+					$('.danmu-ul li').eq(i).css({
+						left:mNum*(1+ran)+'%',
+						transition:"all "+times+"s linear",
+					})
+				}
+			},
 			danOn(){
 				//开启弹幕
 				var self=this;
 				self.danmu=true;
 				self.danTitle=false;
-				$('.danmu-ul li').addClass('danmuLeft')
+				$('.danmu-ul li').css({
+					left:-100+'%'
+				})
 			},
 			danOff(){
 				//关闭弹幕
 				var self=this;
 				self.danmu=false;
 				self.danTitle=true;
+				self.danStyle()
 			},
 			getInfo(){
 				var self=this;
@@ -198,9 +222,14 @@
 					console.log('留言列表详情',d)
 					self.speakAll=d.data.total;
 					if(d.code==0){
+						
 						for(let i = 0; i < d.data.records.length; i++) {
 							self.speakList=d.data.records;
 						}
+						self.$nextTick(function(){
+							self.danStyle()
+						})
+						
 						if(d.data.total==0){
 							self.next1=false;
 							self.next1_text='暂无留言'
@@ -251,6 +280,11 @@
 			},
 		}
 	})
+	
+	
+	
+	
+	
 </script>
 
 <style scoped lang="less">
@@ -314,7 +348,6 @@
 						width: 2rem;
 						height: 2rem;
 						border-radius: 50%;
-						border: 1px solid red;
 						margin-right: 0.4rem;
 						float: left;
 					}
@@ -414,6 +447,7 @@
 		height: 14rem;
 		background: rgba(0,0,0,.5);
 		div.danmu-box{
+			height: 100%;
 			padding: 0.75rem 0 0;
 			overflow: hidden;
 			h1{
@@ -428,43 +462,55 @@
 					width: 1.2rem;
 				}
 			}
-			>div{
+			
+				
+			>ul.danmu-ul{
+				height: 100%;
 				clear: both;
-				color: #fff;
+			color: #fff;
+			height: 100%;
+				li{
+					position: absolute;
+					height: 1.5rem;
+					line-height: 1.5rem;
+					border: 2px solid red;
+					/*left:300%;
+					transition:left 5s linear;
+					-webkit-transition:left 5s linear;*/
+				}
+				li:nth-child(5n-4){
+					top: 15%;
+					background: ;
+				}
+				li:nth-child(5n-3){
+					top: 30%;
+				}
+				li:nth-child(5n-2){
+					top: 45%;
+				}
+				li:nth-child(5n-1){
+					top: 65%;
+				}
+				li:nth-child(5n){
+					top: 75%;
+				}
 			}
+			
 		}
 		
+		.err-dan{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-webkit-transform: translate(-50%,-50%);
+			-moz-transform: translate(-50%,-50%);
+			-ms-transform: translate(-50%,-50%);
+			-o-transform: translate(-50%,-50%);
+			transform: translate(-50%,-50%);
+		}
 		
-		
 	}
-	.danmuLeft{
-		-webkit-animation:myfirst 3000 linear;
-		-moz-animation:myfirst  3000 linear;
-		animation:myfirst  3000 linear;
-	}
-	@keyframes myfirst
-	{
-		0 {left: 500px;}
-		100% {left: 0;}
-	}
-	
-	@-moz-keyframes myfirst /* Firefox */
-	{
-		0 {left: 500px;}
-		100% {left: 0;}
-	}
-		
-	@-webkit-keyframes myfirst /* Safari 和 Chrome */
-	{
-		0 {left: 500px;}
-		100% {left: 0;}
-	}
-	
 
-	.danmu-ul li{
-		position: absolute;
-		top: 0.75rem;
-		left: 500px;
-	
-	}
+
+	 
 </style>

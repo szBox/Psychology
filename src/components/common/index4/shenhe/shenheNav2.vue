@@ -2,36 +2,36 @@
 	<div class="shengheNav2">
 		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li v-for="(item, index) in items" @click="goPath(index)">
+				<li v-for="(item, index) in AllList" @click="goPath(item.id)">
 					<div class="lf zutuan-img">
 						<img src="../../../../assets/img/ren1.png" alt="" />
-						<h1>王大力</h1>
-						<p>我发起</p>
+						<h1>{{item.nickName}}</h1>
+						<p>{{item.type | TypeLeft}}</p>
 						<h5>30分钟前</h5>
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
-						<span>植树活动</span>
+						<span>{{item.name}}</span>
 						<em>
 							<span>
-								<i>10</i>人/
+								<i>{{item.count}}</i>人/
 							</span>
-							<i>20</i>人
+							<i>{{item.total}}</i>人
 						</em>
 					
 					</h1>
-					<h2>我想组织一次秋游,希望大家积极来参与</h2>
+					<h2>{{item.content}}</h2>
 					<div class="activitys-info">
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
 							<p>
-								<span>8-17 08:00</span>~
-								<span>8-18 08:00</span>
+								<span>{{item.signupStartTime | mdDate }}</span>~
+								<span>{{item.signupEndTime | mdDate }}</span>
 							</p>
 						</div>
 						<div>
 							<img src="../../../../assets/img/icon_money.png" alt="" />
-							<em>20元</em>
+							<em>{{item.payPer}}元</em>
 						</div>
 					</div>
 					</div>
@@ -43,36 +43,87 @@
 </template>
 
 <script>
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	export default({
 		data() {
 			return {
 				//				tab_index:2
-				items: [],
+				AllList: [],
 				/*最后的数组*/
 				page: 1,
 				/*当前页码*/
 			}
 		},
-		created() {
-			this.bottom = 3; //一页展示10个
-			this.result = '';
-			for(let i = 1; i <= this.bottom; i++) {
-				this.result = ``
-				this.items.push(this.result);
+		filters:{
+			...filter,
+			TypeLeft(val){
+				if(val==1){
+					return '我发起'
+				}
+				else if(val==2){
+					return '审核中'
+				}
+				else if(val==3){
+					return '我参与'
+				}
+				else if(val==4){
+					return '驳回'
+				}
+				else if(val==5){
+					return	'已满'
+				}
+				else if(val==6){
+					return	'不在报名时间内'
+				}
+				else if(val==7){
+					return '未参与'
+				}
 			}
-
-			console.log(this.items);
+			
 		},
+		mounted(){
+			this.getList()
+		},
+		
 		methods: {
 			goPath(i) {
 				this.$router.push({
-					path: "/activitysList/activitysInfo/" + i
+					path: "/shenheNav2Info/" + i
 				})
 
 			},
-			goWrite() {
-				this.$router.push({
-					path: "/index3/speakWrite"
+			getList(){
+				var self=this;
+				var url=int.activityList;
+				var sid=localStorage.getItem('sid')
+				var params={
+					 current: self.page,
+					 sid: sid,
+					 size: 10,
+//					 state: 2,
+					 type:2,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('组团审核列表',d)
+					self.AllList=d.data.records;
+				})
+			},
+			getPage(){
+				var self=this;
+				var url=int.speakList;
+				var sid=localStorage.getItem('sid')
+				var params={
+					 current: self.page,
+					 sid: sid,
+					 size: 10,
+					 state: 2,
+					 type:2,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('话题发布详情',d)
+					self.AllList=d.data.records;
 				})
 			},
 			refresh(done) {

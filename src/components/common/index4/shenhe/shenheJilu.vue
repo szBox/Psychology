@@ -2,17 +2,17 @@
 	<div class="activitysList">
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
-			<h1>我的审核</h1>
-			<em v-if='roleType' @click="goshenhe()">审核记录</em>
+			<h1>审核记录</h1>
+			
 		</header>
 		<div class="b-content">
 			<div class="activitysBar">
 				<div class="activitysBar-div">
-					<router-link to='/index4/shenhe/'replace>
+					<router-link to='/index4/shenheJilu/'replace>
 						<em>话题审核</em>
 						<span></span>
 					</router-link>
-					<router-link :to='linkto' replace>
+					<router-link to='/index4/shenheJilu/shenheJilu2' replace>
 						<em>组团审核</em>
 						<span></span>
 					</router-link>
@@ -43,25 +43,12 @@
 		},
 		mounted(){
 			var self=this;
-			var role=localStorage.getItem('role');
-			if(role=='S'){
-				self.linkto='/index4/shenhe/shenheNav2'
-			}else{
-				self.linkto='/index4/shenhe/shenheNav3'
-			}
-			if(role=='M'){
-				self.roleType=true
-			}
 		},
 		methods: {
 			back() {
 				this.$router.go(-1);
 			},
-			goshenhe(){
-				this.$router.push({
-					path: "/index4/shenheJilu"
-				})
-			}
+		
 			
 		}
 	})

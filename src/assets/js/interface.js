@@ -69,8 +69,40 @@ export default {
   //index2
   //学生  头部
   navTeacher:host+'teacher/list/page',
+  //查看 老师信息
+  navTeacherInfo:host+'teacher/get/',
   //预约周期
   tableWeek:host+'subscribe/list/week',
+  //学生给老师点赞
+  TeacherZan:host+'teacherPraise/add/',
+   //学生给老师点赞   取消
+  TeacherZanQx:host+'teacherPraise/delete/',
+  //预约记录列表
+  yuyueJilu:host+'subscribeRecord/list/page',
+  
+  //index2
+   //老师
+   navTeacherInfo:host+'teacher/get/',
+   //预约周期
+  tableWeek:host+'subscribe/list/week',
+  //查看预约名单
+  stuNameList:host+'subscribeRecord/list/teacher',
+  //老师查看排行榜
+  teacherPHP:host+'teacher/list/ranking',
   
   
+  
+  
+  //index4 我的
+  //验证身份
+	roleType:host+'auth/identity',
+	
+	//我的话题
+	speakList:host+'topic/list/page',
+	
+	//话题审核
+	speakShenhe: host+'topic/edit',
+	//我的收藏
+	soucangList:host+'article/list/favorite',
+	
 }

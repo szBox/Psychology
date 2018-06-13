@@ -3,7 +3,7 @@
 
 		<header class="header">
 			<div  @click="back()"><img src="../../../assets/img/goback.png" alt=""/></div>
-			<h1>排行榜</h1>
+			<h1>排行榜(老师)</h1>
 
 		</header>
 		<div class="b-content">
@@ -23,12 +23,12 @@
 				</h1>
 			</div>
 
-			<div class="paiming-div" v-if='types==1'>
+			<div class="paiming-div">
 				<div class="nav-flex">
-					<div v-for='(item,index) in TeacherList' v-if='index==1' >
+					<div v-for='(item,index) in allList' v-if='index==1' >
 						<div class="nav-flex-img">
 							<div>
-								<img :src="item.img" />
+								<img :src="item.headPic" />
 							</div>
 							
 							<p>
@@ -38,11 +38,12 @@
 						<h2>{{item.name}}</h2>
 						<p>预约数<span>{{item.num}}</span>例</p>
 					</div>
-					<div v-for='(item,index) in TeacherList' v-if='index==0'>
+					<div v-for='(item,index) in allList' v-if='index==0' >
 						<div class="nav-flex-img">
 							<div>
-								<img :src="item.img" />
+								<img :src="item.headPic" />
 							</div>
+							
 							<p>
 								<span>NO.{{index+1}}</span>
 							</p>
@@ -50,11 +51,12 @@
 						<h2>{{item.name}}</h2>
 						<p>预约数<span>{{item.num}}</span>例</p>
 					</div>
-					<div v-for='(item,index) in TeacherList' v-if='index==2'>
+					<div v-for='(item,index) in allList' v-if='index==2' >
 						<div class="nav-flex-img">
 							<div>
-								<img :src="item.img" />
+								<img :src="item.headPic" />
 							</div>
+							
 							<p>
 								<span>NO.{{index+1}}</span>
 							</p>
@@ -65,9 +67,9 @@
 				</div>
 
 				<ul class="paiming-list">
-					<li :class="{'my-li':item.name=='我'}" v-for="(item,index) in TeacherList" v-if='index>2'>
+					<li :class="{'my-li':item.name=='我'}" v-for="(item,index) in allList" v-if='index>2'>
 						<h1>{{index+1}}</h1>
-						<img :src="item.img" alt="" />
+						<img :src="item.headPic" alt="" />
 						<div class="teacher-name">
 							<h2>{{item.name}}</h2>
 							<p>预约数<span>{{item.num}}</span>例</p>
@@ -77,22 +79,15 @@
 							<p><img src="../../../assets/img/chat_w.png" />100</p>
 						</div>
 						<div v-else class="teacher-icon">
-							<p><img src="../../../assets/img/zan0.png" />200</p>
-							<p><img src="../../../assets/img/pinglun.png" />100</p>
+							<p><img src="../../../assets/img/zan0.png" />{{item.praiseCount}}</p>
+							<p><img src="../../../assets/img/pinglun.png" />{{item.id}}</p>
 						</div>
 					</li>
 
 				</ul>
 			</div>
 
-			<div class="paiming-div" v-if='types==2'>
-				222222222
-			</div>
-
-			<div class="paiming-div" v-if='types==3'>
-				3333333333333
-			</div>
-
+			
 		</div>
 
 	</div>
@@ -100,6 +95,8 @@
 </template>
 
 <script>
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
 	export default {
 		components: {
 
@@ -109,71 +106,63 @@
 		},
 		data() {
 			return {
+				page1:1,
+				allList:[],
+				next1_text:'',
+				next1:true,	//加载更多 状态
 				value: '',
 				types: '1',
-				TeacherList: [{
-						name: '李老师',
-						img: 'src/assets/img/nv.png',
-						num: '200',
-						Tid:1,
-					},
-					{
-						name: '凉老师',
-						img: 'src/assets/img/teacher2.png',
-						num: '160',
-						Tid:2,
-					},
-					{
-						name: '张教授',
-						img: 'src/assets/img/teacher3.png',
-						num: '120',
-						Tid:3,
-					},
-					{
-						name: '梁导师',
-						img: 'src/assets/img/teacher3.png',
-						num: '110',
-						Tid:4,
-					},
-					{
-						name: '李老师',
-						img: 'src/assets/img/teacher2.png',
-						num: '109',
-						Tid:5,
-					},
-					{
-						name: '我',
-						img: 'src/assets/img/teacher2.png',
-						num: '109',
-						Tid:5,
-					},
-					{
-						name: '王尼玛',
-						img: 'src/assets/img/teacher2.png',
-						num: '109',
-						Tid:5,
-					},
-				],
 			
 			}
 		},
 		mounted() {
-//			for(var i=0; i<this.TeacherList.length; i++){
-//				if(i<3){
-//					
-//				}
-//				
-//			}
+			this.getNav1(1);
 		},
 		methods: {
 			back() {
 				this.$router.go(-1);
 			},
-		
+			getNav1(i){
+				var self=this;
+				var url=int.teacherPHP;
+				var sid=localStorage.getItem('sid');
+				var loginId=localStorage.getItem('loginId');
+				var params={
+					current:self.page1,
+					pageSize:10,
+					type:i,
+				}
+				 ajax.get_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("排行榜列表",d);
+					if(d.code==0){
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.allList=d.data.records;
+						}
+						if(d.data.total==0){
+							self.next1=false;
+							self.next1_text='暂无评论'
+						}
+						else{
+							self.next1=true;
+							self.next1_text='查看更多'
+						}
+						if(d.data.current==d.data.pages){
+							self.next1=false;
+							self.next1_text='没有更多了'
+						}
+						if(!d.data.records.length){
+							self.tip=true
+						}
+					}
+					
+		       });
+			},
 			
 			typeToggle(i) {
 				var self = this;
 				self.types = i;
+				self.getNav1(i)
 			},
 			
 		}
@@ -191,6 +180,12 @@
 	.nav-paiming {
 		/*border-bottom: 1px solid #F2F2F2;*/
 		overflow: hidden;
+		position: fixed;
+		top: 2.5rem;
+		left: 0;
+		width: 100%;
+		background: #fff;
+		z-index: 33;
 		display: flex;
 		justify-content: space-around;
 		flex-wrap: wrap;
@@ -279,7 +274,14 @@
 			}
 		}
 		>div:nth-child(2){
-			transform: scale(1.2);
+			.nav-flex-img{
+				
+					transform: scale(1.2);
+				
+			}
+			h2{
+				margin-top: 0.75rem;
+			}
 			.nav-flex-img >p{
 				background: url(../../../assets/img/paim1.png);
 				background-size: 100% 100%;
@@ -347,5 +349,16 @@
 	.my-li{
 		background: #32C4FF;
 		color: #fff;
+	}
+	.paiming-div{
+		margin-top: 3rem;
+	}
+	.more-btn{
+		color: #666;
+		text-align: center;
+		/*border: 0.05rem solid;*/
+		width: 5rem;
+		height: 1.5rem;line-height: 1.5rem;
+		margin: 1rem auto;
 	}
 </style>

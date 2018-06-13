@@ -3,7 +3,7 @@
 
 		<header class="header">
 			<h1>预约咨询</h1>
-			<em @click="goPath({path:'/index2/yuyueName'})">预约名单</em>
+			<em @click="goPath({path:'/index2/yuyueNameT'})">预约名单</em>
 		</header>
 		<div class="b-content">
 			<div id="teacher-swiper" class="swiper-container teacher-swiper">

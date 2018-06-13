@@ -2,21 +2,19 @@
 	<div class="index2" style="">
 
 		<header class="header">
-			<h1>预约咨询(老师)</h1>
-			<em @click="goPath({path:'/index2/yuyueName'})">预约名单</em>
+			<h1>预约咨询(老-师)</h1>
+			<em @click="goPath({path:'/index2/yuyueNameT'})">预约名单</em>
 		</header>
 		<div class="b-content">
 			<div class="teacher-Top">
 				
 						
 						<div class="teacher-img">
-							<img  src="../../../assets/img/nv.png" />
+							<img  :src="teacherInfo.headPic" />
 						</div>
-						<h1>李多云老师 
-							
-						</h1>
+						<h1> {{teacherInfo.name}}</h1>
 						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化 陪你走过人生的低谷</p>
+							<p>{{teacherInfo.personSign}}</p>
 							
 						</div>
 						<div class="see-box">
@@ -24,7 +22,7 @@
 								<img @click="goPath({path:'/chat'})" src="../../../assets/img/zixun.png"/>
 								<span @click="goPath({path:'/chat'})">学生咨询</span>
 								<img src="../../../assets/img/zan_w.png"/>
-								200
+								{{teacherInfo.praiseCount}}
 							
 						</div>
 						<div class="paihan-go" @click="goPhb()">
@@ -41,12 +39,15 @@
 			
 			
 			<div class="show-div">
-				<h3>擅长22222222222</h3>
-				<p>心理治疗</p><p>个人成长</p><p>心理治疗</p>
+				<h3>擅长</h3>
+				<div class="skill" v-for="(skill,index) in skillArr">
+					{{skill}}
+				</div>
+				
 			</div>
 			<div class="show-div">
 				<h3>预约地点</h3>
-				<h5>阳光中学三栋三单元101</h5>
+				<h5>{{address}}</h5>
 			</div>
 			<div class="show-div">
 				<h3>预约时间</h3>
@@ -157,19 +158,26 @@
 </template>
 
 <script>
-	import teacherInfo from '@/components/teacher/index2/teacherInfo' //咨询预约 > 教师信息
-	import yuyueJilu from '@/components/teacher/index2/teacherInfo' //咨询预约 > 预约记录
-	import chat from '@/components/common/chat' //聊天
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
 	import Swiper from 'swiper'
 	export default {
 		components: {
 
+		},
+		filters:{
+			...filter,
+			
 		},
 		created() {
 			console.log('111',this.value)
 		},
 		data() {
 			return {
+				skillArr:[],
+				teacherInfo:'',
+				address:'',
 				value:'',
 				items: [{
 					"day": "2018-05-15",
@@ -276,7 +284,8 @@
 			}
 		},
 		mounted() {
-			
+			this.getInfo();
+			this.getTable();
 			setTimeout(()=>{
 				var table = new Swiper('.table-swiper',{
 			  pagination :{
@@ -289,6 +298,44 @@
 		methods: {
 			goPath(path) {
 				this.$router.push(path)
+			},
+			getInfo(){
+				var self=this;
+				var loginId=localStorage.getItem('loginId')
+				var url=int.navTeacherInfo+loginId;
+				var params={
+				};
+				ajax.get_data(url,params,function(d){
+					console.log('老师信息',d)
+					if(d.code==0){
+						self.teacherInfo=d.data;
+						self.skillArr=d.data.skill.split(',');
+					}
+				})
+			},
+			getTable(){
+				var self=this;
+				var loginId=localStorage.getItem('loginId')
+				var url=int.tableWeek;
+				var sid=localStorage.getItem('sid')
+				var params={
+					teacherId:loginId,
+					sid:sid,
+//					startDate:self.starTime,
+//					endDate:self.endTime,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('week详情',d)
+					if(d.code==0){
+						self.weekInfo=d.data;
+						if(d.data.length!=0){
+							self.address=d.data[0].address
+						}else{
+							self.address='暂无'
+						}
+						
+					}
+				})
 			},
 			yuyue(i){
 				alert(i.starttime+'-'+i.endtime)
@@ -439,22 +486,25 @@
 				font-weight: bold;
 				margin: 0.5rem 0;
 			}
-			>p {
+			>.skill {
 				    float: left;
 				    margin-right: 0.5rem;
-				   	background:url(../../../assets/img/qian1.png);
 				    width: 4rem;
 				    height: 1.5rem;
 				    line-height: 1.5rem;
 				    padding-left: 0.3rem;
-				    background-size: 100% 100%;
+				  
 				    color: #fff;
 				}
-			>p:nth-child(2) {
+			>.skill:nth-child(3n-2) {
+				   	background:url(../../../assets/img/qian1.png);
+				    background-size: 100% 100%;
+			}
+			>.skill:nth-child(3n-1) {
 				   	background:url(../../../assets/img/qian2.png);
 				    background-size: 100% 100%;
 			}
-			>p:nth-child(3) {
+			>.skill:nth-child(3n) {
 				   	background:url(../../../assets/img/qian3.png);
 				    background-size: 100% 100%;
 			}

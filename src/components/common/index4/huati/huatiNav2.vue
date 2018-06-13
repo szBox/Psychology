@@ -2,18 +2,21 @@
 	<div class="shengheNav1">
 		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li v-for="(item, index) in AllList" @click="goPath(item.state,item.id)">
+				<li v-for="(speak, index) in speakList" @click="goPath(speak.id)">
 					<div class="lf zutuan-img">
-						<img  class="imgz" :src="item.imageUrl" alt="" />
+						<img  class="imgz" :src="speak.imageUrl" alt="" />
 						
 					</div>
 					<div class="lf zutuan-info">
-						<h2 class="ellipsis">{{item.name}}</h2>
-						
+						<h2 class="ellipsis">{{speak.name}}</h2>
 						<div>
-							<p>{{item.insertTime | niceDate}}</p>
-							<state-shenhe :state='item.state'></state-shenhe>
+							<p>{{speak.insertTime | niceDate}}</p>
+							<h5>
+								<img src="../../../../assets/img/pinglun.png"/>
+								<span>{{speak.commentCount}}</span>
+							</h5>
 						</div>
+						
 						
 					</div>
 					
@@ -24,53 +27,38 @@
 </template>
 
 <script>
+	
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
-	import stateShenhe from '../../State_shenhe'
 	export default({
 		data() {
 			return {
 				//				tab_index:2
-				AllList: [],
+				speakList: [],
 				/*最后的数组*/
 				page: 1,
-				stateColor:'',
 				/*当前页码*/
 			}
+		},
+		created() {
+			
 		},
 		filters:{
 			...filter,
 			
 		},
-		components:{
-			stateShenhe
-		},
 		mounted(){
-			var self=this;
-			var role=localStorage.getItem('role');
-			if(role=='S'||role=='T'){
-				self.getList()
-			}else{
-				self.getList(1)
-			}
-			
+			this.getList()
 		},
 		methods: {
-			goPath(state,i) {
-				if(state=='2'){
-					this.$router.push({
-						path: "/index3/speakInfo/" + i
-					})
-				}else{
-					this.$router.push({
-						path: "/shenheNav1Info/" + i
-					})
-				}
-				
+			goPath(i) {
+				this.$router.push({
+					path: "/index3/speakInfo/" + i
+				})
 
 			},
-			getList(s){
+			getList(){
 				var self=this;
 				var url=int.speakList;
 				var sid=localStorage.getItem('sid')
@@ -78,14 +66,12 @@
 					 current: self.page,
 					 sid: sid,
 					 size: 10,
-					 type: 1,
-					 state:s
+					 state: 2,
+					 type:2,
 				};
 				ajax.post_data(url,params,function(d){
-					console.log('话题审核',d)
-					self.AllList=d.data.records;
-
-					
+					console.log('话题发布详情',d)
+					self.speakList=d.data.records;
 				})
 			},
 			refresh(done) {
@@ -113,12 +99,11 @@
 			
 			border-radius: 0.4rem 0 0 0.4rem;
 			text-align: center;
-			width: 4.5rem;
+			width: 5.5rem;
 			height: 4.5rem;
 		}
 		.zutuan-info{
-			width: 68%;
-			height: 4.5rem;
+			width: 64%;
 			margin-left: 4%;
 			
 			padding:0.1rem 0.5rem  0.5rem 0;
@@ -131,15 +116,22 @@
 			
 			>div{
 				overflow: hidden;
+				line-height: 1.5rem;
 				>p{
 					float: left;
 					font-size: 0.65rem;
 					color: #A1A1A1;
 					margin: 0.5rem 0;
 				}
-				>div{
+				>h5{
 					float: right;
-					margin-top: 0.4rem;
+					margin: 0.5rem 0;
+					img{
+						width: 0.7rem;
+					}
+					span{
+						color: #999;
+					}
 				}
 			}
 		}

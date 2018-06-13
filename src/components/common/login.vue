@@ -188,7 +188,7 @@
     height: 100%;
   }
   .login-img{
-    height: 10rem;
+    height: 12rem;
     text-align: center;
   }
   .login-img>img{

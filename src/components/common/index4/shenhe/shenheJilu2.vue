@@ -1,14 +1,13 @@
 <template>
-	<div class="activitysNav1">
-
+	<div class="shengheNav2">
 		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li v-for="(item, index) in allList" @click="goPath(item.id)">
+				<li v-for="(item, index) in AllList" @click="goPath(item.id)">
 					<div class="lf zutuan-img">
-						<img :src="item.headPic" alt="" />
+						<img src="../../../../assets/img/ren1.png" alt="" />
 						<h1>{{item.nickName}}</h1>
-						<p :class="typeClass">{{item.type | Types}}</p>
-						<h5>{{item.timelast}}</h5>
+						<p>{{item.type | TypeLeft}}</p>
+						<h5>30分钟前</h5>
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
@@ -40,7 +39,6 @@
 				</li>
 			</ul>
 		</scroller>
-
 	</div>
 </template>
 
@@ -51,17 +49,16 @@
 	export default({
 		data() {
 			return {
-				typeClass:'',
-				allList:[],
+				//				tab_index:2
+				AllList: [],
 				/*最后的数组*/
 				page: 1,
-				allPage:'',
 				/*当前页码*/
 			}
 		},
 		filters:{
 			...filter,
-			Types(val){
+			TypeLeft(val){
 				if(val==1){
 					return '我发起'
 				}
@@ -84,87 +81,62 @@
 					return '未参与'
 				}
 			}
+			
 		},
-		created() {
-			var self=this;
-			var mainUrl = int.activityList;
-         	var token=localStorage.getItem('token');
-         	var role=localStorage.getItem('role');
-         	var sid=localStorage.getItem('sid');
-         	 var params = {
-           		current: 1, //当前页
-				sid: sid,	//学校id
-				size: 10,  //每页展示 几条
-				state: 2 //状态
-//				type: 0
-          	};
-          ajax.post_data(mainUrl, params, function(d) {
-//        	_this.$root.eventHub.$emit('Vloading',false)
-            console.log(d);
-             self.page=d.data.current;
-            self.allPage=d.data.pages;
-			if(d.code==0){
-				for(var i = 0; i < d.data.records.length; i++) {
-					self.allList.push(d.data.records[i]);
-				}
-			}
-          });
-
-
+		mounted(){
+			this.getList()
 		},
-
+		
 		methods: {
 			goPath(i) {
 				this.$router.push({
-					path: "/activitysList/activitysInfo/" + i
+					path: "/shenheNav2Info/" + i
 				})
 
 			},
-			
-			goWrite() {
-				this.$router.push({
-					path: "/index3/speakWrite"
+			getList(){
+				var self=this;
+				var url=int.activityList;
+				var sid=localStorage.getItem('sid')
+				var params={
+					 current: self.page,
+					 sid: sid,
+					 size: 10,
+					 state: 2,
+					 type:2,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('组团审核列表',d)
+					self.AllList=d.data.records;
+				})
+			},
+			getPage(){
+				var self=this;
+				var url=int.speakList;
+				var sid=localStorage.getItem('sid')
+				var params={
+					 current: self.page,
+					 sid: sid,
+					 size: 10,
+					 state: 2,
+					 type:2,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('话题发布详情',d)
+					self.AllList=d.data.records;
 				})
 			},
 			refresh(done) {
 				setTimeout(() => {
-					var self=this;
-					var mainUrl = int.activityList;
-		         	var token=localStorage.getItem('token');
-		         	var role=localStorage.getItem('role');
-		         	var sid=localStorage.getItem('sid');
-		         	 var params = {
-		           		current: 1, //当前页
-						sid: sid,	//学校id
-						size: 10,  //每页展示 几条
-						state: 2 //状态
-		//				type: 0
-		          	};
-		          ajax.post_data(mainUrl, params, function(d) {
-		//        	_this.$root.eventHub.$emit('Vloading',false)
-		            console.log(d);
-		             self.page=d.data.current;
-		            self.allPage=d.data.pages;
-					if(d.code==0){
-						for(var i = 0; i < d.data.records.length; i++) {
-							self.allList=d.data.records;
-						}
-					}
-         			 });
+
 					done()
 				}, 1500)
 			},
 			infinite(done) {
-				var self=this;
-				self.page++;
-				console.log(self.page)
-				done(true);
-				console.log('拉啦啦')
-				if(self.page == self.pageAll) {
-//					return
-									
+				if(this.page == 1) {
+					done(true)
 				}
-				
+				console.log('拉啦啦')
 			}
 		}
 	})
@@ -173,7 +145,6 @@
 <style scoped lang="less">
 		
 		.zutuan-img{
-			background: #31C4FF;
 			border-radius: 0.4rem 0 0 0.4rem;
 			text-align: center;
 			width: 5.5rem;
@@ -183,7 +154,7 @@
 				border-radius: 50%;
 			}
 			>h1{
-				color: #fff;
+				color: #333;
 				font-size: 0.8rem;
 			}
 			>p{
@@ -244,23 +215,5 @@
 						color: #EBAF3B;
 					}
 			}
-		}
-		.zutuan-img p.types-1{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-2{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-3{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-4{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-5{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-6{
-			background: #FFA200;
 		}
 </style>

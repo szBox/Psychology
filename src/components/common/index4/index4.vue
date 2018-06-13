@@ -3,21 +3,21 @@
 		<div class="my-top">
 			<div class="img-div" @click="goPath({path:'/index4/ziliao'})">
 				<div>
-					<img class="" src="../../../assets/img/student.png" alt="" />
+					<img class="" :src="myInfo.headPic" alt="" />
 				</div>
 				
 				
 			</div>
 			<div class="ov-div">
-				<p>安小静</p>
+				<p>{{myInfo.nickName}}</p>
 				<img class="" src="../../../assets/img/icon_yu.png" alt="" />
-				<span class="">一圈一点,胜似晚语千言</span>
+				<span class="">{{myInfo.personSign}}</span>
 			</div>
 		</div>
 		
 		
 			<ul class="my-list">
-				<li>
+				<li @click="goPath({path:'/index4/huati'})">
 					<img src="../../../assets/img/icon_wo1.png" alt="" />
 					<span>参与话题</span>
 					<em>
@@ -31,7 +31,13 @@
 						<img src="../../../assets/img/icon_next.png"/>
 					</em>
 				</li>
-				
+				<li v-show='roleT'  @click="goPath({path:'/index4/zixunList'})">
+					<img src="../../../assets/img/icon_wo3.png" alt="" />
+					<span>我的咨询</span>
+					<em>
+						<img src="../../../assets/img/icon_next.png"/>
+					</em>
+				</li>
 				<li @click="goPath({path:'/index4/shenhe'})">
 					<img src="../../../assets/img/icons_1.png" alt="" />
 					<span>我的审核</span>
@@ -52,16 +58,44 @@
 </template>
 
 <script>
-	import setting from '@/components/student/index4/setting/setting'		//我的 > 设置
-	import ziliao from '@/components/student/index4/ziliao/ziliao'		//我的  >详细资料 
-	import zixunList from '@/components/student/index4/zixun/zixunList'		//我的  >我的咨询 
-	import shoucang from '@/components/student/index4/shoucang/shoucangList'		//我的  >我的收藏
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
 	
 	export default({
+		data() {
+			return {
+				myInfo:'',
+				roleT:true,
+			}
+		},
+		mounted() {
+			this.getRole();
+			var self=this;
+			var role=localStorage.getItem('role');
+			if(role!='S'){
+				self.roleT=false
+			}
+		},
 		methods:{
 			goPath(path){
 				this.$router.push(path)
-			}
+			},
+			getRole(){
+				var self=this;
+				var url=int.roleType;
+				var role=localStorage.getItem('role');
+				var loginId=localStorage.getItem('loginId');
+				var params={
+					id:loginId,
+					type:role,
+				}
+				 ajax.get_data(url, params, function(d) {
+				 	console.log('身份验证',d)
+					if(d.code==0){
+						self.myInfo=d.data;
+					}
+				})
+			},
 		}
 	})
 </script>

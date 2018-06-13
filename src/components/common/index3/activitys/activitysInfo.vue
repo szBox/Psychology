@@ -27,7 +27,7 @@
 			<div class="activi-li">
 				<p>
 					<span>报名时间：</span>
-					08-15 08：00 ~ 08-19 08：00
+					{{userInfo.signupStartTime | niceDate}} ~{{userInfo.signupEndTime | niceDate}}
 				</p>
 				<p>
 					<span>联系方式：</span>
@@ -41,7 +41,7 @@
 			<div class="activi-li">
 				<p>
 					<span>集合时间：</span>
-					08-15 08：00 
+					{{userInfo.gatherStartTime | niceDate}}
 				</p>
 				<p>
 					<span>集合地点：</span>

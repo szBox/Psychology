@@ -12,7 +12,7 @@
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
-						<span>{{item.name}}</span>
+						<span class="ellipsis">{{item.name}}</span>
 						<em>
 							<span>
 								<i>{{item.count}}</i>人/
@@ -21,13 +21,13 @@
 						</em>
 					
 					</h1>
-					<h2>{{item.content}}</h2>
+					<h2 class="ellipsis">{{item.content}}</h2>
 					<div class="activitys-info">
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
 							<p>
-								<span>{{item.signupStartTime | niceDate}}</span>~
-								<span>{{item.signupEndTime | niceDate}}</span>
+								<span>{{item.signupStartTime | mdDate}}</span>~
+								<span>{{item.signupEndTime | mdDate}}</span>
 							</p>
 						</div>
 						<div>
@@ -203,6 +203,9 @@
 
 			h1{
 				font-size: 0.8rem;
+				>span{
+					-webkit-line-clamp: 1;
+				}
 			}
 			h1>em{
 				float: right;
@@ -214,6 +217,7 @@
 			h2{
 				color: #999;
 				font-size: 0.8rem;
+				-webkit-line-clamp: 2;
 			}
 		}
 		.activitys-info{

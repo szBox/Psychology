@@ -288,7 +288,7 @@
 			},
 			goyuyue(){
 				this.$router.push({
-					path:'/index2/yuyueName'
+					path:'/index2/yuyueNameM'
 				})
 			},
 			back() {

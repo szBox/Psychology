@@ -48,12 +48,7 @@
 		},
 		mounted(){
 			var self=this;
-			var role=localStorage.getItem('role');
-			if(role=='S'||role=='T'){
 				self.getList()
-			}else{
-				self.getList(1)
-			}
 			
 		},
 		methods: {
@@ -70,7 +65,7 @@
 				
 
 			},
-			getList(s){
+			getList(){
 				var self=this;
 				var url=int.speakList;
 				var sid=localStorage.getItem('sid')
@@ -79,7 +74,7 @@
 					 sid: sid,
 					 size: 10,
 					 type: 1,
-					 state:s
+					 state:4,
 				};
 				ajax.post_data(url,params,function(d){
 					console.log('话题审核',d)

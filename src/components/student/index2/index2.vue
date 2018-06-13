@@ -12,7 +12,7 @@
 					<div class="swiper-flex" :teacher-id="teacher.id">
 						<div class="teacher-bg">
 						<div class="teacher-img">
-							<img  @click="goPath({path:'/index2/teacherInfo'})" :src="teacher.headPic" />
+							<img  @click="seeTeacher(teacher.id)" :src="teacher.headPic" />
 						</div>
 						<h1>{{ teacher.name }}</h1>
 						<div class='teacher-bb'>
@@ -22,12 +22,16 @@
 					</div>
 					
 					<div class="see-box">
-						<p>
+						<p @click="seeTeacher(teacher.id)">
 							<img src="../../../assets/img/see.png"/>
 							查看信息
 						</p>
-						<h4>
+						<h4 v-if='teacher.selfPraise==0' @click="zan(teacher.praiseCount,teacher.id)">
 							<img src="../../../assets/img/zan_w.png"/>
+							{{teacher.praiseCount}}
+						</h4>
+						<h4 v-else @click='zanQx(teacher.praiseCount,teacher.id)'>
+							<img src="../../../assets/img/zan2.png"/>
 							{{teacher.praiseCount}}
 						</h4>
 					</div>
@@ -307,6 +311,49 @@
 			goPath(path) {
 				this.$router.push(path)
 			},
+			zan(val,id){
+				var self=this;
+				var url=int.TeacherZan+id;
+				var params={
+
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('点赞',d)
+					val+=1
+					self.getTeachZan()
+				})
+			},
+			zanQx(val,id){
+				var self=this;
+				var url=int.TeacherZanQx+id;
+				var params={
+
+				};
+				ajax.delete_data(url,params,function(d){
+					console.log('取消点赞',d)
+					val-=1
+					self.getTeachZan()
+				})
+			},
+			seeTeacher(i){
+				this.$router.push({
+					path:'/index2/teacherInfo/'+i
+				})
+			},
+			getTeachZan(){
+				var self=this;
+				var url=int.navTeacher;
+				var params={
+					current: self.theachPage,
+				    type: 2,
+				    size:5,
+				};
+				ajax.post_data(url,params,function(d){
+					if(d.code==0){
+						self.teachNav=d.data.records;
+					}
+				})
+			},
 			getTeachList(){
 				var self=this;
 				var url=int.navTeacher;
@@ -314,6 +361,7 @@
 					current: self.theachPage,
 				    type: 2,
 				    size:5,
+				    
 				};
 				ajax.post_data(url,params,function(d){
 					console.log('老师列表',d)
@@ -365,10 +413,26 @@
 					console.log('week详情',d)
 					if(d.code==0){
 						self.weekInfo=d.data;
-						self.address=d.data[0].address
+						if(d.data.length!=0){
+							self.address=d.data[0].address
+						}else{
+							self.address='暂无'
+						}
+						
 					}
 				})
 			},
+			niceDate(val){
+		    if (val != null) {
+		      let date = new Date(val),
+		        years = date.getFullYear() ,
+		        month = (date.getMonth() + 1),
+		        day = date.getDate()
+		        
+		      return years + '-' + month + '-' + day 
+		    }
+		    return "";
+  			},
 			getWeek(star,end){
 				var self=this;
 				var week = new Date().getDay(); 
@@ -392,8 +456,17 @@
 					star=new Date().getTime() - 24*4*60*60*1000
 					end=new Date().getTime() + 24*7*60*60*1000
 				}
-				self.starTime="2018-06-11";
-		       	self.endTime='2018-06-22'
+				else if(week==6){
+					star=new Date().getTime() - 24*5*60*60*1000
+					end=new Date().getTime() + 24*6*60*60*1000
+				}
+				else if(week==7){
+					star=new Date().getTime() - 24*6*60*60*1000
+					end=new Date().getTime() + 24*5*60*60*1000
+				}
+				self.starTime=self.niceDate(star);
+				
+		       	self.endTime=self.niceDate(end);
 			},
 			yuyue(i){
 				alert(i.starttime+'-'+i.endtime)
@@ -573,19 +646,22 @@
 			>div {
 				    float: left;
 				    margin-right: 0.5rem;
-				   	background:url(../../../assets/img/qian1.png);
+				   	
 				    width: 4rem;
 				    height: 1.5rem;
 				    line-height: 1.5rem;
 				    padding-left: 0.3rem;
-				    background-size: 100% 100%;
 				    color: #fff;
 				}
-			>div:nth-child(2) {
+			>div:nth-child(3n-2){
+				background:url(../../../assets/img/qian1.png);
+				    background-size: 100% 100%;
+			}
+			>div:nth-child(3n-1) {
 				   	background:url(../../../assets/img/qian2.png);
 				    background-size: 100% 100%;
 			}
-			>div:nth-child(3) {
+			>div:nth-child(3n) {
 				   	background:url(../../../assets/img/qian3.png);
 				    background-size: 100% 100%;
 			}

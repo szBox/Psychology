@@ -9,13 +9,13 @@
 			<div class="ziliao-div">
 				<span>头像</span>
 				<div class="file-div">
-					<img class="file-img" src="../../../../assets/img/student.png" alt="" />
+					<img class="file-img" :src="myInfo.headPic" alt="" />
 					<input type="file" name="file1" id="imgFile" accept="image/*" @change="addPic">
 				</div>
 			</div>
 			<div class="ziliao-div">
 				<span>昵称</span>
-				<input type="text" placeholder="安小静"/>
+				<input type="text" :placeholder="myInfo.nickName"/>
 			</div>
 			<div class="ziliao-div">
 				<span>性别</span>
@@ -28,7 +28,7 @@
 			<div class="bgg"></div>
 			<div class="ziliao-div">
 				<span>个性签名</span>
-				<input type="text" placeholder="一圈一点，胜似千言万语"/>
+				<input type="text" :placeholder="myInfo.personSign"/>
 			</div>
 		</div>
 		
@@ -37,16 +37,46 @@
 </template>
 
 <script>
-	
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
 	export default({
+		data() {
+			return {
+				myInfo:'',
+			}
+		},
+		mounted() {
+			this.getUser();
+		},
 		methods:{
 			back() {
 				this.$router.go(-1);
 			},
+			
 			addPic() {
 				$(".file-img").attr('src', URL.createObjectURL($('#imgFile')[0].files[0]) )
-			}
+			},
+			goPath(path){
+				this.$router.push(path)
+			},
+			getUser(){
+				var self=this;
+				var loginId=localStorage.getItem('loginId');
+				var role=localStorage.getItem('role');
+				var url=int.roleType;
+				var params={
+					id:loginId,
+					type:role,
+				}
+				 ajax.get_data(url, params, function(d) {
+				 	console.log('身份信息',d)
+					if(d.code==0){
+						self.myInfo=d.data;
+					}
+				})
+			},
 		}
+		
 	})
 </script>
 

@@ -5,10 +5,11 @@ import footBar from '@/components/common/footBar'
 import login from '@/components/common/login'
 import forget from '@/components/common/mimaForget'
 import chat from '@/components/common/chat' //聊天 (公共的)
+import stateShenhe from '@/components/common/State_shenhe' //审核状态 样式 (公共的)
 import myalert from '@/components/common/alert' //弹窗 (公共的)
 import indexA1 from '@/components/common/index1/index1'		//心灵阅读 (公共的)
 import yueduInfo from '@/components/common/index1/yueduInfo'		//心灵阅读 > 详情 (公共的)
-import newsInfo from '@/components/common/newsInfo'		//弹幕 > 详情 (公共的)
+
 import navTop from '@/components/common/navTop'
 
 import index3 from '@/components/common/index3/index3'		//互动   (公共的)
@@ -42,12 +43,23 @@ import gamesList from '@/components/common/index3/games/gamesList'		//互动 > �
 import shenhe from '@/components/common/index4/shenhe/shenhe'		//我的> 我的审核
 import shenheNav1 from '@/components/common/index4/shenhe/shenheNav1'		//我的> 我的审核 话题审核
 import shenheNav2 from '@/components/common/index4/shenhe/shenheNav2'		//我的> 我的审核 组团审核
+import shenheNav3 from '@/components/common/index4/shenhe/shenheNav3'		//我的> 我的审核 组团审核
+
+import shenheJilu from '@/components/common/index4/shenhe/shenheJilu'		//我的> 我的审核  记录 （管理员）
+import shenheJilu1 from '@/components/common/index4/shenhe/shenheJilu1'		//我的> 我的审核  记录 （管理员）
+import shenheJilu2 from '@/components/common/index4/shenhe/shenheJilu2'		//我的> 我的审核  记录 （管理员）
+
+import shenheNav1Info from '@/components/common/index4/shenhe/shenheNav1Info'		//我的> 我的审核 话题审核 详情
+import shenheNav2Info from '@/components/common/index4/shenhe/shenheNav2Info'		//我的> 我的审核 组团审核 详情
+import huati from '@/components/common/index4/huati/huati'		//我的> 我的话题
+import huatiNav1 from '@/components/common/index4/huati/huatiNav1'		//我的> 我的话题 我的发布
+import huatiNav2 from '@/components/common/index4/huati/huatiNav2'		//我的> 我的话题 我的参与
 import shoucang from '@/components/common/index4/shoucang/shoucangList'		//我的  >我的收藏
 /* template */
 
 import indexA2 from '@/components/student/index2/index2'		//咨询预约
 
-import indexA4 from '@/components/student/index4/index4'		//我的
+
 
 
 import indexB2 from '@/components/teacher/index2/index2'		//咨询预约
@@ -73,7 +85,7 @@ import index2BPhP from '@/components/teacher/index2/index2PhP'		//排行榜 (老
 import index2C from '@/components/admini/index2/index2'		//咨询预约  (管理员)
 import index2Set from '@/components/common/index2/index2Set'		//咨询预约  >设置 (老师  管理员)
 import index2CInfo from '@/components/admini/index2/index2Info'		//咨询预约 -查看单个老师  (管理员)
-
+import yuyueNameM from '@/components/admini/index2/yuyueName'		//咨询预约 > 预约名单
 /*index4 我的*/
 
 
@@ -87,7 +99,7 @@ import zixunList from '@/components/student/index4/zixun/zixunList'		//我的  >
 
 //教师端
 //indexB2
-import yuyueName from '@/components/common/index2/yuyueName'		//咨询预约 > 预约名单
+import yuyueNameT from '@/components/teacher/index2/yuyueName'		//咨询预约 > 预约名单
 Vue.use(Router)
 
 export default new Router({
@@ -107,16 +119,17 @@ export default new Router({
       name: 'chat',
       component: chat
     },
+    {
+    	path: '/stateShenhe',
+      name: 'stateShenhe',
+      component: stateShenhe
+    },
      {
     	path: '/alert',
       name: 'myalert',
       component: myalert
     },
-    {
-			path:'/newsInfo/:id',
-   		name:	'newsInfo',			// 弹幕 > 详情
-   		component: newsInfo,
-		},
+ 
     /* 公共的footBar */
    	{
    		path:'/home',
@@ -140,11 +153,7 @@ export default new Router({
 		   		name:	'index2B',			//咨询预约 (老师)
 		   		component: index2B,
    			},
-   			{
-   				path:'/index2BPhP', 
-		   		name:	'index2BPhP',			//排行榜 (老师)
-		   		component: index2BPhP,
-   			},
+   		
    			{
    				path:'/index2C', 
 		   		name:	'index2C',			//咨询预约 (管理员)
@@ -160,11 +169,7 @@ export default new Router({
 		   		name:	'index4',			//我的  (管理员-教师 公共的)
 		   		component: index4,
    			},
-   			{
-   				path:'/student/index4',
-		   		name:	'indexA4',			//我的
-		   		component: indexA4,
-   			},
+   		
    		
    			
    			
@@ -176,7 +181,7 @@ export default new Router({
 	   		component: yueduInfo,
 		},
 		{
-				path:'/index2/teacherInfo',
+				path:'/index2/teacherInfo/:id',
 	   		name:	'teacherInfo',			// index2 > 教师信息
 	   		component: teacherInfo,
 		},
@@ -187,9 +192,14 @@ export default new Router({
 	   		component: yuyueJilu,
 		},
 		{
-				path:'/index2/yuyueName',
+				path:'/index2/yuyueNameT',
 	   		name:	'yuyueName',			// index2 > 预约名单   (教师端)
-	   		component: yuyueName,
+	   		component: yuyueNameT,
+		},
+		{
+				path:'/index2/yuyueNameM',
+	   		name:	'yuyueName',			// index2 > 预约名单   (管理员端)
+	   		component: yuyueNameM,
 		},
 		{
 				path:'/index2CInfo/:Tid',
@@ -201,6 +211,11 @@ export default new Router({
 	   		name:	'index2Set',			// 心理咨询  > 设置  (管理员 老师) 
 	   		component: index2Set,
 		},
+			{
+   				path:'/index2BPhP', 
+		   		name:	'index2BPhP',			//排行榜 (老师)
+		   		component: index2BPhP,
+   			},
 		{
 				path:'/index3/speakList',
 	   		name:	'speakList',			// 互动 > 留言板list
@@ -332,6 +347,56 @@ export default new Router({
 							path:'/index4/shenhe/shenheNav2',
 				   		name:	'shenheNav2',			// 我的 > 我的审核 组团审核
 				   		component: shenheNav2,
+					},
+					{
+							path:'/index4/shenhe/shenheNav3',
+				   		name:	'shenheNav3',			// 我的 > 我的审核 组团审核
+				   		component: shenheNav3,
+					}
+	   		]
+		},
+		{
+				path:'/shenheNav1Info/:id',
+	   		name:	'shenheNav1Info',			// 我的 > 我的审核 话题审核详情
+	   		component: shenheNav1Info,
+		},
+		{
+				path:'/shenheNav2Info/:id',
+	   		name:	'shenheNav2Info',			// 我的 > 我的审核 组团审核详情
+	   		component: shenheNav2Info,
+		},
+		{
+				path:'/index4/shenheJilu',
+	   		name:	'shenheJilu',			// 我的 > 我的审核 记录(管理员)
+	   		component: shenheJilu,
+	   		children:[
+	   			{
+							path:'/index4/shenheJilu/',
+				   		name:	'shenheJilu1',			// 我的 > 我的审核记录  话题审核
+				   		component: shenheJilu1,
+					},
+					{
+							path:'/index4/shenheJilu/shenheJilu2',
+				   		name:	'shenheJilu2',			// 我的 > 我的审核记录  组团审核
+				   		component: shenheJilu2,
+					},
+				
+	   		]
+		},
+		{
+				path:'/index4/huati',
+	   		name:	'huati',			///我的  >我的话题
+	   		component: huati,
+	   		children:[
+	   			{
+							path:'/index4/huati/',
+				   		name:	'huatiNav1',			// 我的 > 我的话题 我的发布
+				   		component: huatiNav1,
+					},
+					{
+							path:'/index4/huati/huatiNav2',
+				   		name:	'huatiNav2',			// 我的 > 我的话题 我的参与
+				   		component: huatiNav2,
 					}
 	   		]
 		}
