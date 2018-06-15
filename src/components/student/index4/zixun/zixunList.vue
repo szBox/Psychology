@@ -35,8 +35,7 @@
 </template>
 
 <script>
-	import ziliao from '@/components/student/index4/ziliao/ziliao'		//我的  >详细资料 
-	import changeMima from '@/components/student/index4/setting/changeMima'		//我的  >设置 >修改密码
+
 	export default({
 		methods:{
 			back() {

@@ -6,6 +6,7 @@ import login from '@/components/common/login'
 import forget from '@/components/common/mimaForget'
 import chat from '@/components/common/chat' //聊天 (公共的)
 import stateShenhe from '@/components/common/State_shenhe' //审核状态 样式 (公共的)
+import stateTable from '@/components/common/State_Table' //预约表格状态 (公共的)
 import myalert from '@/components/common/alert' //弹窗 (公共的)
 import indexA1 from '@/components/common/index1/index1'		//心灵阅读 (公共的)
 import yueduInfo from '@/components/common/index1/yueduInfo'		//心灵阅读 > 详情 (公共的)
@@ -57,12 +58,11 @@ import huatiNav2 from '@/components/common/index4/huati/huatiNav2'		//我的> �
 import shoucang from '@/components/common/index4/shoucang/shoucangList'		//我的  >我的收藏
 /* template */
 
-import indexA2 from '@/components/student/index2/index2'		//咨询预约
 
 
 
 
-import indexB2 from '@/components/teacher/index2/index2'		//咨询预约
+
 
 
 
@@ -83,7 +83,7 @@ import index2B from '@/components/teacher/index2/index2'		//咨询预约  (老�
 import index2BPhP from '@/components/teacher/index2/index2PhP'		//排行榜 (老师的)
 //管理员
 import index2C from '@/components/admini/index2/index2'		//咨询预约  (管理员)
-import index2Set from '@/components/common/index2/index2Set'		//咨询预约  >设置 (老师  管理员)
+import index2Set from '@/components/teacher/index2/index2Set'		//咨询预约  >设置 (老师  管理员)
 import index2CInfo from '@/components/admini/index2/index2Info'		//咨询预约 -查看单个老师  (管理员)
 import yuyueNameM from '@/components/admini/index2/yuyueName'		//咨询预约 > 预约名单
 /*index4 我的*/
@@ -123,6 +123,11 @@ export default new Router({
     	path: '/stateShenhe',
       name: 'stateShenhe',
       component: stateShenhe
+    },
+    {
+    	path: '/stateTable',
+      name: 'stateTable',
+      component: stateTable
     },
      {
     	path: '/alert',
@@ -197,7 +202,7 @@ export default new Router({
 	   		component: yuyueNameT,
 		},
 		{
-				path:'/index2/yuyueNameM',
+				path:'/index2/yuyueNameM/:id',
 	   		name:	'yuyueName',			// index2 > 预约名单   (管理员端)
 	   		component: yuyueNameM,
 		},

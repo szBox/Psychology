@@ -5,6 +5,7 @@
 // let host='http://120.24.178.171';
 // let host='http://192.168.0.208';
 let host='http://119.23.41.124:8099/';
+//let host='http://192.168.0.111:8099/';
 export default {
   //登录
   getlogin:host+"auth/app/login",
@@ -79,16 +80,22 @@ export default {
   TeacherZanQx:host+'teacherPraise/delete/',
   //预约记录列表
   yuyueJilu:host+'subscribeRecord/list/page',
+  //可预约
+  yuyueClick : host+'subscribeRecord/add',
+  
   
   //index2
    //老师
    navTeacherInfo:host+'teacher/get/',
    //预约周期
   tableWeek:host+'subscribe/list/week',
+  //预约设置
+  yuyueSet :host+'subscribe/add',
   //查看预约名单
   stuNameList:host+'subscribeRecord/list/teacher',
   //老师查看排行榜
   teacherPHP:host+'teacher/list/ranking',
+  
   
   
   
@@ -104,5 +111,9 @@ export default {
 	speakShenhe: host+'topic/edit',
 	//我的收藏
 	soucangList:host+'article/list/favorite',
+	//修改个人信息  学生
+	xiugaiStuden :host + 'student/edit',
+	//修改个人信息  老师
+	xiugaiTeacher :host + 'teacher/edit',
 	
 }

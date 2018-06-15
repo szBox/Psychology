@@ -2,52 +2,42 @@
 	<div class="yuyueJilu">
 		<header class="header">
 			<div  @click="back()"><img src="../../../assets/img/goback.png" alt=""/></div>
-			<h1>预约名单管理员</h1>
+			<h1>预约名单 (管理员)</h1>
 		</header>
 		<div class="b-content">
 		<div class="pickerBox">
 			<div class="picker-div" style="padding-left: 0.75rem;">
-     			<datetime format='YYYY-MM-DD HH:mm' clear-text='确认' :placeholder='dateTitle1' v-model="startTime"  start-date='2018-01-01' @on-clear='change1'></datetime>
+     			<datetime format='YYYY-MM-DD' clear-text='确认' :placeholder='dTime'    start-date='2018-01-01' @on-clear='change1'></datetime>
 				<img src="../../../assets/img/sdown.png" alt="" />
 			</div>
 			<div class="picker-div">
-				<input type="text" v-model='val' @input="search()" placeholder="老师姓名"/>
-				<img style="width: 0.8rem;" class="search-img" :src="imgS1" alt=""/>
+				<input type="text" v-model='sName' placeholder="学生姓名"/>
+				<img style="width: 0.8rem;" @click="search(sName)" class="search-img" :src="imgS1" alt=""/>
 			</div>
 		</div>
 		<ul v-if="allList.length" class="name-list">
 			<li v-for="(item,index) in allList">
 				<div class="data-div">
-					<p>{{item.insertTime | niceDate}}</p>
-					<p></p>
+					<p>{{item.date | niceDate}}  {{item.period | ampm}}</p>
+					
+					<ul style="clear: both;">
+						<li v-for="(list,index) in item.studentSubscibeList">
+							<div class="name-div">
+								<img :src="list.stuHeadPic" alt="" />
+								<div>
+									<h4>{{list.stuName}}</h4>
+									<h5>{{list.className}}</h5>
+								</div>
+								
+								<p class="">{{list.insertTime | niceDate}}</p>
+							</div>
+						</li>
+					</ul>
 				</div>
 				
-				<div class="name-div">
-					<img src="../../../../build/logo.png" alt="" />
-					<div>
-						<h4>{{王老师}}</h4>
-						<h5>三年级二班</h5>
-					</div>
-					
-					<p class="">2018/03/12</p>
-				</div>
-			</li>
-			<li>
-				<div class="data-div">
-					<p>2018/03/12 星期三 上午</p>
-					<p></p>
-				</div>
 				
-				<div class="name-div">
-					<img src="../../../../build/logo.png" alt="" />
-					<div>
-						<h4>王老师</h4>
-						<h5>三年级二班</h5>
-					</div>
-					
-					<p class="">2018/03/12</p>
-				</div>
 			</li>
+			
 			<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
 		</ul>
 		<div class="err-tips" v-if='tip'>
@@ -71,27 +61,41 @@
 				next1_text:'',
 				next1:true,	//加载更多 状态
 				tip:false,
-				startTime:'',
-				val:'',
-				dateTitle1:'所有时间',
-				searchVal:'',
-				time1num: '', //时间1  时间戳
+				
+				mm:'',
+				dd:'',
+				dTime:'',
+				sName:'',
 				results: [],
       			imgS1:'src/assets/img/search.png',
 			}
 		},
 		mounted(){
 			var self=this;
-			this.getList();
-			var role=localStorage.getItem('role');
-			if(role=='T'){
-				self.searchVal='学生姓名'
-			}else if(role=='M'){
-				self.searchVal='老师姓名'
+			var d = new Date()
+			if(parseInt(d.getMonth()+1)<10){
+				self.mm= '0'+parseInt(d.getMonth()+1)
+			}else{
+				self.mm= parseInt(d.getMonth()+1)
 			}
+			if(parseInt(d.getDate())<10){
+				self.dd='0'+parseInt(d.getDate());
+			}else{
+				self.dd=+parseInt(d.getDate());
+			}
+    		self.dTime = parseInt(d.getFullYear()) + '-' + self.mm + '-' + self.dd;
+    		this.getList();
+			
 		},
 		filters:{
 			...filter,
+			ampm(val){
+				if(val==1){
+					return '上午'
+				}else if(val==2){
+					return '下午'
+				}
+			}
 		},
 		computed:{
 			
@@ -111,51 +115,56 @@
 				vm.getPage();
 	
 			},
-			getList(){
+			getList(d,name){
 				var self=this;
-				var url=int.yuyueJilu;
+				d=self.dTime;
+				name=self.sName;
+				var url=int.stuNameList;
 				var sid=localStorage.getItem('sid');
-				var loginId=localStorage.getItem('loginId');
 				var params={
 					current:self.page,
-					size:10,
-					teacherId:loginId,
-					
+					size:5,
+					teacherId:self.$route.params.Tid,
+					date:d,
+					stuName:name
 				}
 				 ajax.post_data(url, params, function(d) {
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("预约记录列表",d);
 					if(d.code==0){
-						for(let i = 0; i < d.data.records.length; i++) {
-							self.allList=d.data.records;
-						}
-						if(d.data.total==0){
-							self.next1=false;
-							self.next1_text='暂无评论'
-						}
-						else{
-							self.next1=true;
-							self.next1_text='查看更多'
-						}
-						if(d.data.current==d.data.pages){
-							self.next1=false;
-							self.next1_text='没有更多了'
-						}
-						if(!d.data.records.length){
+						
+						if(d.data){
+							self.allList=d.data;
+							self.tip=false;
+							if(d.data.total==0){
+								self.next1=false;
+								self.next1_text='暂无数据'
+							}
+							else{
+								self.next1=true;
+								self.next1_text='查看更多'
+							}
+							if(d.data.current==d.data.pages){
+								self.next1=false;
+								self.next1_text='没有更多了'
+							}
+						}else{
 							self.tip=true
+							self.allList='';
 						}
+						
 					}
-					
+//					
 		       });
 			},
 			getPage(){
 				var self=this;
-				var url=int.yuyueJilu;
+				var url=int.stuNameList;
 				var sid=localStorage.getItem('sid');
 				var loginId=localStorage.getItem('loginId');
 				var params={
 					current:self.page,
-					size:10,
+					size:5,
 					teacherId:loginId,
 					
 				}
@@ -163,35 +172,41 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("预约记录列表",d);
 					if(d.code==0){	
-						for(let i = 0; i < d.data.records.length; i++) {
-							self.allList.push(d.data.records[i]);
+						if(d.data){
+							for(let i = 0; i < d.data.length; i++) {
+							self.allList.push(d.data[i]);
+							}
+							if(d.data.total==0){
+								self.next1=false;
+								self.next1_text='暂无数据'
+							}
+							else{
+								self.next1=true;
+								self.next1_text='查看更多'
+							}
+							if(d.data.current==d.data.pages){
+								self.next1=false;
+								self.next1_text='没有更多了'
+							}
 						}
-						if(d.data.total==0){
-							self.next1=false;
-							self.next1_text='暂无评论'
-						}
-						else{
-							self.next1=true;
-							self.next1_text='查看更多'
-						}
-						if(d.data.current==d.data.pages){
-							self.next1=false;
-							self.next1_text='没有更多了'
-						}
+						
 					}
 					
 		       });
 			},
 			change1(value) {
-				console.log('change', value)
 				var self = this;
-				self.time1num = new Date(value).getTime()
-				console.log(self.time1num)
-				if(value.length > 12) {
-					self.startTime = value.slice(5)
-				}
+				self.dTime = value;
+				console.log(self.dTime)
+				self.getList(value)
 			},
-		
+			search(name){
+				var self = this;
+				
+				self.sName=name;
+				console.log(self.sName)
+				self.getList(name)
+			}
 		}
 	})
 </script>
@@ -208,23 +223,20 @@
 			overflow: hidden;
 			border-bottom:1px solid #F2FAFA;
 			padding:10px 0;
-			>p:first-child{
+			>p{
 				float: left;
 				color: #A09E9F;
-				
+				font-size: 0.75rem;
 			}
-			>p:last-child{
-				float: right;
-				color: #D45851;
-			}
+			
 		}
 		.name-div{
 			overflow: hidden;
 			padding: 10px 0;
 			>img{
 				float: left;
-				width: 3rem;
-				height: 3rem;
+				width: 2.5rem;
+				height: 2.5rem;
 				border-radius: 50%;
 			}
 			>div{
@@ -280,12 +292,13 @@
 		width: 100%;
 		border: none;
 		background: transparent;
+		color: #A09E9F;
 	}
 	.picker-div>img.search-img{
 		z-index: 1;
 	}
-	.weui-cell__ft.vux-cell-primary.vux-datetime-value .vux-cell-placeholder{
-		color: red;
+	.vux-datetime-value .vux-cell-placeholder{
+		color:#333 !important;
 	}
 		.more-btn{
 		color: #666;
@@ -304,5 +317,6 @@
 		-ms-transform: translateX(-50%);
 		-o-transform: translateX(-50%);
 		transform: translateX(-50%);
-	}	
+		
+	}
 </style>

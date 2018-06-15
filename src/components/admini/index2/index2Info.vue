@@ -4,38 +4,48 @@
 		<header class="header">
 			<div  @click="back()"><img src="../../../assets/img/goback.png" alt=""/></div>
 			<h1>预约咨询</h1>
-			<em @click="goyuyue()">预约名单</em>
+			<em @click="goPath()">预约名单</em>
 		</header>
 		<div class="b-content">
 			<div class="teacher-Top">
 				
-						<div class="teacher-bg">
+						
 						<div class="teacher-img">
-							<img  src="../../../assets/img/nv.png" />
+							<img  :src="teacherInfo.headPic" />
 						</div>
-						<h1>李多云老师111 
-							<span><img src="../../../assets/img/zan_w.png"/>200</span>
-						</h1>
+						<h1> {{teacherInfo.name}}</h1>
 						<div class='teacher-bb'>
-							<p>倾心聆听 唯爱融化 陪你走过人生的低谷</p>
+							<p>{{teacherInfo.personSign}}</p>
 							
 						</div>
-					</div>
+						<div class="see-box">
+							
+								<!--<img @click="goPath({path:'/chat'})" src="../../../assets/img/zixun.png"/>-->
+								<!--<span @click="goPath({path:'/chat'})">学生咨询</span>-->
+								<img src="../../../assets/img/zan_w.png"/>
+								{{teacherInfo.praiseCount}}
+							
+						</div>
+						
 					
 					
 					
 			</div>
 		
+		
 		<div class="teacher-show">
 			
 			
 			<div class="show-div">
-				<h3>擅长22222222222</h3>
-				<p>心理治疗</p><p>个人成长</p><p>心理治疗</p>
+				<h3>擅长</h3>
+				<div class="skill" v-for="(skill,index) in skillArr">
+					{{skill}}
+				</div>
+				
 			</div>
 			<div class="show-div">
 				<h3>预约地点</h3>
-				<h5>阳光中学三栋三单元101</h5>
+				<h5>{{address}}</h5>
 			</div>
 			<div class="show-div">
 				<h3>预约时间</h3>
@@ -56,55 +66,37 @@
 						    <div class="swiper-wrapper">
 						        <div class="swiper-slide" >
 						        	<ul>
-								<li v-for="(item,index) in items"  v-if="index<5">
+								<li v-for="(item,index) in dateAll"  v-if="index<5">
 									<div>
-										<!--<i>周一</i>
-										<em>3-8</em>-->
-										{{item.day}}
+										<p>周{{index+1 | weekNum}}</p>
+										<span>{{item.day | ddDate}}</span>
 									</div>
-									<!--<p v-if='item.data.length==1'>
-										
-									</p>-->
-									<p v-for="itemAm in item.data">
-										
-										<span @click="yuyue(itemAm)" v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
-										<span @click="yuyue(itemAm)" v-else-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) > 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
+									<p >
+										<state-table  :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+									
+									</p>
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
 										
 									</p>
-									
 								</li>
 							</ul>
 						        </div>
 						        <div class="swiper-slide">
 						        	<ul>
-								<li v-for="(item,index) in items"  v-if="index>5">
+								<li v-for="(item,index) in dateAll"  v-if="index>4">
 									<div>
-										<!--<i>周一</i>
-										<em>3-8</em>-->
-										{{item.day}}
+										<p>周{{index+1 | weekNum}}</p>
+										<span>{{item.day | ddDate}}</span>
 									</div>
-									<!--<p v-if='item.data.length==1'>
-										
-									</p>-->
-									<p v-for="itemAm in item.data">
-										
-										<span @click="yuyue(itemAm)" v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
-										<span @click="yuyue(itemAm)" v-else-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) > 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+									
+									</p>
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
 										
 									</p>
-									
 								</li>
 							</ul>
 						        </div>
@@ -127,145 +119,142 @@
 		
 		
 		</div>
-		<div class="flexd-nav">
-				<!--<div>
-					<img src="../../../assets/img/s1.png" alt="" @click="goPath({path:'/index2/teacherInfo'})" />
-				</div>
-				<div>
-					<img src="../../../assets/img/s2.png" alt="" />
-					<p>200</p>
-				</div>-->
-				<div  @click="goSet(1)">
-					<img src="../../../assets/img/set.png" alt="" />
-					<p>设置</p>
-				</div>
-		</div>
+		
 		
 	</div>
 
 </template>
 
 <script>
-	import teacherInfo from '@/components/teacher/index2/teacherInfo' //咨询预约 > 教师信息
-	import yuyueJilu from '@/components/teacher/index2/teacherInfo' //咨询预约 > 预约记录
-	import chat from '@/components/common/chat' //聊天
+	import int from '@/assets/js/interface'
+	import ajax from '@/assets/js/ajax'
+	import filter from '@/assets/js/filters'
+	import stateTable from '../../common/State_Table'
 	import Swiper from 'swiper'
 	export default {
-		components: {
-
-		},
-		created() {
-			console.log('111',this.value)
-		},
 		data() {
 			return {
-				value:'',
-				items: [{
-					"day": "2018-05-15",
-					"data": [{
-						"timeid": "111",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "14:00",
-						"endtime": "21:00"
-					}]
-				}, {
-					"day": "2018-05-16",
-					"data": [{
-						"timeid": "118",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "false",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}]
-				}, {
-					"day": "2018-05-18",
-					"data": [{
-						"timeid": "172",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "173",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-19",
-					"data": [{
-						"timeid": "174",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "175",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-20",
-					"data": [{
-						"timeid": "176",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "177",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-21",
-					"data": [{
-						"timeid": "178",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "179",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-22",
-					"data": [{
-						"timeid": "181",
-						"maxnum": "20",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "12:00"
-					}]
-				}],
-				/*最后的数组*/
-				page: 1,
-				/*当前页码*/
+				skillArr:[],
+				teacherInfo:'',
+				address:'',
+
+				Tid:'',
+				starDate:'',
+				NumDay: 24 * 60 * 60 * 1000,
+				endDate:'',
+				dateAll: [
+				
+				],
+				tableArr:[],
 			}
 		},
-		mounted() {
+		components: {
+			stateTable
+		},
+		filters:{
+			...filter,
+			gexing(val){
+				if(!val){
+					return '什么也没留下'
+				}
+			},
+			weekAm(val,date,am){
+					let yue=0,yid;
+					
+					for(var d=0; d<date.length; d++){
+						if(val==date[d].date && am==date[d].period && date[d].status==1){
+							yue=1;
+							yid=date[d].id;
+							break
+						}else if(val==date[d].date && am==date[d].period && date[d].status==2){
+							yue=2;
+							break
+						}else if(val==date[d].date && am==date[d].period && date[d].status==3){
+							yue=3;
+							break;
+						}else if(val==date[d].date && am==date[d].period && date[d].status==4){
+							yue=4
+							break
+						}
+					}
+					if(yue==1){
+						return '预约&'+yid
+					
+					}else if(yue==2){
+						return '不可预约'
+					}
+					else if(yue==3){
+						return '已预约'
+					}else if(yue==4){
+						return '已满'
+					}
+				
+			},
+			weekPm(val,date,pm){
+					let yue=0,yid;
+					for(var d=0; d<date.length; d++){
+						if(val==date[d].date && pm==date[d].period && date[d].status==1){
+							yue=1;
+							yid=date[d].id;
+							break
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==2){
+							yue=2;
+							break
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==3){
+							yue=3;
+							break;
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==4){
+							yue=4
+							break
+						}
+					}
+					if(yue==1){
+						return '预约&'+yid
+					
+					}else if(yue==2){
+						return '不可预约'
+					}
+					else if(yue==3){
+						return '已预约'
+					}else if(yue==4){
+						return '已满'
+					}
+				
+				
+			},
+			weekNum(val){
+				switch (val) {
+                case 1: 
+                case 6:
+                    val = '一';
+                    break;
+                case 2: 
+                case 7:
+                    val = '二';
+                    break;
+                case 3: 
+                case 8: 
+                    val = '三';
+                    break;
+                case 4: 
+                case 9: 
+                    val = '四';
+                    break;
+                case 5:
+                case 10: 
+                    val = '五';
+                    break;
+            	}
+				return val
+			}
+		},
+		created() {
+			
+		},
 		
+		mounted() {
+			this.getInfo();
+			this.getTable();
 			setTimeout(()=>{
 				var table = new Swiper('.table-swiper',{
 			  pagination :{
@@ -274,26 +263,96 @@
 			  }
 			})
 			},2)
-
-
+			var self=this;
+			let Time,week,dateArray
+			week=new Date().getDay();
+			Time=new Date(new Date().toLocaleDateString()).getTime();
+			
+//			debugger;
+			switch (week) {
+                case 1: 
+                    dateArray = [0,1,2,3,4,7,8,9,10,11];
+                    break;
+                case 2: 
+                    dateArray = [-1,0,1,2,3,6,7,8,9,10];
+                    break;
+                case 3: 
+                    dateArray = [-2,-1,0,1,2,5,6,7,8,9];
+                    break;
+                case 4: 
+                    dateArray = [-3,-2,-1,0,1,4,5,6,7,8];
+                    break;
+                case 5: 
+                    dateArray = [-4,-3,-2,-1,0,3,4,5,6,7];
+                    break;
+                case 6:
+                    dateArray = [-5,-4,-3,-2,-1,2,3,4,5,6,];
+                    break;
+                case 0:
+                    dateArray = [-6,-5,-4,-3,-2,1,2,3,4,5];
+                    break;
+            }
+			for(var i=0; i<dateArray.length; i++){
+				self.dateAll.push({
+						day:Time + self.NumDay * dateArray[i]
+					}
+				)
+				
+			}
 		},
 		methods: {
-			goSet(i) {
-				this.$router.push({
-					path:'/index2Set/'+i
+			goPath() {
+				this.$router.push(
+					
+					{path:'/index2/yuyueNameM/'+this.$route.params.Tid}
+				)
+				
+			},
+			getInfo(){
+				var self=this;
+				
+				var url=int.navTeacherInfo+self.$route.params.Tid;
+				var params={
+				};
+				ajax.get_data(url,params,function(d){
+					console.log('老师信息',d)
+					if(d.code==0){
+						self.teacherInfo=d.data;
+						self.skillArr=d.data.skill.split(',');
+					}
 				})
 			},
-			yuyue(i){
-				alert(i.starttime+'-'+i.endtime)
-			},
-			goyuyue(){
-				this.$router.push({
-					path:'/index2/yuyueNameM'
+			getTable(){
+				var self=this;
+				var loginId=localStorage.getItem('loginId')
+				var url=int.tableWeek;
+				var sid=localStorage.getItem('sid')
+				self.starDate=filter.ymdDate(filter.getWeek().star);
+				self.endDate=filter.ymdDate(filter.getWeek().end);
+				var params={
+					teacherId:self.$route.params.Tid,
+					sid:sid,
+					startDate:self.starDate,
+					endDate:self.endDate,
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('week详情',d)
+					if(d.code==0){
+						self.tableArr=d.data;
+						if(d.data.length!=0){
+							self.address=d.data[0].address
+						}else{
+							self.address='暂无'
+						}
+						
+					}
 				})
 			},
 			back() {
 				this.$router.go(-1);
 			},
+		
+			
 		}
 	}
 </script>
@@ -303,16 +362,19 @@
 	border: none;
 }
 .b-content{
-	padding-bottom: 3rem;
 }
 	
+.teacher-Top:before{
+		content: "";
+		display: table;
+	}
 	.teacher-Top{
 	    text-align: center;
 	    font-size: 18px;
     	width: 100%;
 		background: linear-gradient(to right, #31c4ff, #3991f4);
 		padding: 1rem 0;
-		
+		position: relative;
 		.teacher-img{
 			img{
 				width: 4.5rem;
@@ -338,17 +400,36 @@
 			color: #F5FAFB;
 			font-size: 0.6rem;
 		}
-		
+		.see-box{
+			text-align: center;
+			color: #fff;
+			font-size: 0.65rem;
+			margin-top: 0.75rem;
+			img{
+				width: 1rem;
+				margin-right: 0.2rem;
+				margin-top: -0.25rem;
+			}
+			span{
+				margin-right: 2rem;
+			}
+		}
+		.paihan-go{
+			position: absolute;
+			top:1.6rem;
+			right: 0;
+			background: #32C4FF;
+			color: #fff;
+			padding: 0.1rem 0.4rem 0.1rem 0.6rem;
+			border-radius: 1rem 0 0 1rem;
+			img{
+				width: 0.9rem;
+				margin-right: 0.1rem;
+			}
+		}
 	}
-	
-	
-	
-	.swiper-slide>img {
-		width: 5rem;
-		height: 5rem;
-		background: paleturquoise;
-		border-radius: 50%;
-	}
+
+
 	
 	.flexd-nav {
 		width:2.5rem;
@@ -390,7 +471,7 @@
 	}
 	
 	.teacher-show {
-		
+	
 		position: relative;
 		padding: 0 0.75rem;
 
@@ -399,7 +480,7 @@
 		.show-tableBox {
 			/*background: #F2F2F2;*/
 			border-radius: 0.3rem;
-			margin: 0.5rem 0;
+			/*margin: 0.5rem 0;*/
 			padding:0.3rem 0.5rem;
 			
 			>h3 {
@@ -407,22 +488,25 @@
 				font-weight: bold;
 				margin: 0.5rem 0;
 			}
-			>p {
+			>.skill {
 				    float: left;
 				    margin-right: 0.5rem;
-				   	background:url(../../../assets/img/qian1.png);
 				    width: 4rem;
 				    height: 1.5rem;
 				    line-height: 1.5rem;
 				    padding-left: 0.3rem;
-				    background-size: 100% 100%;
+				  
 				    color: #fff;
 				}
-			>p:nth-child(2) {
+			>.skill:nth-child(3n-2) {
+				   	background:url(../../../assets/img/qian1.png);
+				    background-size: 100% 100%;
+			}
+			>.skill:nth-child(3n-1) {
 				   	background:url(../../../assets/img/qian2.png);
 				    background-size: 100% 100%;
 			}
-			>p:nth-child(3) {
+			>.skill:nth-child(3n) {
 				   	background:url(../../../assets/img/qian3.png);
 				    background-size: 100% 100%;
 			}
@@ -490,6 +574,9 @@
 						display: block;
 						height: 100%;
 					}
+					>div{
+						border: none;
+					}
 				}
 				>p:last-child {
 					border-bottom: none;
@@ -515,7 +602,8 @@
 			}
 		}
 	}
-
+	
+	
 	
 	.table-swiper{
 		overflow: initial !important;

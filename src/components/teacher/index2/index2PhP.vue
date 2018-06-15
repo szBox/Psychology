@@ -3,12 +3,12 @@
 
 		<header class="header">
 			<div  @click="back()"><img src="../../../assets/img/goback.png" alt=""/></div>
-			<h1>排行榜(老师)</h1>
+			<h1>预约排行</h1>
 
 		</header>
 		<div class="b-content">
 
-			<div class="nav-paiming">
+			<!--<div class="nav-paiming">
 				<h1 @click="typeToggle(1)" :class="{'paiming-active':types==1}">
 					<span>咨询排行</span> 
 					<em ></em>
@@ -21,7 +21,7 @@
 					<span>点赞排行</span> 
 					<em ></em>
 				</h1>
-			</div>
+			</div>-->
 
 			<div class="paiming-div">
 				<div class="nav-flex">
@@ -35,7 +35,8 @@
 								<span>NO.{{index+1}}</span>
 							</p>
 						</div>
-						<h2>{{item.name}}</h2>
+						<h2 style='color: red;' v-if='item.id==myId'>我</h2>
+						<h2 v-else>{{item.name}}</h2>
 						<p>预约数<span>{{item.num}}</span>例</p>
 					</div>
 					<div v-for='(item,index) in allList' v-if='index==0' >
@@ -48,7 +49,8 @@
 								<span>NO.{{index+1}}</span>
 							</p>
 						</div>
-						<h2>{{item.name}}</h2>
+						<h2 style='color: red;' v-if='item.id==myId'>我</h2>
+						<h2 v-else>{{item.name}}</h2>
 						<p>预约数<span>{{item.num}}</span>例</p>
 					</div>
 					<div v-for='(item,index) in allList' v-if='index==2' >
@@ -61,26 +63,27 @@
 								<span>NO.{{index+1}}</span>
 							</p>
 						</div>
-						<h2>{{item.name}}</h2>
+						<h2 style='color: red;' v-if='item.id==myId'>我</h2>
+						<h2 v-else>{{item.name}}</h2>
 						<p>预约数<span>{{item.num}}</span>例</p>
 					</div>
 				</div>
 
 				<ul class="paiming-list">
-					<li :class="{'my-li':item.name=='我'}" v-for="(item,index) in allList" v-if='index>2'>
+					<li :class="{'my-li':item.id==myId}" v-for="(item,index) in allList" v-if='index>2'>
 						<h1>{{index+1}}</h1>
 						<img :src="item.headPic" alt="" />
 						<div class="teacher-name">
 							<h2>{{item.name}}</h2>
 							<p>预约数<span>{{item.num}}</span>例</p>
 						</div>
-						<div v-if="item.name=='我'" class="teacher-icon">
-							<p><img src="../../../assets/img/zan_w.png" />200</p>
-							<p><img src="../../../assets/img/chat_w.png" />100</p>
+						<div v-if="item.id==myId" class="teacher-icon">
+							<p><img src="../../../assets/img/zan_w.png" />{{item.praiseCount}}</p>
+							<!--<p><img src="../../../assets/img/chat_w.png" />{{item.consultNum}}</p>-->
 						</div>
 						<div v-else class="teacher-icon">
 							<p><img src="../../../assets/img/zan0.png" />{{item.praiseCount}}</p>
-							<p><img src="../../../assets/img/pinglun.png" />{{item.id}}</p>
+							<!--<p><img src="../../../assets/img/pinglun.png" />{{item.consultNum}}</p>-->
 						</div>
 					</li>
 
@@ -107,6 +110,7 @@
 		data() {
 			return {
 				page1:1,
+				myId:'',
 				allList:[],
 				next1_text:'',
 				next1:true,	//加载更多 状态
@@ -116,7 +120,9 @@
 			}
 		},
 		mounted() {
-			this.getNav1(1);
+			this.getNav1(2);
+			var self=this;
+			self.myId=localStorage.getItem('loginId');
 		},
 		methods: {
 			back() {
@@ -136,8 +142,8 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("排行榜列表",d);
 					if(d.code==0){
-						for(let i = 0; i < d.data.records.length; i++) {
-							self.allList=d.data.records;
+						for(let i = 0; i < d.data.length; i++) {
+							self.allList=d.data;
 						}
 						if(d.data.total==0){
 							self.next1=false;
@@ -151,7 +157,7 @@
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}
-						if(!d.data.records.length){
+						if(!d.data.length){
 							self.tip=true
 						}
 					}
@@ -159,11 +165,11 @@
 		       });
 			},
 			
-			typeToggle(i) {
-				var self = this;
-				self.types = i;
-				self.getNav1(i)
-			},
+//			typeToggle(i) {
+//				var self = this;
+//				self.types = i;
+//				self.getNav1(i)
+//			},
 			
 		}
 	}
@@ -174,11 +180,11 @@
 	}
 	
 	.b-content {
-		padding-bottom: 3rem;
+/*		padding-bottom: 3rem;*/
 	}
 	
-	.nav-paiming {
-		/*border-bottom: 1px solid #F2F2F2;*/
+	/*.nav-paiming {
+		
 		overflow: hidden;
 		position: fixed;
 		top: 2.5rem;
@@ -191,7 +197,6 @@
 		flex-wrap: wrap;
 		>h1 {
 			padding: 0.75rem 0 0;
-			/*margin-right: 1.5rem;*/
 			color: #999;
 			span {
 				font-size: 0.8rem;
@@ -208,13 +213,13 @@
 				background: #3991F4;
 			}
 		}
-	}
+	}*/
 	
 	.nav-flex {
 		display: flex;
 		justify-content: space-around;
 		flex-wrap: wrap;
-		margin: 1.25rem auto 1.25rem;
+		margin: 1.75rem auto 0.5rem;
 		>div {
 			text-align: center;
 			.nav-flex-img {
@@ -351,7 +356,7 @@
 		color: #fff;
 	}
 	.paiming-div{
-		margin-top: 3rem;
+		/*margin-top: 3rem;*/
 	}
 	.more-btn{
 		color: #666;

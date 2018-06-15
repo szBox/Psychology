@@ -2,7 +2,7 @@
 	<div class="index2" style="">
 
 		<header class="header">
-			<h1>预约咨询(老-师)</h1>
+			<h1>预约咨询</h1>
 			<em @click="goPath({path:'/index2/yuyueNameT'})">预约名单</em>
 		</header>
 		<div class="b-content">
@@ -19,8 +19,8 @@
 						</div>
 						<div class="see-box">
 							
-								<img @click="goPath({path:'/chat'})" src="../../../assets/img/zixun.png"/>
-								<span @click="goPath({path:'/chat'})">学生咨询</span>
+								<!--<img @click="goPath({path:'/chat'})" src="../../../assets/img/zixun.png"/>-->
+								<!--<span @click="goPath({path:'/chat'})">学生咨询</span>-->
 								<img src="../../../assets/img/zan_w.png"/>
 								{{teacherInfo.praiseCount}}
 							
@@ -68,55 +68,37 @@
 						    <div class="swiper-wrapper">
 						        <div class="swiper-slide" >
 						        	<ul>
-								<li v-for="(item,index) in items"  v-if="index<5">
+								<li v-for="(item,index) in dateAll"  v-if="index<5">
 									<div>
-										<!--<i>周一</i>
-										<em>3-8</em>-->
-										{{item.day}}
+										<p>周{{index+1 | weekNum}}</p>
+										<span>{{item.day | ddDate}}</span>
 									</div>
-									<!--<p v-if='item.data.length==1'>
-										
-									</p>-->
-									<p v-for="itemAm in item.data">
-										
-										<span @click="yuyue(itemAm)" v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
-										<span @click="yuyue(itemAm)" v-else-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) > 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
+									<p >
+										<state-table  :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+									
+									</p>
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
 										
 									</p>
-									
 								</li>
 							</ul>
 						        </div>
 						        <div class="swiper-slide">
 						        	<ul>
-								<li v-for="(item,index) in items"  v-if="index>5">
+								<li v-for="(item,index) in dateAll"  v-if="index>4">
 									<div>
-										<!--<i>周一</i>
-										<em>3-8</em>-->
-										{{item.day}}
+										<p>周{{index+1 | weekNum}}</p>
+										<span>{{item.day | ddDate}}</span>
 									</div>
-									<!--<p v-if='item.data.length==1'>
-										
-									</p>-->
-									<p v-for="itemAm in item.data">
-										
-										<span @click="yuyue(itemAm)" v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
-										<span @click="yuyue(itemAm)" v-else-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) > 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+									
+									</p>
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
 										
 									</p>
-									
 								</li>
 							</ul>
 						        </div>
@@ -140,14 +122,8 @@
 		
 		</div>
 		<div class="flexd-nav">
-				<!--<div>
-					<img src="../../../assets/img/s1.png" alt="" @click="goPath({path:'/index2/teacherInfo'})" />
-				</div>
-				<div>
-					<img src="../../../assets/img/s2.png" alt="" />
-					<p>200</p>
-				</div>-->
-				<div @click="goSet(1)" >
+				
+				<div @click="goSet(teacherInfo.userId)" >
 					<img src="../../../assets/img/zixun.png" alt="" />
 					<p>设置</p>
 				</div>
@@ -161,128 +137,129 @@
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
+	import stateTable from '../../common/State_Table'
 	import Swiper from 'swiper'
 	export default {
-		components: {
-
-		},
-		filters:{
-			...filter,
-			
-		},
-		created() {
-			console.log('111',this.value)
-		},
 		data() {
 			return {
 				skillArr:[],
 				teacherInfo:'',
 				address:'',
-				value:'',
-				items: [{
-					"day": "2018-05-15",
-					"data": [{
-						"timeid": "111",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "14:00",
-						"endtime": "21:00"
-					}]
-				}, {
-					"day": "2018-05-16",
-					"data": [{
-						"timeid": "118",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "false",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}]
-				}, {
-					"day": "2018-05-18",
-					"data": [{
-						"timeid": "172",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "173",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-19",
-					"data": [{
-						"timeid": "174",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "175",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-20",
-					"data": [{
-						"timeid": "176",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "177",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-21",
-					"data": [{
-						"timeid": "178",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "179",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-22",
-					"data": [{
-						"timeid": "181",
-						"maxnum": "20",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "12:00"
-					}]
-				}],
-				/*最后的数组*/
-				page: 1,
-				/*当前页码*/
+
+				Tid:'',
+				starDate:'',
+				NumDay: 24 * 60 * 60 * 1000,
+				endDate:'',
+				dateAll: [
+				
+				],
+				tableArr:[],
 			}
 		},
+		components: {
+			stateTable
+		},
+		filters:{
+			...filter,
+			gexing(val){
+				if(!val){
+					return '什么也没留下'
+				}
+			},
+			weekAm(val,date,am){
+					let yue=0,yid;
+					
+					for(var d=0; d<date.length; d++){
+						if(val==date[d].date && am==date[d].period && date[d].status==1){
+							yue=1;
+							yid=date[d].id;
+							break
+						}else if(val==date[d].date && am==date[d].period && date[d].status==2){
+							yue=2;
+							break
+						}else if(val==date[d].date && am==date[d].period && date[d].status==3){
+							yue=3;
+							break;
+						}else if(val==date[d].date && am==date[d].period && date[d].status==4){
+							yue=4
+							break
+						}
+					}
+					if(yue==1){
+						return '预约&'+yid
+					
+					}else if(yue==2){
+						return '不可预约'
+					}
+					else if(yue==3){
+						return '已预约'
+					}else if(yue==4){
+						return '已满'
+					}
+				
+			},
+			weekPm(val,date,pm){
+					let yue=0,yid;
+					for(var d=0; d<date.length; d++){
+						if(val==date[d].date && pm==date[d].period && date[d].status==1){
+							yue=1;
+							yid=date[d].id;
+							break
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==2){
+							yue=2;
+							break
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==3){
+							yue=3;
+							break;
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==4){
+							yue=4
+							break
+						}
+					}
+					if(yue==1){
+						return '预约&'+yid
+					
+					}else if(yue==2){
+						return '不可预约'
+					}
+					else if(yue==3){
+						return '已预约'
+					}else if(yue==4){
+						return '已满'
+					}
+				
+				
+			},
+			weekNum(val){
+				switch (val) {
+                case 1: 
+                case 6:
+                    val = '一';
+                    break;
+                case 2: 
+                case 7:
+                    val = '二';
+                    break;
+                case 3: 
+                case 8: 
+                    val = '三';
+                    break;
+                case 4: 
+                case 9: 
+                    val = '四';
+                    break;
+                case 5:
+                case 10: 
+                    val = '五';
+                    break;
+            	}
+				return val
+			}
+		},
+		created() {
+			
+		},
+		
 		mounted() {
 			this.getInfo();
 			this.getTable();
@@ -294,6 +271,42 @@
 			  }
 			})
 			},2)
+			var self=this;
+			let Time,week,dateArray
+			week=new Date().getDay();
+			Time=new Date(new Date().toLocaleDateString()).getTime();
+			
+//			debugger;
+			switch (week) {
+                case 1: 
+                    dateArray = [0,1,2,3,4,7,8,9,10,11];
+                    break;
+                case 2: 
+                    dateArray = [-1,0,1,2,3,6,7,8,9,10];
+                    break;
+                case 3: 
+                    dateArray = [-2,-1,0,1,2,5,6,7,8,9];
+                    break;
+                case 4: 
+                    dateArray = [-3,-2,-1,0,1,4,5,6,7,8];
+                    break;
+                case 5: 
+                    dateArray = [-4,-3,-2,-1,0,3,4,5,6,7];
+                    break;
+                case 6:
+                    dateArray = [-5,-4,-3,-2,-1,2,3,4,5,6,];
+                    break;
+                case 0:
+                    dateArray = [-6,-5,-4,-3,-2,1,2,3,4,5];
+                    break;
+            }
+			for(var i=0; i<dateArray.length; i++){
+				self.dateAll.push({
+						day:Time + self.NumDay * dateArray[i]
+					}
+				)
+				
+			}
 		},
 		methods: {
 			goPath(path) {
@@ -318,16 +331,18 @@
 				var loginId=localStorage.getItem('loginId')
 				var url=int.tableWeek;
 				var sid=localStorage.getItem('sid')
+				self.starDate=filter.ymdDate(filter.getWeek().star);
+				self.endDate=filter.ymdDate(filter.getWeek().end);
 				var params={
 					teacherId:loginId,
 					sid:sid,
-//					startDate:self.starTime,
-//					endDate:self.endTime,
+					startDate:self.starDate,
+					endDate:self.endDate,
 				};
 				ajax.post_data(url,params,function(d){
 					console.log('week详情',d)
 					if(d.code==0){
-						self.weekInfo=d.data;
+						self.tableArr=d.data;
 						if(d.data.length!=0){
 							self.address=d.data[0].address
 						}else{
@@ -337,9 +352,7 @@
 					}
 				})
 			},
-			yuyue(i){
-				alert(i.starttime+'-'+i.endtime)
-			},
+			
 			goPhb(){
 				this.$router.push({
 					path:"/index2BPhP"
@@ -478,7 +491,7 @@
 		.show-tableBox {
 			/*background: #F2F2F2;*/
 			border-radius: 0.3rem;
-			margin: 0.5rem 0;
+			/*margin: 0.5rem 0;*/
 			padding:0.3rem 0.5rem;
 			
 			>h3 {
@@ -571,6 +584,9 @@
 					>span{
 						display: block;
 						height: 100%;
+					}
+					>div{
+						border: none;
 					}
 				}
 				>p:last-child {

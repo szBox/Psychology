@@ -3,6 +3,8 @@
 		<div  v-show="state==1" class="state_shenhe1 state_shenhe">审核中</div>
 		<div  v-show="state==3" class="state_shenhe2 state_shenhe">已驳回</div>
 		<div  v-show="state==2" class="state_shenhe3 state_shenhe">已通过</div>
+		
+
 	</div>
 </template>
 
@@ -13,7 +15,14 @@
 				
 			}
 		},
-		props:['state'],
+
+		props:{
+			state:{
+				type:String,
+		
+			},
+		
+		},
 		mounted(){
 		
 
@@ -21,7 +30,9 @@
 	
 		
 		methods: {
-	
+			yuyueClick(yid){
+				this.$root.eventHub.$emit('zidingyi',yid)
+			}
 		}
 	})
 </script>
@@ -46,4 +57,18 @@
 	    color: #40A0F1;
 	    border: 1px solid #40A0F1;
 	} 
+	.yueyuY{
+		color: #55CFFD;
+				width: 100%;
+	
+		display: inline-block;
+	}
+	.yuyueN{
+		color: #9B999A;
+		background: #F3EFF0;
+		width: 100%;
+
+		display: inline-block;
+		
+	}
 </style>

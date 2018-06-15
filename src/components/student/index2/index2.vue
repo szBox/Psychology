@@ -77,55 +77,37 @@
 						    <div class="swiper-wrapper">
 						        <div class="swiper-slide" >
 						        	<ul>
-								<li v-for="(item,index) in items"  v-if="index<5">
+								<li v-for="(item,index) in dateAll"  v-if="index<5">
 									<div>
-										<!--<i>周一</i>
-										<em>3-8</em>-->
-										{{item.day}}
+										<p>周{{index+1 | weekNum}}</p>
+										<span>{{item.day | ddDate}}</span>
 									</div>
-									<!--<p v-if='item.data.length==1'>
-										
-									</p>-->
-									<p v-for="itemAm in item.data">
-										
-										<span @click="yuyue(itemAm)" v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
-										<span @click="yuyue(itemAm)" v-else-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) > 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
+									<p >
+										<state-table  :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+									
+									</p>
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
 										
 									</p>
-									
 								</li>
 							</ul>
 						        </div>
 						        <div class="swiper-slide">
 						        	<ul>
-								<li v-for="(item,index) in items"  v-if="index>5">
+								<li v-for="(item,index) in dateAll"  v-if="index>4">
 									<div>
-										<!--<i>周一</i>
-										<em>3-8</em>-->
-										{{item.day}}
+										<p>周{{index+1 | weekNum}}</p>
+										<span>{{item.day | ddDate}}</span>
 									</div>
-									<!--<p v-if='item.data.length==1'>
-										
-									</p>-->
-									<p v-for="itemAm in item.data">
-										
-										<span @click="yuyue(itemAm)" v-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) <= 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
-										<span @click="yuyue(itemAm)" v-else-if='(parseInt(itemAm.endtime.split(":")[0]) != 0) && (parseInt(itemAm.endtime.split(":")[0]) > 12) && (itemAm.reg == "true")'>
-											预约
-										</span>
-										
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+									
+									</p>
+									<p >
+										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
 										
 									</p>
-									
 								</li>
 							</ul>
 						        </div>
@@ -164,128 +146,32 @@
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
 	import Swiper from 'swiper'
+	import stateTable from '../../common/State_Table'
+	import {Toast } from 'vux'
 	export default {
 		components: {
-
+			stateTable,
+			Toast
 		},
 		created() {
-			console.log('111',this.value)
+
 		},
 		data() {
 			return {
 				theachPage:1,
-				starTime:'',
-				endTime:'',
+				Tid:'',
+				starDate:'',
+				NumDay: 24 * 60 * 60 * 1000,
+				endDate:'',
 				teachNav:[],//  返回老师列表
 				skillArr:[], //返回的技能
 				address:'',
 				value:'',
-				weekInfo:[],
-				xxlist:[
-					{name:'123'},
-					{name:'123'},
-					{name:'123'},
-					{name:'123'}
+				tableArr:[],
+				
+				dateAll: [
+				
 				],
-				items: [{
-					"day": "2018-05-15",
-					"data": [{
-						"timeid": "111",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "14:00",
-						"endtime": "21:00"
-					}]
-				}, {
-					"day": "2018-05-16",
-					"data": [{
-						"timeid": "118",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "false",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}]
-				}, {
-					"day": "2018-05-18",
-					"data": [{
-						"timeid": "172",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "173",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-19",
-					"data": [{
-						"timeid": "174",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "175",
-						"maxnum": "2",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-20",
-					"data": [{
-						"timeid": "176",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "177",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-21",
-					"data": [{
-						"timeid": "178",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "11:00"
-					}, {
-						"timeid": "179",
-						"maxnum": "1",
-						"count": "0",
-						"reg": "true",
-						"starttime": "15:00",
-						"endtime": "17:00"
-					}]
-				}, {
-					"day": "2018-05-22",
-					"data": [{
-						"timeid": "181",
-						"maxnum": "20",
-						"count": "0",
-						"reg": "true",
-						"starttime": "08:00",
-						"endtime": "12:00"
-					}]
-				}],
 				/*最后的数组*/
 				page: 1,
 				/*当前页码*/
@@ -297,15 +183,136 @@
 				if(!val){
 					return '什么也没留下'
 				}
+			},
+			weekAm(val,date,am){
+					let yue=0,yid;
+					
+					for(var d=0; d<date.length; d++){
+						if(val==date[d].date && am==date[d].period && date[d].status==1){
+							yue=1;
+							yid=date[d].id;
+							break
+						}else if(val==date[d].date && am==date[d].period && date[d].status==2){
+							yue=2;
+							break
+						}else if(val==date[d].date && am==date[d].period && date[d].status==3){
+							yue=3;
+							break;
+						}else if(val==date[d].date && am==date[d].period && date[d].status==4){
+							yue=4
+							break
+						}
+					}
+					if(yue==1){
+						return '预约&'+yid
+					
+					}else if(yue==2){
+						return '不可预约'
+					}
+					else if(yue==3){
+						return '已预约'
+					}else if(yue==4){
+						return '已满'
+					}
+				
+			},
+			weekPm(val,date,pm){
+					let yue=0,yid;
+					for(var d=0; d<date.length; d++){
+						if(val==date[d].date && pm==date[d].period && date[d].status==1){
+							yue=1;
+							yid=date[d].id;
+							break
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==2){
+							yue=2;
+							break
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==3){
+							yue=3;
+							break;
+						}else if(val==date[d].date && pm==date[d].period && date[d].status==4){
+							yue=4
+							break
+						}
+					}
+					if(yue==1){
+						return '预约&'+yid
+					
+					}else if(yue==2){
+						return '不可预约'
+					}
+					else if(yue==3){
+						return '已预约'
+					}else if(yue==4){
+						return '已满'
+					}
+				
+				
+			},
+			weekNum(val){
+				switch (val) {
+                case 1: 
+                case 6:
+                    val = '一';
+                    break;
+                case 2: 
+                case 7:
+                    val = '二';
+                    break;
+                case 3: 
+                case 8: 
+                    val = '三';
+                    break;
+                case 4: 
+                case 9: 
+                    val = '四';
+                    break;
+                case 5:
+                case 10: 
+                    val = '五';
+                    break;
+            	}
+				return val
 			}
 		},
 		mounted() {
 			var self=this;
+			let Time,week,dateArray
 			self.getTeachList();
-			self.getWeek();
+			week=new Date().getDay();
+			Time=new Date(new Date().toLocaleDateString()).getTime();
 			
-			
-
+//			debugger;
+			switch (week) {
+                case 1: 
+                    dateArray = [0,1,2,3,4,7,8,9,10,11];
+                    break;
+                case 2: 
+                    dateArray = [-1,0,1,2,3,6,7,8,9,10];
+                    break;
+                case 3: 
+                    dateArray = [-2,-1,0,1,2,5,6,7,8,9];
+                    break;
+                case 4: 
+                    dateArray = [-3,-2,-1,0,1,4,5,6,7,8];
+                    break;
+                case 5: 
+                    dateArray = [-4,-3,-2,-1,0,3,4,5,6,7];
+                    break;
+                case 6:
+                    dateArray = [-5,-4,-3,-2,-1,2,3,4,5,6,];
+                    break;
+                case 0:
+                    dateArray = [-6,-5,-4,-3,-2,1,2,3,4,5];
+                    break;
+            }
+			for(var i=0; i<dateArray.length; i++){
+				self.dateAll.push({
+						day:Time + self.NumDay * dateArray[i]
+					}
+				)
+				
+			}
+				
 		},
 		methods: {
 			goPath(path) {
@@ -367,10 +374,6 @@
 					console.log('老师列表',d)
 					if(d.code==0){
 						self.teachNav=d.data.records;
-//						for(var i=0; i<d.data.records.length; i++){
-//							self.skillArr=d.data.records[i].skill.split(',');
-//							console.log(self.skillArr)
-//						}
 						self.$nextTick(function(){
 						 	var teacherNav = new Swiper('.teacher-swiper', {
 								slidesPerView: 2.5,
@@ -381,10 +384,30 @@
 								    	
 								    	var index=this.activeIndex;
 								    	self.skillArr=self.teachNav[index].skill.split(',')
-								    	console.log(self.skillArr)
 								    	var Tid=$('.swiper-flex').eq(index).attr('teacher-id');
 								    	console.log('老师ID',Tid)
 										self.getTable(Tid)
+										self.$root.eventHub.$off('zidingyi')
+										self.$root.eventHub.$on('zidingyi',function(d){
+											self.Tid=d;
+											var loginId=localStorage.getItem('loginId')
+											var url=int.yuyueClick;
+											var params={
+												stuId: loginId,
+							  					subId: d
+											};
+											ajax.post_data(url,params,function(d){
+												self.getTable(Tid);
+												console.log('可预约',d)
+												if(d.code==1013){
+													self.$vux.toast.show({
+														type: 'text',
+														text: '报名人数已满',
+														position: 'bottom'
+													})
+												}
+											})
+										})
 								    },
 								  },		     
 							})
@@ -402,75 +425,38 @@
 				var self=this;
 				var url=int.tableWeek;
 				var sid=localStorage.getItem('sid')
-				console.log(self.starTime+'/'+self.endTime)
+				var loginId=localStorage.getItem('loginId')
+				self.starDate=filter.ymdDate(filter.getWeek().star);
+				self.endDate=filter.ymdDate(filter.getWeek().end);
+//				console.log(self.starTime+'/'+self.endTime)
 				var params={
 					teacherId:tid,
 					sid:sid,
-					startDate:self.starTime,
-					endDate:self.endTime,
+					startDate:self.starDate,
+					endDate:self.endDate,
+					type:2,
+					stuId:loginId
 				};
 				ajax.post_data(url,params,function(d){
 					console.log('week详情',d)
 					if(d.code==0){
-						self.weekInfo=d.data;
+						self.tableArr=d.data;
+						
+						console.log('xxxxx',self.tableArr)
 						if(d.data.length!=0){
 							self.address=d.data[0].address
-						}else{
+													}else{
 							self.address='暂无'
 						}
 						
 					}
 				})
 			},
-			niceDate(val){
-		    if (val != null) {
-		      let date = new Date(val),
-		        years = date.getFullYear() ,
-		        month = (date.getMonth() + 1),
-		        day = date.getDate()
-		        
-		      return years + '-' + month + '-' + day 
-		    }
-		    return "";
-  			},
-			getWeek(star,end){
-				var self=this;
-				var week = new Date().getDay(); 
-				if(week==1){
-					star=(new Date()).getTime();
-					end=new Date().getTime() + 24*11*60*60*1000
-				}
-				else if(week==2){
-					star=new Date().getTime() - 24*60*60*1000
-					end=new Date().getTime() + 24*10*60*60*1000
-				}
-				else if(week==3){
-					star=new Date().getTime() - 24*2*60*60*1000
-					end=new Date().getTime() + 24*9*60*60*1000
-				}
-				else if(week==4){
-					star=new Date().getTime() - 24*3*60*60*1000
-					end=new Date().getTime() + 24*8*60*60*1000
-				}
-				else if(week==5){
-					star=new Date().getTime() - 24*4*60*60*1000
-					end=new Date().getTime() + 24*7*60*60*1000
-				}
-				else if(week==6){
-					star=new Date().getTime() - 24*5*60*60*1000
-					end=new Date().getTime() + 24*6*60*60*1000
-				}
-				else if(week==7){
-					star=new Date().getTime() - 24*6*60*60*1000
-					end=new Date().getTime() + 24*5*60*60*1000
-				}
-				self.starTime=self.niceDate(star);
-				
-		       	self.endTime=self.niceDate(end);
-			},
-			yuyue(i){
-				alert(i.starttime+'-'+i.endtime)
-			}
+			
+			
+//			yuyueGo(){
+//				
+//			}
 		}
 	}
 </script>
@@ -726,21 +712,34 @@
 						display: block;
 						height: 100%;
 					}
+					>div{
+						border: none;
+					}
 				}
 				>p:last-child {
 					border-bottom: none;
 				}
 				>p,
 				div {
+					
 					width: 100%;
-					/*width: 20%;*/
+					/*line-height: 2.25rem;*/
 					height: 2.25rem;
 					font-size: 0.6rem;
 					border-bottom: 1px solid #E8E8E8;
 					border-right: 1px solid #E8E8E8;
+					>p{
+						color: #000;
+					}
+					>span{
+						color: #666;
+					}
 				}
 				>div>em {
 					display: block;
+				}
+				>div{
+					
 				}
 			}
 			.table-action li:last-child {
