@@ -18,7 +18,7 @@
 
 		props:{
 			state:{
-				type:String,
+				default:'',
 		
 			},
 		
@@ -28,12 +28,6 @@
 
 		},
 	
-		
-		methods: {
-			yuyueClick(yid){
-				this.$root.eventHub.$emit('zidingyi',yid)
-			}
-		}
 	})
 </script>
 
@@ -44,6 +38,7 @@
 	    height: 1.3rem;
 	    line-height: 1.3rem;
 	    border-radius: 1rem;
+	    margin:  0 auto;
 	}
 	.state_shenhe1{
 	    color: #fff;
@@ -57,18 +52,5 @@
 	    color: #40A0F1;
 	    border: 1px solid #40A0F1;
 	} 
-	.yueyuY{
-		color: #55CFFD;
-				width: 100%;
 	
-		display: inline-block;
-	}
-	.yuyueN{
-		color: #9B999A;
-		background: #F3EFF0;
-		width: 100%;
-
-		display: inline-block;
-		
-	}
 </style>

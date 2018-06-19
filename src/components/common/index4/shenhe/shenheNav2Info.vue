@@ -51,6 +51,7 @@
 		
 			
 		</div>
+		
 	
 		<div v-if='roleType' class="btn-fixed">
 			<div v-if='userInfo.state==2' @click="getYes(2)" class="btn-yes">通过</div>
@@ -240,7 +241,7 @@
 			border-bottom: none;
 		}
 	}
-		.btn-fixed{
+	.btn-fixed{
 		position: fixed;
 		bottom: 2rem;
 		width:100%;

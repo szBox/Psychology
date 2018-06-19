@@ -11,7 +11,7 @@
 			<div class="ov-div">
 				<p>{{myInfo.nickName}}</p>
 				<img class="" src="../../../assets/img/icon_yu.png" alt="" />
-				<span class="">{{myInfo.personSign}}</span>
+				<span class="">{{bbF}}</span>
 			</div>
 		</div>
 		
@@ -31,13 +31,13 @@
 						<img src="../../../assets/img/icon_next.png"/>
 					</em>
 				</li>
-				<li v-show='roleT'  @click="goPath({path:'/index4/zixunList'})">
+				<!--<li v-show='roleT'  @click="goPath({path:'/index4/zixunList'})">
 					<img src="../../../assets/img/icon_wo3.png" alt="" />
 					<span>我的咨询</span>
 					<em>
 						<img src="../../../assets/img/icon_next.png"/>
 					</em>
-				</li>
+				</li>-->
 				<li @click="goPath({path:'/index4/shenhe'})">
 					<img src="../../../assets/img/icons_1.png" alt="" />
 					<span>我的审核</span>
@@ -65,6 +65,7 @@
 		data() {
 			return {
 				myInfo:'',
+				bbF:'',
 				roleT:true,
 			}
 		},
@@ -93,6 +94,11 @@
 				 	console.log('身份验证',d)
 					if(d.code==0){
 						self.myInfo=d.data;
+						if(d.data.personSign==''){
+							self.bbF='暂无个性签名'
+						}else{
+							self.bbF=d.data.personSign
+						}
 					}
 				})
 			},

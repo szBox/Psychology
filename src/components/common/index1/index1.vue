@@ -7,6 +7,9 @@
 
 			<div class="swiper-container" id="nav">
 				<div class="swiper-wrapper" >
+					<div class=" swiper-slide" @click="navOn('','全部')">
+						<span>全部</span>
+					</div>
 					<div class=" swiper-slide" v-for="(nav,index) in navList" @click="navOn(nav.id,nav.name)">
 						<span>{{nav.name}}</span>
 					</div>
@@ -18,7 +21,7 @@
 			</h1>
 		</div>
 			
-			<scroller :class='{"zindex":ztype==true}' :on-refresh="reType && refresh" :on-infinite="reType && infinite" ref="my_scroller">
+			<scroller :class='' :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			
 					
 					<ul class="nav-list">
@@ -55,18 +58,14 @@
 	export default({
 		data() {
 			return {
-				reType: true,
 				indexTitle:'心灵阅读',
 				tabActive: 0,
-				newPage:1,
-				nav1Page:1,
-				newList:'',
-				ztype: false,
-				items1: [],
+				page:1,
+				pages:'',
+				newList:[],
 				navList:[], //nav头部列表
-				navList2:[
-				{name:1},{name:2},{name:3},{name:4},{name:5},
-				]
+				navName:'',
+				navId:'',
 			
 			}
 		},
@@ -77,7 +76,7 @@
 		mounted() {
 			var self=this;
 			self.getNav();
-			self.getNew();
+			self.getList();  //什么都不传  全部显示
 
 			$('._v-content').css({
 				paddingTop:10+'rem',
@@ -108,7 +107,7 @@
 				var sid=localStorage.getItem('sid');
 				var params={
 					current:1,
-					size:5,
+					size:10,
 				}
 				 ajax.post_data(url, params, function(d) {
 		//        	_this.$root.eventHub.$emit('Vloading',false)
@@ -127,15 +126,19 @@
 					}
 		       });
 			},
-			navOn(i,name){
-				
+			navOn(id,name){
 				var self=this;
+				self.navName=name; //传给 刷新函数 navOnPage
+				self.navId=id;
 				self.indexTitle=name;
+				if(name=='全部'){
+					self.indexTitle='心灵阅读'
+				}
 				var url=int.index1List;
 				var sid=localStorage.getItem('sid');
 				var params={
-					  columnId:i,
-					  current: self.nav1Page,
+					  columnId:id,
+					  current: 1,
 					  size: 10,
 //					  state: 0,
 				}
@@ -152,13 +155,58 @@
 					}
 		       });
 			},
-			getNew(){
+			navOnList(id,name){
+				var url=int.index1List;
+				var sid=localStorage.getItem('sid');
+				var params={
+					  columnId:id,
+					  current: 1,
+					  size: 10,
+//					  state: 0,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("专题i列表",d);
+					if(d.code==0){
+						 self.pages=d.data.pages;
+						if(d.data.records.length==0){
+							self.newList='';
+						}
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.newList=d.data.records;
+						}
+					}
+		       });			
+			},
+			navOnPage(id,name){
+				var url=int.index1List;
+				var sid=localStorage.getItem('sid');
+				var params={
+					  columnId:id,
+					  current: 1,
+					  size: 10,
+//					  state: 0,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("专题i列表",d);
+					if(d.code==0){
+						self.pages=d.data.pages;
+						if(d.data.records.length==0){
+							self.newList='';
+						}
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.newList.push(d.data.records[i]);
+						}
+					}
+		       });			
+			},
+			getList(){
 				var self=this;
 				var url=int.index1List;
 				var sid=localStorage.getItem('sid');
 				var params={
-//					  columnId:15,
-					  current: self.newPage,
+					  current: self.page,
 					  size: 10,
 //					  state: 0,
 				}
@@ -166,33 +214,39 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("最新列表",d);
 					if(d.code==0){
-						for(let i = 0; i < d.data.records.length; i++) {
 							self.newList=d.data.records
-						}
+							self.pages=d.data.pages;
 					}
 		       });
 			},
+			
 			refresh(done) {
-				setTimeout(() => {
-
-					done()
-				}, 1500)
+				var self=this;
+				self.page=1;
+				setTimeout(function(){
+					self.navOnList(self.navId,self.navName)
+						done()
+				},1500)
 			},
 			infinite(done) {
-				this.page++;
-				done(true);
-				console.log('拉啦啦')
-				if(this.page == this.pageAll) {
-					return
+				var self=this;
+				console.log('112',self.page+'---'+self.pages)
+				if(self.page>=self.pages){
+					done(true)
+				}
+				else{
+		
+					console.log('拉啦啦')
+					self.page++
+					setTimeout(function(){
+						self.navOnPage(self.navId,self.navName)
+						done()
+					},1500)
 				}
 				
 			},
 
-			active(index) {
-				this.tabActive = index;
-				console.log(this.tabActive);
-
-			},
+			
 			
 			goPath(i) {
 				this.$router.push({
@@ -240,9 +294,7 @@
 		/*width: inherit !important;*/
 	}
 	
-	.zindex {
-		z-index: -1000;
-	}
+	
 	#top {
     position:absolute;
     top:0;

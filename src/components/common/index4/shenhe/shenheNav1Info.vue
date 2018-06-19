@@ -25,10 +25,17 @@
 			
 			
 			<div v-if='roleType' class="btn-fixed">
-				<div v-if='userInfo.state==1' @click="getYes(2)" class="btn-yes">通过</div>
-				<div v-if='userInfo.state==1'@click="getYes(3)" class="btn-no">驳回</div>
+				<div v-if='userInfo.state==1' @click="conshowFn(2,'通过')" class="btn-yes">通过</div>
+				<div v-if='userInfo.state==1'@click="conshowFn(3,'驳回')" class="btn-no">驳回</div>
 			</div>
-		
+			
+			 <confirm v-model="conShow"
+			title='操作提示'
+	      @on-cancel="onCancel"
+	      @on-confirm="onConfirm">
+	        <p style="text-align:center;">是否确认{{ConfirmStr}}?</p>
+	      </confirm>
+			
 		</div>
 
 		
@@ -43,20 +50,27 @@
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
-	import { Toast } from 'vux'
+	import { Toast, Confirm } from 'vux'
 	export default({
 		data() {
 			return {
 				userInfo:'', //话题 作者信息
 				roleType:false,
 				stateData:'',
+				conShow:false,   //二次提示 
+				ConfirmState:'',  //提示  通过/驳回的状态 传给提示框
+				ConfirmStr:'', //提示  通过/驳回的内容  传给提示框
 			}
+		},
+		components:{
+			Toast,
+			Confirm
 		},
 		mounted(){
 			var self=this;
 			self.getInfo();
 			var role=localStorage.getItem('role');
-			if(role=='M'||role=='T'){
+			if(role=='M'){
 				self.roleType=true
 			}
 		},
@@ -90,14 +104,25 @@
 					self.stateData=d.data.state;
 				})
 			},
-			
-			getYes(s){
-				var self=this;
+				conshowFn(state,str){
+//				再次确认提示框
+				this.conShow=true
+				this.ConfirmState=state;
+				this.ConfirmStr=str;
+
+			},
+		 	onCancel () {
+		      
+		    },
+		    onConfirm () {
+		     var self=this;
+		     console.log(self.ConfirmState+'////'+self.ConfirmStr)
+		     //	调ajax  通过传2, 驳回传3
 				var url=int.speakShenhe;
 				var params={
+					state:self.ConfirmState,
 					id:self.$route.params.id,
-					state:s
-				};
+				}
 				ajax.put_data(url,params,function(d){
 					console.log('通过/驳回',d)
 					if(d.code==0){
@@ -108,12 +133,11 @@
 						})
 						setTimeout(function(){
 							self.back()
-						},800)
+						},1000)
 					}
 					
 				})
-			},
-		
+		    },
 			
 		
 	

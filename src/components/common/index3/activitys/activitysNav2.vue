@@ -3,9 +3,9 @@
 
 		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li v-for="(item, index) in items" @click="goPath(item.id)">
+				<li v-for="(item, index) in allList" @click="goPath(item.id)">
 					<div class="lf zutuan-img">
-						<img :src="item.headPic" alt="" />
+						<img :src="item.headPic" alt=""/>
 						<h1>{{item.nickName}}</h1>
 						<p :class="typeClass">{{item.type | Types}}</p>
 						<h5>{{item.timelast}}</h5>
@@ -26,8 +26,8 @@
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
 							<p>
-								<span>{{item.signupStartTime | mdDate}}</span>~
-								<span>{{item.signupEndTime | mdDate}}</span>
+								<span>{{item.signupStartTime | mdDate }}</span>~
+								<span>{{item.signupEndTime | mdDate }}</span>
 							</p>
 						</div>
 						<div>
@@ -52,46 +52,44 @@
 		data() {
 			return {
 				typeClass:'',
-				items: [],
-				allList:[
-//					{name:'王大力',play:'植树活动',bb:"我想组织一次秋游,希望大家积极来参与",
-//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'20元',img:'src/assets/img/teacher2.png',
-//					type:'我发起'},
-//					{name:'杀马特',play:'聚餐活动',bb:"我想组织一次聚餐,希望大家积极来参与",
-//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'120元',img:'src/assets/img/ren2.png',
-//					type:'已参与'},
-//					{name:'伏地魔',play:'亲子活动',bb:"我想组织一次亲子活动,希望大家积极来参与",
-//					times:"08-16 08:00~08-18",timelast:"40分钟前",money:'10元',img:'src/assets/img/ren3.png',
-//					type:'未参与'},
-//					{name:'王大力',play:'植树活动',bb:"我想组织一次秋游,希望大家积极来参与",
-//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'20元',img:'src/assets/img/ren1.png',
-//					type:'已审核'},
-//					{name:'杀马特',play:'聚餐活动',bb:"我想组织一次聚餐,希望大家积极来参与",
-//					times:"08-16 08:00~08-18",timelast:"30分钟前",money:'120元',img:'src/assets/img/ren2.png',
-//					type:'未审核'},
-//				
-					],
+				allList:[],
 				/*最后的数组*/
-				page: '',
-				allPage:'',
+				page: 1,
+				pages:'',
 				/*当前页码*/
 			}
 		},
-		created() {
-			this.getPage()
-
-		},
-		filters: {
+		filters:{
 			...filter,
 			Types(val){
-				if(val==5){
+				if(val==1){
+					return '我发起'
+				}
+				else if(val==2){
+					return '审核中'
+				}
+				else if(val==3){
+					return '我参与'
+				}
+				else if(val==4){
+					return '驳回'
+				}
+				else if(val==5){
 					return	'已满'
 				}
+				else if(val==6){
+//					return	'不在报名时间内'
+					return '已过期'
+				}
+				else if(val==7){
+					return '未参与'
+				}
 			}
-	   },
-	   mounted(){
-//	   	this.getPage()
-	   },
+		},
+		mounted() {
+			this.getList()
+		},
+
 		methods: {
 			goPath(i) {
 				this.$router.push({
@@ -99,69 +97,84 @@
 				})
 
 			},
+			
 			goWrite() {
 				this.$router.push({
 					path: "/index3/speakWrite"
 				})
 			},
-			getPage(done){
+			getList(){
 				var self=this;
 				var mainUrl = int.activityList;
+	         	var token=localStorage.getItem('token');
 	         	var role=localStorage.getItem('role');
 	         	var sid=localStorage.getItem('sid');
 	         	 var params = {
-	           		current: 1, //当前页
+	           		current: self.page, //当前页
 					sid: sid,	//学校id
-					size: 2,  //每页展示 几条
-					state: 1 //状态
-	//				type: 0
+					size: 10,  //每页展示 几条
+					state: 2,//状态
+					type: 1
 	          	};
 	          ajax.post_data(mainUrl, params, function(d) {
 	//        	_this.$root.eventHub.$emit('Vloading',false)
 	            console.log(d);
-	            self.page=d.data.current;
-	            self.allPage=d.data.pages;
 				if(d.code==0){
+					self.pages=d.data.pages;
 					self.allList=d.data.records;
-					if (done) {
-		              done(true)
-		            }
-					for(let i = 0; i < self.allList.length; i++) {
-						self.items.push(self.allList[i]);
+				}
+	          });
+			},
+			getPage(){
+				var self=this;
+				var mainUrl = int.activityList;
+	         	var token=localStorage.getItem('token');
+	         	var role=localStorage.getItem('role');
+	         	var sid=localStorage.getItem('sid');
+	         	 var params = {
+	           		current: self.page, //当前页
+					sid: sid,	//学校id
+					size: 10,  //每页展示 几条
+					state: 2, //状态
+					type: 1
+	          	};
+	          ajax.post_data(mainUrl, params, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+	            console.log(d);
+				if(d.code==0){
+					self.pages=d.data.pages;
+					for(var i = 0; i < d.data.records.length; i++) {
+						self.allList.push(d.data.records[i]);
 					}
 				}
-				
-	             
-	
 	          });
 			},
 			refresh(done) {
 				var self=this;
-				setTimeout(() => {
-					self.getPage();
-					console.log('刷新了',self.page)
-					done()
-				}, 1500)
+				self.page=1;
+				
+				setTimeout(function(){
+					self.getList()
+						done()
+				},1500)
 			},
 			infinite(done) {
-				
-				
 				var self=this;
-				
-				self.page++;
-				self.getPage();
-				if(self.page==self.allPage){
+				console.log('112',self.page+'---'+self.pages)
+				if(self.page>=self.pages){
 					done(true)
 				}
-				
+				else{
+		
+					console.log('拉啦啦')
+					self.page++
+					setTimeout(function(){
+						self.getPage()
+						done()
+					},1500)
+				}
 				
 			}
-			
-		
-    
-			
-			
-			
 		}
 	})
 </script>

@@ -42,9 +42,9 @@
 		data() {
 			return {
 				allList:[],
-				items: [],
 				/*最后的数组*/
 				page: 1,
+				pages:'',
 				/*当前页码*/
 			}
 		},
@@ -87,24 +87,60 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("话题列表",d);
 					if(d.code==0){
-						for(let i = 0; i < d.data.records.length; i++) {
-							self.allList.push(d.data.records[i]);
-						}
+						self.pages=d.data.pages;
+						self.allList=d.data.records
+						
 					}
 					
 		       });
 			},
+			getPage(){
+				var self=this;
+				var url=int.speakList;
+				var sid=localStorage.getItem('sid');
+				var params={
+					sid:sid,
+					current:self.page,
+					size:10,
+					state:2,
+				}
+				 ajax.post_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log("话题列表",d);
+					if(d.code==0){
+//						self.allList=d.data.records;
+						self.pages=d.data.pages;
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.allList.push(d.data.records[i]);
+						}
+					}
+		       });
+			},
 			refresh(done) {
-				setTimeout(() => {
-
-					done()
-				}, 1500)
+				var self=this;
+				self.page=1;
+				
+				setTimeout(function(){
+					self.getList()
+						done()
+				},1500)
 			},
 			infinite(done) {
-				if(this.page == 1) {
+				var self=this;
+				console.log('112',self.page+'---'+self.pages)
+				if(self.page>=self.pages){
 					done(true)
 				}
-				console.log('拉啦啦')
+				else{
+		
+					console.log('拉啦啦')
+					self.page++
+					setTimeout(function(){
+						self.getPage()
+						done()
+					},1500)
+				}
+				
 			}
 		}
 	})

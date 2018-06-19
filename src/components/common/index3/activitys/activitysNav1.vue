@@ -5,7 +5,7 @@
 			<ul class="activitys-ul">
 				<li v-for="(item, index) in allList" @click="goPath(item.id)">
 					<div class="lf zutuan-img">
-						<img :src="item.headPic" alt="" />
+						<img :src="item.headPic" alt=""/>
 						<h1>{{item.nickName}}</h1>
 						<p :class="typeClass">{{item.type | Types}}</p>
 						<h5>{{item.timelast}}</h5>
@@ -55,7 +55,7 @@
 				allList:[],
 				/*最后的数组*/
 				page: 1,
-				allPage:'',
+				pages:'',
 				/*当前页码*/
 			}
 		},
@@ -78,39 +78,19 @@
 					return	'已满'
 				}
 				else if(val==6){
-					return	'不在报名时间内'
+//					return	'不在报名时间内'
+					return '未开始'
 				}
 				else if(val==7){
 					return '未参与'
 				}
-			}
-		},
-		created() {
-			var self=this;
-			var mainUrl = int.activityList;
-         	var token=localStorage.getItem('token');
-         	var role=localStorage.getItem('role');
-         	var sid=localStorage.getItem('sid');
-         	 var params = {
-           		current: 1, //当前页
-				sid: sid,	//学校id
-				size: 10,  //每页展示 几条
-				state: 2 //状态
-//				type: 0
-          	};
-          ajax.post_data(mainUrl, params, function(d) {
-//        	_this.$root.eventHub.$emit('Vloading',false)
-            console.log(d);
-             self.page=d.data.current;
-            self.allPage=d.data.pages;
-			if(d.code==0){
-				for(var i = 0; i < d.data.records.length; i++) {
-					self.allList.push(d.data.records[i]);
+				else if(val==8){
+					return '已过期'
 				}
 			}
-          });
-
-
+		},
+		mounted() {
+			this.getList()
 		},
 
 		methods: {
@@ -126,43 +106,75 @@
 					path: "/index3/speakWrite"
 				})
 			},
-			refresh(done) {
-				setTimeout(() => {
-					var self=this;
-					var mainUrl = int.activityList;
-		         	var token=localStorage.getItem('token');
-		         	var role=localStorage.getItem('role');
-		         	var sid=localStorage.getItem('sid');
-		         	 var params = {
-		           		current: 1, //当前页
-						sid: sid,	//学校id
-						size: 10,  //每页展示 几条
-						state: 2 //状态
-		//				type: 0
-		          	};
-		          ajax.post_data(mainUrl, params, function(d) {
-		//        	_this.$root.eventHub.$emit('Vloading',false)
-		            console.log(d);
-		             self.page=d.data.current;
-		            self.allPage=d.data.pages;
-					if(d.code==0){
-						for(var i = 0; i < d.data.records.length; i++) {
-							self.allList=d.data.records;
-						}
+			getList(){
+				var self=this;
+				var mainUrl = int.activityList;
+	         	var token=localStorage.getItem('token');
+	         	var role=localStorage.getItem('role');
+	         	var sid=localStorage.getItem('sid');
+	         	 var params = {
+	           		current: self.page, //当前页
+					sid: sid,	//学校id
+					size: 10,  //每页展示 几条
+					state: 2 //状态
+	//				type: 0
+	          	};
+	          ajax.post_data(mainUrl, params, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+	            console.log(d);
+				if(d.code==0){
+					self.pages=d.data.pages;
+					self.allList=d.data.records;
+				}
+	          });
+			},
+			getPage(){
+				var self=this;
+				var mainUrl = int.activityList;
+	         	var token=localStorage.getItem('token');
+	         	var role=localStorage.getItem('role');
+	         	var sid=localStorage.getItem('sid');
+	         	 var params = {
+	           		current: self.page, //当前页
+					sid: sid,	//学校id
+					size: 10,  //每页展示 几条
+					state: 2 //状态
+	//				type: 0
+	          	};
+	          ajax.post_data(mainUrl, params, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+	            console.log(d);
+				if(d.code==0){
+					self.pages=d.data.pages;
+					for(var i = 0; i < d.data.records.length; i++) {
+						self.allList.push(d.data.records[i]);
 					}
-         			 });
-					done()
-				}, 1500)
+				}
+	          });
+			},
+			refresh(done) {
+				var self=this;
+				self.page=1;
+				
+				setTimeout(function(){
+					self.getList()
+						done()
+				},1500)
 			},
 			infinite(done) {
 				var self=this;
-				self.page++;
-				console.log(self.page)
-				done(true);
-				console.log('拉啦啦')
-				if(self.page == self.pageAll) {
-//					return
-									
+				console.log('112',self.page+'---'+self.pages)
+				if(self.page>=self.pages){
+					done(true)
+				}
+				else{
+		
+					console.log('拉啦啦')
+					self.page++
+					setTimeout(function(){
+						self.getPage()
+						done()
+					},1500)
 				}
 				
 			}

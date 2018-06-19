@@ -12,7 +12,8 @@ import store from './Vuex/store'
 import vuexI18n from 'vuex-i18n';  
 import VueScroller from 'vue-scroller'
 import  { ToastPlugin } from 'vux' /* 全局toast */
-import { Tab, TabItem } from 'vux'
+import { Tab, TabItem,ConfirmPlugin } from 'vux'
+Vue.use(ConfirmPlugin)
 /*tab*/
 Vue.component('tab', Tab)
 Vue.component('tab-item', TabItem)

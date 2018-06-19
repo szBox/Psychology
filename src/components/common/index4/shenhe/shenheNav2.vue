@@ -2,12 +2,13 @@
 	<div class="shengheNav2">
 		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
-				<li v-for="(item, index) in AllList" @click="goPath(item.id)">
+				<li v-for="(item, index) in AllList" @click="goPath(item.state,item.id)">
 					<div class="lf zutuan-img">
 						<img src="../../../../assets/img/ren1.png" alt="" />
 						<h1>{{item.nickName}}</h1>
-						<p>{{item.type | TypeLeft}}</p>
-						<h5>30分钟前</h5>
+						<!--<p>{{item.type | TypeLeft}}</p>-->
+						<state-shenhe :state='item.state'></state-shenhe>
+						<!--<h5>30分钟前</h5>-->
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
@@ -46,15 +47,21 @@
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
+	import stateShenhe from '../../State_shenhe'
 	export default({
 		data() {
 			return {
-				//				tab_index:2
 				AllList: [],
 				/*最后的数组*/
 				page: 1,
+				pages:'',
+				dataType:'',
+				dataStatus:'',
 				/*当前页码*/
 			}
+		},
+		components:{
+			stateShenhe
 		},
 		filters:{
 			...filter,
@@ -84,14 +91,30 @@
 			
 		},
 		mounted(){
-			this.getList()
+			var self=this;
+			var role=localStorage.getItem('role');
+			if(role=='S'){
+				self.dataType=1;
+				self.dataStatus=''
+			}else{
+				self.dataType='';
+				self.dataStatus=1
+			}
+			self.getList();
 		},
 		
 		methods: {
-			goPath(i) {
-				this.$router.push({
-					path: "/shenheNav2Info/" + i
-				})
+			goPath(state,i) {
+				if(state=='2'){
+					this.$router.push({
+						path: "/activitysList/activitysInfo/" + i
+					})
+				}else{
+					this.$router.push({
+						path: "/shenheNav2Info/" + i
+					})
+				}
+				
 
 			},
 			getList(){
@@ -102,41 +125,66 @@
 					 current: self.page,
 					 sid: sid,
 					 size: 10,
-//					 state: 2,
-					 type:2,
+					 state: self.dataStatus,
+					 type:self.dataType
 				};
 				ajax.post_data(url,params,function(d){
 					console.log('组团审核列表',d)
-					self.AllList=d.data.records;
+					if(d.code==0){
+						self.pages=d.data.pages;
+						self.AllList=d.data.records;
+					}
+					
+					
 				})
 			},
 			getPage(){
 				var self=this;
-				var url=int.speakList;
+				var url=int.activityList;
 				var sid=localStorage.getItem('sid')
 				var params={
 					 current: self.page,
 					 sid: sid,
 					 size: 10,
-					 state: 2,
-					 type:2,
+					 state: self.dataStatus,
+					 type:self.dataType
 				};
 				ajax.post_data(url,params,function(d){
-					console.log('话题发布详情',d)
-					self.AllList=d.data.records;
+					console.log('组团审核列表',d)
+					if(d.code==0){
+						self.pages=d.data.pages;
+						for(let i = 0; i < d.data.records.length; i++) {
+							self.AllList.push(d.data.records[i]);
+						}
+					}
+					
 				})
 			},
 			refresh(done) {
-				setTimeout(() => {
-
-					done()
-				}, 1500)
+				var self=this;
+				self.page=1;
+				
+				setTimeout(function(){
+					self.getList()
+						done()
+				},1500)
 			},
 			infinite(done) {
-				if(this.page == 1) {
+				var self=this;
+				console.log('112',self.page+'---'+self.pages)
+				if(self.page>=self.pages){
 					done(true)
 				}
-				console.log('拉啦啦')
+				else{
+		
+					console.log('拉啦啦')
+					self.page++
+					setTimeout(function(){
+						self.getPage()
+						done()
+					},1500)
+				}
+				
 			}
 		}
 	})

@@ -15,7 +15,7 @@
 				</p>
 				<p>
 					<span>联系方式：</span>
-					<input v-model="phone" type="text" />
+					<input v-model="phone" type="text" maxlength="11"/>
 				</p>
 			</div>
 
@@ -58,7 +58,7 @@
 			</div>
 
 			<div class="write-bottom">
-				<p>
+				<p v-if='tips'>
 					<img src="../../../../assets/img/icons_1.png" />
 					<span>发布之后需要进行审核</span>
 				</p>
@@ -84,7 +84,7 @@
 				people:'',
 				phone:'',
 				address:'',
-				
+				tips:true,
 				startTime: '',
 				endTime: '',
 				jiheTime: '',
@@ -100,6 +100,13 @@
 				sty: {
 					width: '50%'
 				}
+			}
+		},
+		created(){
+			var self=this;
+			var role =localStorage.getItem('role')
+			if(role=='M'){
+				self.tips=false
 			}
 		},
 		components: {
@@ -202,7 +209,7 @@
 						position: 'bottom'
 					})
 				}
-				else if(self.time3num<self.time1num){
+				else if(self.time3num<self.time1num||self.time3num<self.time2num){
 					self.$vux.toast.show({
 						type: 'text',
 						text: '集合时间有误',
@@ -229,9 +236,12 @@
 							self.response = d.data;
 							self.$vux.toast.show({
 								type: 'text',
-								text: '发布成功',
+								text: '操作成功',
 								position: 'bottom'
 							})
+							setTimeout(function(){
+								self.back()
+							},1000)
 						}
 
 					});

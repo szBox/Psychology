@@ -129,12 +129,12 @@
 				setTimeout(function(){
 					self.getList()
 						done()
-				},2000)
+				},1500)
 			},
 			infinite(done) {
 				var self=this;
 				console.log('112',self.page)
-				if(self.page==self.pages){
+				if(self.page>=self.pages){
 					done(true)
 				}
 				else{
@@ -144,7 +144,7 @@
 					setTimeout(function(){
 						self.getPage()
 						done()
-					},2000)
+					},1500)
 				}
 				
 			}

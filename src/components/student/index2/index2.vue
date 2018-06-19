@@ -130,12 +130,12 @@
 		
 		
 		</div>
-		<div class="flexd-nav">
+		<!--<div class="flexd-nav">
 				<div  @click="goPath({path:'/chat'})">
 					<img src="../../../assets/img/zixun.png" alt="" />
 					<p>咨询</p>
 				</div>
-		</div>
+		</div>-->
 		
 	</div>
 
@@ -353,7 +353,7 @@
 				var params={
 					current: self.theachPage,
 				    type: 2,
-				    size:5,
+				    size:9999,
 				};
 				ajax.post_data(url,params,function(d){
 					if(d.code==0){
@@ -367,7 +367,7 @@
 				var params={
 					current: self.theachPage,
 				    type: 2,
-				    size:5,
+				    size:9999,
 				    
 				};
 				ajax.post_data(url,params,function(d){

@@ -5,7 +5,8 @@
 			<h1>预约记录</h1>
 		</header>
 		
-		<ul v-if='allList.length'>
+		<div class="b-content">
+			<ul v-if='allList.length'>
 			<li v-for="(item,index) in allList">
 				<img :src="item.tHeadPic" alt="" />
 				<div class="xiaoxi-div">
@@ -20,6 +21,8 @@
 		<div v-if='tip'>
 			暂无数据
 		</div>
+		</div>
+		
 	</div>
 </template>
 
@@ -133,6 +136,9 @@
 </script>
 
 <style scoped lang="less">
+.header{
+	position: fixed;
+}
 	.yuyueJilu ul{
 		li{
 			border-bottom: 1px solid #F7F7F7;

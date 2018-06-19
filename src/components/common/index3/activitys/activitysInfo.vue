@@ -3,7 +3,7 @@
 	<div class="activitysInfo">
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
-			<h1>{{userInfo.name}}</h1>
+			<h1 >{{userInfo.name}}</h1>
 		</header>
 		<div class="b-content">
 			<div class="activi-li">
@@ -18,12 +18,14 @@
 					{{userInfo.type | TypesName}}
 				</p>
 			</div>
+			<div class="bgg"></div>
 			<div class="activi-li">
 				<p style="border: none;font-size: 0.8rem;">
 					<span style="font-size: 0.7rem;">活动详情：</span>
 					{{userInfo.content}}
 				</p>
 			</div>
+			<div class="bgg"></div>
 			<div class="activi-li">
 				<p>
 					<span>报名时间：</span>
@@ -38,6 +40,7 @@
 					<em>{{userInfo.payPer}}元</em>
 				</p>
 			</div>
+			<div class="BGG"></div>
 			<div class="activi-li">
 				<p>
 					<span>集合时间：</span>
@@ -48,6 +51,8 @@
 					{{userInfo.gatherAddress}}
 				</p>
 			</div>
+			<div class="bgg"></div>
+			<!----    管理员  老师  发起---->
 			<div class="baoming-ul"  v-if='userInfo.type=="1"'>
 				<div class="h-faqi">
 					<h1 @click="typeToggle(1),getList1()" :class="{'baoming-active':toggleNav==1}" class="baoming-type">
@@ -73,7 +78,7 @@
 							<h4>{{item.className}}</h4>
 						</div>
 					</li>
-					<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
+					<p  class="more-btn" :class="{'nodata' : nodata1==true}" @click="next1 && more1() ">{{next1_text}}</p>
 				</ul>
 				
 				<ul v-if='toggleNav==2'>
@@ -91,11 +96,14 @@
 							
 						</div>
 						<h6>
-							<i @click="shenheGo(item2.id,2)">通过</i>
-							<i @click="shenheGo(item2.id,3)">不通过</i>
+							<!--<i @click="shenheGo(item2.id,2)">通过</i>
+							<i @click="shenheGo(item2.id,3)">不通过</i>-->
+							<i @click="conshowFn(item2.id,2,'通过')">通过</i>
+							<i @click="conshowFn(item2.id,3,'驳回')">驳回</i>
+							
 						</h6>
 					</li>
-					<p  class="more-btn" @click="next2 && more2() ">{{next2_text}}</p>
+					<p  class="more-btn" :class="{'nodata' : nodata2==true}" @click="next2 && more2() ">{{next2_text}}</p>
 					
 				</ul>
 				
@@ -111,17 +119,20 @@
 				
 				<ul>
 					<li v-for='(item,index) in baominList'>
+						<!--{{item}}-->
 						<p>
-							<img src="../../../../assets/img/ren3.png" alt="" />
-							<span>{{item.nickName}}</span>
+							<img :src="item.headPic" alt="" />
+							<span v-if='item.type==1'>{{item.nickName}}</span>
+							<span v-if='item.type==2'>{{item.name}}</span>
 						</p>
 						<div>
-							<p>18874159636</p>
-							<h4>三年级二班</h4>
+							<p v-if='item.type==1'>{{item.userPhone}}</p>
+							<p v-if='item.type==2'>{{item.phone}}</p>
+							<h4>{{item.className}}</h4>
 						</div>
 					</li>
 				</ul>
-				<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
+				<p  class="more-btn" :class="{'nodata' : nodata1==true}"  @click="next1 && more1() ">{{next1_text}}</p>
 			</div>
 			<!--<myalert :alertProps='alertType' :type='type'></myalert>-->
 			
@@ -130,25 +141,32 @@
 				<p>当前报名人员已满,请下次再来</p>
 			</div>
 			<div class="btn-box" v-if='userInfo.type!=1'>
-				<div v-if='userInfo.type!=1'  :style="{background:TypesBtn_bgcolor}" class="btn-init" @click='baomin()'>{{userInfo.type | TypesBtn}}</div>
-				<!--<div v-if='userInfo.type!=1'  :class="{'btnColor':colorFn(userInfo.type)}" class="btn-init" @click='baomin()'>{{userInfo.type | TypesBtn}}</div>-->
+				<div v-show='userInfo.type==2||userInfo.type==3||userInfo.type==4||
+					userInfo.type==5||userInfo.type==6||userInfo.type==7'
+					 :style="{background:TypesBtn_bgcolor}" 
+					 class="btn-init" @click='baomin()'>{{TypesBtn}}</div>
 			</div>
+		</div>
+		<!--添加报名--fixed-->
+		<div class='add-fixed' v-if="userInfo.type==3" @click="addFn()">
+			<img src="../../../../assets/img/icontext1.png" alt="" />
+			<span>添加报名</span>
 		</div>
 		<!--我要报名-->
 		<div class="alert-bg" v-if="mybao">
 			<div class="alert-box">
-				<h1>我要报名</h1>
+				<h1>添加报名信息</h1>
 				<img @click="closeAlert()" src="../../../../assets/img/closebig.png" alt="" />
 				<div class="alert-inp">
 					<p>
 						<span>姓名:</span>
 						<input v-model="myname" type="text" :placeholder="errname"/>
 					</p>
-					<p>
-						<span v-if="mybaoType==1">班级:</span>
+					<!--<p>
+						<span>班级:</span>
 						<input v-model="myclass" :placeholder="errclass" type="text" />
-					</p>
-					<p v-if="mybaoType==2">
+					</p>-->
+					<p>
 						<span>联系电话:</span>
 						<input maxlength="11" v-model="mytel" :placeholder="errtel" class="alert-phone" type="text" />
 					</p>
@@ -160,10 +178,16 @@
 		
 		<div class="alert-bg" v-if='baoYes' @click="coverYes()">
 			<div class="baoming-yes">
-					报名成功啦!
+				<p>当前用户已报名</p>
+				请等待审核
 			</div>
 		</div>
-		
+	      <confirm v-model="conShow"
+			title='操作提示'
+	      @on-cancel="onCancel"
+	      @on-confirm="onConfirm">
+	        <p style="text-align:center;">是否确认{{ConfirmStr}}?</p>
+	      </confirm>
 	</div>
 </template>
 
@@ -171,14 +195,16 @@
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import myalert from '../../alert'
-	import { Toast } from 'vux'
+	import { Toast, Confirm } from 'vux'
+	
 	import filter from '@/assets/js/filters'
 	export default({
 		data(){
 			return{
 				TypesName_color:'',	//头部状态 样式
 				TypesBtn_bgcolor:'',  //报名 按钮 样式
-				userInfo:"",      //发起作者 信息
+				userInfo:"",      //发起作者 信息+
+				TypesBtn:'',  //报名按钮名字
 				baominList:[],	//报名记录  返回数据
 				shenheList:[],	//待审核记录  返回数据
 				toggleNav:1,	//我发起状态  切换nav
@@ -189,25 +215,28 @@
 				next1_text:'',	next2_text:'',	
 				next1:true,	next2:true,	//加载更多 状态
 				mybao:false,    //我要报名  弹窗
-				mybaoType:'',   //自己报名为1，
 				baoYes:false,   //报名成功 弹窗
 				myname:'',myclass:'',mytel:'', 
 				errname:'',errclass:'',errtel:'', //错误提示
+				nodata1:false,  //'暂无数据的样式'
+				nodata2:false,
+				conShow:false,   //二次提示 
+				ConfirmId:'',  //提示 id
+				ConfirmState:'',  //提示  通过/驳回的状态 传给提示框
+				ConfirmStr:'', //提示  通过/驳回的内容  传给提示框
 			}
 		},
 		components:{
-			Toast
+			Toast,
+			Confirm
 		},
 		created(){
-			
+			this.getUser()
+			this.getList1()
 		},
 		
 		mounted(){
 			var self=this;
-			this.getUser()
-			//this.getPage1()  //获取的 已报名分页 列表
-			this.getList1()
-//			this.getList3()
 		},
 		computed:{
 			colorFn(val){
@@ -226,7 +255,7 @@
 					return '审核中'
 				}
 				else if(val==3){
-					return '我参与'
+					return '已参与'
 				}
 				else if(val==4){
 					return '驳回'
@@ -235,10 +264,12 @@
 					return	'已满'
 				}
 				else if(val==6){
-					return	'不在报名时间内'
+//					return	'不在报名时间内'
+					return '已过期'
 				}
 				else if(val==7){
-					return '未参与'
+//					return '未参与'
+					return ''
 				}
 			},
 			TypesBtn(val){
@@ -269,10 +300,29 @@
 		            console.log('发起作者信息',d);
 					if(d.code==0){
 						self.userInfo=d.data;
-						if(d.data.type==5||d.data.type==6){ //报名人数已满,不在时间内
-							self.Typestn_bgcolor='#D7D5D6'
+						if(d.data.type==2){ 
+							self.TypesBtn='审核中'
+
+							self.TypesBtn_bgcolor=''
 						}
+						else if(d.data.type==3){  //已参与
+							self.TypesBtn='退出活动'
+							self.TypesBtn_bgcolor='#FE6637'
+						}
+						else if(d.data.type==5){ //报名人数已满,
+							self.Typestn_bgcolor='#D7D5D6'
+							self.TypesBtn='我要报名'
+						}
+						
 						else if(d.data.type==7){ //未参与
+							self.TypesBtn='我要报名'
+							self.TypesName_color='#666'
+							self.TypesBtn_bgcolor=''
+						}
+						
+						else if(d.data.type==6){  //已参与
+							self.TypesBtn='活动结束'
+							self.TypesBtn_bgcolor='#D7D5D6'
 							self.TypesName_color='#666'
 						}
 					}
@@ -281,26 +331,7 @@
 	
 	          	});
 			},
-			shenheGo(i,s){
-				var self=this;
-				console.log(i,s)
-				var url=int.activityCaozuo;
-				var params={
-					state:s,
-					id:i
-				}
-				ajax.put_data(url, params, function(d) {
-	//        	_this.$root.eventHub.$emit('Vloading',false)
-		            console.log('操作',d);
-		            if(d.code==0){
-		            	self.$vux.toast.show({
-						type: 'text',
-						text: '操作成功',
-						position: 'bottom'
-						})
-		            }
-	          	});
-			},
+			
 			getPage1(){
 				var self=this;
           		//查看 详情的 报名记录列表
@@ -308,7 +339,7 @@
 	          	var params2={
 					activityId:self.$route.params.id,
 					current:self.page1,
-					size:2,
+					size:10,
 					state:2,
 					
 				} 
@@ -321,14 +352,17 @@
 							}
 						if(d.data.total==0){
 							self.next1=false;
-							self.next1_text='暂无留言'
+							self.next1_text='暂无数据'
+							self.nodata1=true;
 						}
 						else{
 							self.next1=true;
+							self.nodata1=false;
 							self.next1_text='加载更多'
 						}
 						if(d.data.current==d.data.pages){
 							self.next1=false;
+							self.nodata1=false;
 							self.next1_text='没有更多了'
 						}
 						
@@ -346,7 +380,7 @@
 	          	var params2={
 					activityId:self.$route.params.id,
 					current:self.page1,
-					size:2,
+					size:10,
 					state:2,
 					
 				} 
@@ -359,14 +393,17 @@
 							}
 						if(d.data.total==0){
 							self.next1=false;
-							self.next1_text='暂无留言'
+							self.next1_text='暂无数据'
+							self.nodata1=true;
 						}
 						else{
 							self.next1=true;
+							self.nodata1=false;
 							self.next1_text='加载更多'
 						}
 						if(d.data.current==d.data.pages){
 							self.next1=false;
+							self.nodata1=false;
 							self.next1_text='没有更多了'
 						}
 						
@@ -396,13 +433,16 @@
 						if(d.data.total==0){
 							self.next2=false;
 							self.next2_text='暂无数据'
+							self.nodata2=true;
 						}
 						else{
 							self.next2=true;
+							self.nodata2=false;
 							self.next2_text='加载更多'
 						}
 						if(d.data.current==d.data.pages){
 							self.next2=false;
+							self.nodata2=false;
 							self.next2_text='没有更多了'
 						}
 						
@@ -433,13 +473,16 @@
 						if(d.data.total==0){
 							self.next2=false;
 							self.next2_text='暂无数据'
+							self.nodata2=true;
 						}
 						else{
 							self.next2=true;
+							self.nodata2=false;
 							self.next2_text='加载更多'
 						}
 						if(d.data.current==d.data.pages){
 							self.next2=false;
+							self.nodata2=false;
 							self.next2_text='没有更多了'
 						}
 						
@@ -463,6 +506,11 @@
 				vm.getPage2();
 
 			},
+			addFn(){
+				//打开 添加报名窗口
+				var self=this;
+				self.mybao=true
+			},
 			closeAlert(){
 				//关闭弹窗
 				var self=this;
@@ -474,6 +522,7 @@
 				self.baoYes=false;
 			},
 			baomin(){
+				//自己报名
 				var self=this;
 				var loginName=localStorage.getItem('loginName');
 				var sid=localStorage.getItem('sid');
@@ -498,58 +547,84 @@
 				}
 			},
 			myadd(){
-				//自己报名
+				//添加报名
 				var self=this;
-				console.log(self.mybaoType)
 				var url2=int.activityInfoBao;
 				var sid=localStorage.getItem('sid');
-//					先判断是自己报名1,还是帮别人报名2
-					if(self.mybaoType==1){
-						if(!self.myname){
-							self.errname='请输入姓名'
-						}else if(!self.myclass){
-							self.errclass='请输入班级'
-						}else{
-							var params={
-								activityId:self.$route.params.id,
-								nickName:self.myname,
-								sid:sid,
-								type:1,
-							} 
-						}
-					}
-					if(self.mybaoType==2){
-						if(!self.myname){
-							self.errname='请输入姓名'
-						}else if(!self.myctel){
-							self.errtel='请输入联系电话'
-						}else{
-							var params={
-								activityId:self.$route.params.id,
-								name:self.myname,
-								phone:self.tel,
-								type:2,
-								sid:sid
-							} 
-						}
-					}
-		          	
-		          	ajax.post_data(url2, params, function(d) {
-		//        	_this.$root.eventHub.$emit('Vloading',false)
-			            console.log('',d);
+				if(!self.myname){
+					self.errname='请输入姓名'
+				}
+//						else if(!self.myclass){
+//							self.errclass='请输入班级'
+//						}
+				else if(!self.mytel){
+					self.errtel='请输入联系电话'
+				}
+				else{
+					var params={
+						activityId:self.$route.params.id,
+						name:self.myname,
+						phone:self.mytel,
+						type:2,
+						sid:sid
+					} 
+					ajax.post_data(url2, params, function(d) {
+						//        	_this.$root.eventHub.$emit('Vloading',false)
 						if(d.code==0){
-							self.baominList.push(d.data.records);
-							if(d.data.current==d.data.pages){
-								self.next1=false;
-								self.next1_text='没有更多了'
-							}
-						}
-					
-		             
-		
-		          	});
-				
+			            	self.$vux.toast.show({
+							type: 'text',
+							text: '操作成功,等待审核',
+							position: 'bottom'
+							})
+			            	self.mybao=false;
+			            	setTimeout(function(){
+			            		
+			            		self.myname='';
+			            		self.mytel='';
+			            		self.getUser();
+			            	},1000)
+			            	
+			            	
+			            	
+			            }
+          			});
+				}
 			},
+			conshowFn(id,state,str){
+//				再次确认提示框
+				this.conShow=true
+				this.ConfirmId=id;
+				this.ConfirmState=state;
+				this.ConfirmStr=str;
+
+			},
+		 	onCancel () {
+		      
+		    },
+		    onConfirm () {
+		     var self=this;
+		     console.log(self.ConfirmId+'////'+self.ConfirmState+'////'+self.ConfirmStr)
+		     //	调ajax  通过传2, 驳回传3
+				var url=int.activityCaozuo;
+				var params={
+					state:self.ConfirmState,
+					id:self.ConfirmId
+				}
+				ajax.put_data(url, params, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('操作',d);
+		            if(d.code==0){
+		            	self.$vux.toast.show({
+						type: 'text',
+						text: '操作成功',
+						position: 'bottom'
+						})
+		            	self.getUser();
+		            	self.getList1();
+		            	self.getList2();
+		            }
+	          	});
+		    },
 		}
 	})
 </script>
@@ -560,7 +635,10 @@
 		border: none;
 	}
 	.activitysInfo{
-		background: #f4f4f4;
+		/*background: #f4f4f4;*/
+	}
+	.bgg{
+		height: 0.3rem;
 	}
 	.activi-li{
 		padding:0 0.75rem;
@@ -646,6 +724,10 @@
 		
 		>ul{
 			clear: both;
+			min-height: 5rem;
+		}
+		>ul:first-child{
+			padding-top: 50px;
 		}
 		ul>li{
 			overflow: hidden;
@@ -761,9 +843,27 @@
 		/*border: 0.05rem solid;*/
 		width: 5rem;
 		height: 1.5rem;line-height: 1.5rem;
-		margin: 0 auto;
-	}
+		margin: 0 auto 1.5rem;
 	
+	}
+	.add-fixed{
+		position: fixed;
+		right: 0;
+		bottom: 5rem;
+		border-radius:1rem 0 0 1rem;
+		background: #32C4FF;
+		line-height: 1.4rem;
+		color: #fff;
+		padding: 0 0.2rem;
+		font-size: 0.6rem;
+		>img{
+			width: 0.7rem;
+			margin: 0 0.2rem;
+		}
+	}
+	.nodata{
+		margin-top: 2rem;
+	}
 	/*弹窗背景*/
 	.alert-bg{
 		position: fixed;
