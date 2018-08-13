@@ -6,7 +6,7 @@
 			<em @click="goWrite()">发布</em>
 		</header>
 
-		<scroller style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller  v-if='showInit' style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li  @click="goPath(item.id)" v-for="(item, index) in allList">
 					<div class="lf zutuan-img">
@@ -45,6 +45,7 @@
 				/*最后的数组*/
 				page: 1,
 				pages:'',
+				showInit:false,
 				/*当前页码*/
 			}
 		},
@@ -56,6 +57,7 @@
 		},
 		mounted(){
 			var self=this;
+			this.$root.eventHub.$emit('Vloading',true)
 			self.getList();
 		},
 		methods: {
@@ -87,6 +89,8 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("话题列表",d);
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.pages=d.data.pages;
 						self.allList=d.data.records
 						

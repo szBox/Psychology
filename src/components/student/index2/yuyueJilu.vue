@@ -80,7 +80,7 @@
 						}
 						if(d.data.total==0){
 							self.next1=false;
-							self.next1_text='暂无评论'
+							self.next1_text='暂无记录'
 						}
 						else{
 							self.next1=true;
@@ -117,13 +117,13 @@
 						}
 						if(d.data.total==0){
 							self.next1=false;
-							self.next1_text='暂无评论'
+							self.next1_text='暂无记录'
 						}
 						else{
 							self.next1=true;
 							self.next1_text='查看更多'
 						}
-						if(d.data.current==d.data.pages){
+						if(d.data.current>=d.data.pages){
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}

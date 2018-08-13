@@ -5,7 +5,7 @@
 			<h1>点歌台</h1>
 			<em @click="goWrite()">我要点歌</em>
 		</header>
-		<scroller style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller  v-if='showInit' style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="mp3-bbox">
 				<li v-for="(item, index) in allList">
 					<img :src="item.headPic" alt="" />
@@ -17,7 +17,7 @@
 								<i>{{item.playTime | niceDate}}</i>
 							</span>
 						</h1>
-						<h2 class="ellipsis">我要赠送一首'《{{item.name}}》'，送给好朋友 '{{item.toNickName}}' </h2>
+						<h2 class="ellipsis">我要赠送一首 《{{item.name}}》 ，送给我的同学 {{item.toNickName}} </h2>
 						<h4 class="ellipsis"> {{item.content}}</h4>
 						
 					</div>
@@ -44,6 +44,7 @@
 				/*最后的数组*/
 				page: 1,
 				pages:'',
+				showInit:false,
 				/*当前页码*/
 			}
 		},
@@ -55,6 +56,7 @@
 		},
 		mounted(){
 			var self=this;
+			this.$root.eventHub.$emit('Vloading',true)
 			self.getList()
 		},
 		methods: {
@@ -82,6 +84,8 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("点歌列表",d);
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.allList=d.data.records;
 						self.pages=d.data.pages;
 //						for(let i = 0; i < d.data.records.length; i++) {

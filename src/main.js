@@ -20,7 +20,8 @@ Vue.component('tab-item', TabItem)
 
 import '@/assets/css/common.css'
 import '@/assets/css/style.less'
-import 'swiper/dist/css/swiper.min.css'
+import '@/assets/css/swiper.css'
+//import 'swiper/dist/css/swiper.css'
 import utils from './assets/js/utils'
 Vue.use(utils)
 import '@/assets/js/rem.js'

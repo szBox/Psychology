@@ -5,18 +5,18 @@
 			<div  @click="back()"><img src="../../../assets/img/goback.png" alt=""/></div>
 			<h1>文章详情</h1>
 		</header>
-		<div class="b-content">
-			<div class="info-img">
-			<img class="imgz" :src="indexInfo.cover" alt="" />
-		</div>
-		<div class="yuedu-content">
-			<h1>{{indexInfo.title}}</h1>
-			<em>{{indexInfo.insertTime | niceDate}}</em>
+		<div v-if="showInit" class="b-content">
+			<!--<div class="info-img">
+				<img class="imgz" :src="indexInfo.covers" alt="" />
+			</div>-->
+			<div class="yuedu-content">
+				<h1>{{indexInfo.title}}</h1>
+				<em>{{indexInfo.insertTime | niceDate}}</em>
+				
+				<div v-html="indexInfo.content">
 			
-			<p v-html="indexInfo.content">
-		
-			</p>
-		</div>
+				</div>
+			</div>
 		
 		<div class="yuedu-bbox">
 			<h1>评论</h1>
@@ -65,7 +65,7 @@
 					<img src="../../../assets/img/zan0.png"/>
 					<span>{{zanNum}}</span>
 				</p>
-				<p v-else="" @click="zanQx()">
+				<p v-else @click="zanQx()">
 					<img src="../../../assets/img/zan1.png"/>
 					<span>{{zanNum}}</span>
 				</p>
@@ -112,21 +112,41 @@
 				value:'',
 				speakAll:'',
 				maxL:100,
+				showInit:false
 			}
 		},
 		filters:{
 			...filter,
 			
 		},
+		created(){
+			
+		},
+		
 		mounted(){
+			this.$root.eventHub.$emit('Vloading',true)
 			var self=this;
 			self.getInfo();
 			self.getList();
+			
 		},
+		beforeRouteLeave(to, from, next) {
+			// 设置下一个路由的 meta
+			if(to.path=='/index1'){
+//				alert('111111111')
+				 to.meta.keepAlive = true;  // 让 A 缓存，即不刷新
+			}else{
+				 to.meta.keepAlive = false;  
+			}
+             
+           
+            next();
+       	},
 		methods:{
 			back(){
 				this.$router.go(-1)
 			},
+			
 			maxLen(val){
 				var self=this;
 				self.maxL=100-val.length
@@ -139,8 +159,14 @@
 				};
 				ajax.get_data(url,params,function(d){
 					console.log('心理预约详情',d)
-					self.indexInfo=d.data;
-					self.zanNum=d.data.praise;
+					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
+						self.indexInfo=d.data;
+						self.zanNum=d.data.praise;
+					}
+					
+					
 				})
 			},
 			zan(){
@@ -221,7 +247,7 @@
 							self.next1=true;
 							self.next1_text='查看更多'
 						}
-						if(d.data.current==d.data.pages){
+						if(d.data.current == d.data.pages){
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}
@@ -251,7 +277,7 @@
 							self.next1=true;
 							self.next1_text='查看更多'
 						}
-						if(d.data.current==d.data.pages){
+						if(d.data.current>=d.data.pages){
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}
@@ -297,7 +323,15 @@
 		}
 	})
 </script>
-
+<style>
+	.yuedu-content >div img{
+		max-width:100%;
+	}
+	.yuedu-content iframe{
+		width: 100%;
+		height: 12rem;
+	}
+</style>
 <style scoped lang="less">
 	.header{
 		position: fixed;
@@ -314,7 +348,7 @@
         height: 8rem;
     }
     .yuedu-content{
-        padding: 0.75rem;
+        padding: 0.75rem;    
         h1{
             font-weight: bold;
             font-size: 1rem;
@@ -327,7 +361,7 @@
             color: #9C9C9C;
         }
         
-        p{
+        div {
             font-size: 0.8rem;
             color: #333;
             line-height: 1.4rem;
@@ -335,6 +369,7 @@
             >span{
                 margin-left: 1.3rem;
             }
+          
         }
         
     }
@@ -395,7 +430,6 @@
             width: 1.5rem;
             height: 1.5rem;
             border-radius: 50%;
-            background: hotpink;
         }
         >div{
             float: left;

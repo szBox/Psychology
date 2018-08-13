@@ -11,19 +11,19 @@
 			<div class="write-title">
 				<p>
 					<span>我的书：</span>
-					<input v-model="book1" type="text" :placeholder="errbook1"/>
+					<input v-model="book1" maxlength="20" type="text" :placeholder="errbook1"/>
 				</p>
 				
 				<p>
 					<span>我想看的书：</span>
-					<input v-model="book2" type="text" :placeholder="errbook2"/>
+					<input v-model="book2" maxlength="20" type="text" :placeholder="errbook2"/>
 				</p>
 				
 			</div>
 			
 			<div class="write-title">
 				<span>联系地址：</span>
-				<input v-model="tel" type="text"  :placeholder="errtel"/>
+				<input v-model="tel" maxlength="20" type="text"  :placeholder="errtel"/>
 			</div>
 
 			<div class="write-bbox">
@@ -42,7 +42,7 @@
 
 		
 			<div class="btn-box">
-				<div class="btn-init" @click="faqi()">
+				<div class="btn-init" @click="dis && faqi()">
 					发布
 				</div>
 			</div>
@@ -61,6 +61,7 @@
 		data() {
 			return {
 				num:1,
+				dis:true,
 				book1:'',book2:'',tel:'',bookImg:'',
 				errbook1:'',errbook2:'',errtel:'',errimg:'',//错误提示
 			}
@@ -74,12 +75,13 @@
 			},
 			addPic() {
 				var self=this;
-				self.num=0;
+				
 				self.bookImg=$('#imgFile')[0].files[0];
 				self.errimg='';
 			    self.alyConfig.uploadToAliyun(self.bookImg,function (url) {
 			    	console.log('阿里云 图片地址',url)
 	               self.bookImg=url;
+	               self.num=0;
 	            })
 				
 //				$(".file-img").attr('src', URL.createObjectURL($('#imgFile')[0].files[0]) )
@@ -115,6 +117,7 @@
 			//        	_this.$root.eventHub.$emit('Vloading',false)
 			            console.log("发布漂流",d);
 						if(d.code==0){
+							self.dis=false;
 							self.$vux.toast.show({
 								type: 'text',
 								text: '发布成功',
@@ -122,7 +125,7 @@
 							})
 							setTimeout(function(){
 								self.back()
-							},1000)
+							},800)
 						}
 						
 		       		});

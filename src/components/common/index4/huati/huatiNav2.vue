@@ -1,10 +1,10 @@
 <template>
 	<div class="shengheNav1">
-		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller  v-if='showInit' style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li v-for="(speak, index) in speakList" @click="goPath(speak.id)">
 					<div class="lf zutuan-img">
-						<img  class="imgz" :src="speak.imageUrl" alt="" />
+						<img  style="border-radius: 0.3rem;"  class="imgz" :src="speak.imageUrl" alt="" />
 						
 					</div>
 					<div class="lf zutuan-info">
@@ -37,6 +37,7 @@
 				speakList: [],
 				/*最后的数组*/
 				page: 1,
+				showInit:false,
 				pages:''
 				/*当前页码*/
 			}
@@ -49,6 +50,7 @@
 			
 		},
 		mounted(){
+			this.$root.eventHub.$emit('Vloading',true)
 			this.getList()
 		},
 		methods: {
@@ -72,6 +74,8 @@
 				ajax.post_data(url,params,function(d){
 					console.log('话题发布详情',d)
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.speakList=d.data.records;
 						self.pages=d.data.pages;
 					}

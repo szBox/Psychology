@@ -3,15 +3,16 @@
 		<header class="header">
 			<h1>{{indexTitle}}</h1>
 		</header>
-		<div id="top">
+		<div class="b-content">
+			<div id="top">
 
 			<div class="swiper-container" id="nav">
 				<div class="swiper-wrapper" >
-					<div class=" swiper-slide" @click="navOn('','全部')">
-						<span>全部</span>
+					<div :data-index='0' class=" swiper-slide" @click="navOn('','全部')">
+						全部
 					</div>
-					<div class=" swiper-slide" v-for="(nav,index) in navList" @click="navOn(nav.id,nav.name)">
-						<span>{{nav.name}}</span>
+					<div :data-index='index+1' class=" swiper-slide" v-for="(nav,index) in navList" @click.stop=" navOn(nav.id,nav.name)">
+						{{nav.name}}
 					</div>
 				</div>
 			</div>
@@ -21,7 +22,7 @@
 			</h1>
 		</div>
 			
-			<scroller :class='' :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+			<scroller  v-if='showInit' :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			
 					
 					<ul class="nav-list">
@@ -37,11 +38,13 @@
 									</em>
 								</p>
 								</div>
-							<img class="rt" :src="item.cover" alt="" />
+							<img style="border-radius: 0.3rem;" class="rt" :src="item.covers" alt="" />
 						</li>
 					</ul>
 
 		</scroller>
+		</div>
+		
 		
 		
 		
@@ -51,6 +54,7 @@
 <script language="javascript">
 </script>
 <script>
+	import VueScroller from 'vue-scroller'
 	import Swiper from 'swiper'
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
@@ -66,33 +70,29 @@
 				navList:[], //nav头部列表
 				navName:'',
 				navId:'',
-			
+				navOndis:true,
+				navIndex:'',
+				dataObj:[],
+				showInit:false,
 			}
 		},
+		 meta: {
+            keepAlive: true // 需要被缓存
+        },
 		filters:{
 			...filter,
 			
 		},
 		mounted() {
 			var self=this;
+			self.$root.eventHub.$emit('Vloading',true)
 			self.getNav();
 			self.getList();  //什么都不传  全部显示
-
-			$('._v-content').css({
-				paddingTop:10+'rem',
-				paddingLeft:'0.75rem',
-				paddingRight:'0.75rem'
-			});
 			
-//			setTimeout(function(){
-//				$('#page').height($('.nav-list').height())
-//			},500)
 			
-
-	
 		},
 		created() {
-			
+//			alert(this.page)
 		},
 
 		components: {
@@ -107,15 +107,14 @@
 				var sid=localStorage.getItem('sid');
 				var params={
 					current:1,
-					size:10,
+					size:9999,
 				}
 				 ajax.post_data(url, params, function(d) {
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("nav列表",d);
 					if(d.code==0){
-						for(let i = 0; i < d.data.records.length; i++) {
-							self.navList=d.data.records;
-						}
+						self.navList=d.data.records;
+						
 						 self.$nextTick(function(){
 						 	var navSwiper = new Swiper('#nav', {
 							freeMode: true,
@@ -128,34 +127,44 @@
 			},
 			navOn(id,name){
 				var self=this;
-				self.navName=name; //传给 刷新函数 navOnPage
-				self.navId=id;
-				self.indexTitle=name;
-				if(name=='全部'){
-					self.indexTitle='心灵阅读'
-				}
-				var url=int.index1List;
-				var sid=localStorage.getItem('sid');
-				var params={
-					  columnId:id,
-					  current: 1,
-					  size: 10,
-//					  state: 0,
-				}
-				 ajax.post_data(url, params, function(d) {
-		//        	_this.$root.eventHub.$emit('Vloading',false)
-		            console.log("专题i列表",d);
-					if(d.code==0){
-						if(d.data.records.length==0){
-							self.newList='';
+				self.page=1;
+//				if(event.target.className.indexOf('swiper-slide') > -1){
+					console.log('点击的index',event.target.dataset.index)
+					if(self.navIndex!=event.target.dataset.index){
+						if(self.dataObj){
+							self.navName=name; //传给 刷新函数 navOnPage
+							self.navId=id;
+							self.indexTitle=name;
+							if(name=='全部'){
+								self.indexTitle='心灵阅读'
+							}
+							var url=int.index1List;
+							var sid=localStorage.getItem('sid');
+							var params={
+								  columnId:id,
+								  current: 1,
+								  size: 10,
+			//					  state: 0,
+							}
+							 ajax.post_data(url, params, function(d) {
+					//        	_this.$root.eventHub.$emit('Vloading',false)
+					            console.log("专题i列表",d);
+								if(d.code==0){
+								 	self.navOndis=false;
+									self.pages=d.data.pages;
+									self.newList=d.data.records;
+									self.$refs.my_scroller.scrollBy(0,0,true);
+								}
+					       });
 						}
-						for(let i = 0; i < d.data.records.length; i++) {
-							self.newList=d.data.records;
-						}
+						
 					}
-		       });
+					self.navIndex=event.target.dataset.index
+//				}
+
 			},
 			navOnList(id,name){
+				var self=this;
 				var url=int.index1List;
 				var sid=localStorage.getItem('sid');
 				var params={
@@ -172,18 +181,19 @@
 						if(d.data.records.length==0){
 							self.newList='';
 						}
-						for(let i = 0; i < d.data.records.length; i++) {
+						else{
 							self.newList=d.data.records;
 						}
 					}
 		       });			
 			},
 			navOnPage(id,name){
+				var self=this;
 				var url=int.index1List;
 				var sid=localStorage.getItem('sid');
 				var params={
 					  columnId:id,
-					  current: 1,
+					  current: self.page,
 					  size: 10,
 //					  state: 0,
 				}
@@ -214,6 +224,20 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("最新列表",d);
 					if(d.code==0){
+						self.showInit=true;
+						if(self.showInit==true){
+							self.$nextTick(function(){
+								$('._v-content').css({
+									paddingTop:10+'rem',
+									paddingLeft:'0.75rem',
+									paddingRight:'0.75rem'
+								});
+
+							})
+							
+						}
+						
+						self.$root.eventHub.$emit('Vloading',false)
 							self.newList=d.data.records
 							self.pages=d.data.pages;
 					}

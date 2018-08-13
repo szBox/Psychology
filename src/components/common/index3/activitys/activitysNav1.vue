@@ -1,13 +1,15 @@
 <template>
 	<div class="activitysNav1">
 
-		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller v-if='showInit' style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li v-for="(item, index) in allList" @click="goPath(item.id)">
 					<div class="lf zutuan-img">
 						<img :src="item.headPic" alt=""/>
 						<h1>{{item.nickName}}</h1>
-						<p :class="typeClass">{{item.type | Types}}</p>
+						<!--<p :style="typeClass">{{item.type | Types}}</p>-->
+						<!--<p>{{item.type | Types}}</p>-->
+						<state-activity  :state='item.type'></state-activity>
 						<h5>{{item.timelast}}</h5>
 					</div>
 					<div class="lf zutuan-info">
@@ -48,16 +50,25 @@
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
+	import stateActivity from '../../../common/State_Activity'
 	export default({
 		data() {
 			return {
-				typeClass:'',
+				typeClass:{
+					background:'',
+					color:'',
+					
+				},
 				allList:[],
 				/*最后的数组*/
 				page: 1,
 				pages:'',
+				showInit:false,
 				/*当前页码*/
 			}
+		},
+		components: {
+			stateActivity
 		},
 		filters:{
 			...filter,
@@ -90,6 +101,7 @@
 			}
 		},
 		mounted() {
+			this.$root.eventHub.$emit('Vloading',true)
 			this.getList()
 		},
 
@@ -123,6 +135,8 @@
 	//        	_this.$root.eventHub.$emit('Vloading',false)
 	            console.log(d);
 				if(d.code==0){
+					self.$root.eventHub.$emit('Vloading',false);
+					self.showInit=true;
 					self.pages=d.data.pages;
 					self.allList=d.data.records;
 				}
@@ -200,8 +214,8 @@
 			}
 			>p{
 				font-size: 0.7rem;
-				color: #fff;
-				background: #ffa200;
+				/*color: #fff;
+				background: #ffa200;*/
 				text-align: center;
 				border-radius: 1rem;
 				margin: 0 15%;
@@ -257,22 +271,5 @@
 					}
 			}
 		}
-		.zutuan-img p.types-1{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-2{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-3{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-4{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-5{
-			background: #FFA200;
-		}
-		.zutuan-img p.types-6{
-			background: #FFA200;
-		}
+	
 </style>

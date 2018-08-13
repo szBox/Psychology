@@ -16,8 +16,8 @@
 						</div>
 						<h1>{{ teacher.name }}</h1>
 						<div class='teacher-bb'>
-							<p>{{teacher.presonSign | gexing}} </p>
-							<p></p>
+							<p class="ellipsis" style="height: 1.7rem; -webkit-line-clamp: 2;">{{teacher.personSign | gexing}} </p>
+							
 						</div>
 					</div>
 					
@@ -31,7 +31,7 @@
 							{{teacher.praiseCount}}
 						</h4>
 						<h4 v-else @click='zanQx(teacher.praiseCount,teacher.id)'>
-							<img src="../../../assets/img/zan2.png"/>
+							<img src="../../../assets/img/zan3.png"/>
 							{{teacher.praiseCount}}
 						</h4>
 					</div>
@@ -49,7 +49,7 @@
 			
 			
 			<div class="show-div">
-				<h3>擅长</h3>
+				<h3 style="margin-bottom: 0;">擅长</h3>
 				<div v-for='(skill,index) in skillArr' >
 					<p>{{skill}}</p>
 				</div>
@@ -182,6 +182,8 @@
 			gexing(val){
 				if(!val){
 					return '什么也没留下'
+				}else{
+					return val
 				}
 			},
 			weekAm(val,date,am){
@@ -617,13 +619,16 @@
 		.show-tableBox {
 			/*background: #F2F2F2;*/
 			border-radius: 0.3rem;
-			margin: 0.5rem 0;
-			padding:0.3rem 0.5rem;
+			/*margin: 0.5rem 0;*/
+			/*padding:0.3rem 0.5rem;*/
 			
 			>h3 {
 				color: #000;
 				font-weight: bold;
 				margin: 0.5rem 0;
+			}
+			>h5{
+				color: #666;
 			}
 			
 		}
@@ -631,12 +636,10 @@
 			overflow: hidden;
 			>div {
 				    float: left;
-				    margin-right: 0.5rem;
-				   	
-				    width: 4rem;
-				    height: 1.5rem;
-				    line-height: 1.5rem;
-				    padding-left: 0.3rem;
+				    margin: 0.5rem 0.5rem 0 0;
+				    padding: 0 0.75rem 0 0.3rem;
+				    height: 1.4rem;
+				    line-height: 1.4rem;
 				    color: #fff;
 				}
 			>div:nth-child(3n-2){

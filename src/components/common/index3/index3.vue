@@ -22,10 +22,10 @@
 					<img  @click="goPath({path:'/index3/activitysList'})"  src="../../../assets/img/index3_4.png" alt="" />
 					<p>组团活动</p>
 				</li>
-				<!--<li>
+				<li>
 					<img  @click="goPath({path:'/index3/gamesList'})"  src="../../../assets/img/index3_5.png" alt="" />
 					<p>游戏擂台</p>
-				</li>-->
+				</li>
 				
 			</ul>
 		</section>

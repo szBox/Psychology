@@ -7,7 +7,7 @@
 		
 		<ul>
 			<li>
-				<img src="../../../../assets/img/exchange_icon_recharge_n.png" alt="" />
+				<img src="../../../../assets/img/hao.png" alt="" />
 				<div class="xiaoxi-div">
 					<h4>王老师</h4>
 					<p class="ellipsis">你小子要加油啊!</p>
@@ -18,7 +18,7 @@
 				</div>
 			</li>
 			<li>
-				<img src="../../../../assets/img/exchange_icon_recharge_n.png" alt="" />
+				<img src="../../../../assets/img/hao.png" alt="" />
 				<div class="xiaoxi-div">
 					<h4>王老师</h4>
 					<p class="ellipsis">你小子要加油啊!</p>

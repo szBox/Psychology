@@ -1,10 +1,10 @@
 <template>
 	<div class="shengheNav1">
-		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller  v-if='showInit' style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li v-for="(item, index) in AllList" @click="goPath(item.state,item.id)">
 					<div class="lf zutuan-img">
-						<img  class="imgz" :src="item.imageUrl" alt="" />
+						<img style="border-radius: 0.3rem;"  class="imgz" :src="item.imageUrl" alt="" />
 						
 					</div>
 					<div class="lf zutuan-info">
@@ -36,6 +36,7 @@
 				page: 1,
 				pages:'',
 				dataType:'',
+				showInit:false,
 				dataStatus:'',
 				/*当前页码*/
 			}
@@ -48,12 +49,14 @@
 			stateShenhe
 		},
 		mounted(){
+			this.$root.eventHub.$emit('Vloading',true)
 			var self=this;
 			var role=localStorage.getItem('role');
-			if(role=='S'){
+			var speakQx=localStorage.getItem('speakQx');
+			if(role=='S'||role=='T'){
 				self.dataType=1;
 				self.dataStatus=''
-			}else{
+			}else if(role=='M'||speakQx=='Y'){
 				self.dataType='';
 				self.dataStatus=1
 			}
@@ -87,6 +90,8 @@
 				ajax.post_data(url,params,function(d){
 					console.log('话题审核',d)
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.pages=d.data.pages;
 						self.AllList=d.data.records;
 					}

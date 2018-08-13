@@ -1,10 +1,10 @@
 <template>
 	<div class="shengheNav2">
-		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller v-if='showInit' style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li v-for="(item, index) in AllList" @click="goPath(item.state,item.id)">
 					<div class="lf zutuan-img">
-						<img src="../../../../assets/img/ren1.png" alt="" />
+						<img  style="border-radius: 0.3rem;" :src="item.imageUrl" alt="" />
 						<h1>{{item.nickName}}</h1>
 						<!--<p>{{item.type | TypeLeft}}</p>-->
 						<state-shenhe :state='item.state'></state-shenhe>
@@ -55,6 +55,8 @@
 				AllList: [],
 				/*最后的数组*/
 				page: 1,
+				showInit:false,
+				pages:'',
 				/*当前页码*/
 			}
 		},
@@ -89,6 +91,7 @@
 			
 		},
 		mounted(){
+			this.$root.eventHub.$emit('Vloading',true)
 			this.getList()
 		},
 		
@@ -120,6 +123,8 @@
 				ajax.post_data(url,params,function(d){
 					console.log('组团审核列表',d)
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.pages=d.data.pages;
 						self.AllList=d.data.records;
 					}

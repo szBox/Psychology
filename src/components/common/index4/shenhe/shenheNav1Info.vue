@@ -70,7 +70,8 @@
 			var self=this;
 			self.getInfo();
 			var role=localStorage.getItem('role');
-			if(role=='M'){
+			var speakQx=localStorage.getItem('speakQx');
+			if(role=='M'||speakQx=='Y'){
 				self.roleType=true
 			}
 		},

@@ -28,7 +28,7 @@
 				<div class="teacher-like">
 					<div>
 						<h1>个性签名</h1>
-						<p>{{teacherInfo.personSign}}</p>
+						<p>{{teacherInfo.personSign| gexing}}</p>
 					</div>
 					<div>
 						<h1>擅长领域</h1>
@@ -56,6 +56,15 @@
 				skillArr:[],
 				zanNum:'',
 			}
+		},
+		filters:{
+			gexing(val){
+				if(!val){
+					return '什么也没留下'
+				}else{
+					return val
+				}
+			},
 		},
 		mounted() {
 			var self=this;
@@ -240,15 +249,12 @@
 			}
 			
 			>div {
-				float: left;
-				margin-right: 0.5rem;
-				
-				width: 4rem;
-				height: 1.5rem;
-				line-height: 1.5rem;
-				padding-left: 0.3rem;
-				background-size: 100% 100%;
-				color: #fff;
+				 float: left;
+				    margin: 0.5rem 0.5rem 0 0;
+				    padding: 0 0.75rem 0 0.3rem;
+				    height: 1.4rem;
+				    line-height: 1.4rem;
+				    color: #fff;
 				
 			}
 				
@@ -258,7 +264,7 @@
 		}
 		h1 {
 			font-size: 0.8rem;
-			margin: 0.5rem 0;
+			margin: 0.25rem 0;
 		}
 	}
 	.teacher-skill:nth-child(3n-2){

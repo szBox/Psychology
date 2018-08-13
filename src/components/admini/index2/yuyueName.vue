@@ -12,9 +12,10 @@
 			</div>
 			<div class="picker-div">
 				<input type="text" v-model='sName' placeholder="学生姓名"/>
-				<img style="width: 0.8rem;" @click="search(sName)" class="search-img" :src="imgS1" alt=""/>
+				<img style="width: 0.8rem;" @click="search(sName)" class="search-img" src="../../../assets/img/search.png" alt=""/>
 			</div>
 		</div>
+
 		<ul v-if="allList.length" class="name-list">
 			<li v-for="(item,index) in allList">
 				<div class="data-div">
@@ -61,13 +62,10 @@
 				next1_text:'',
 				next1:true,	//加载更多 状态
 				tip:false,
-				
 				mm:'',
 				dd:'',
 				dTime:'',
 				sName:'',
-				results: [],
-      			imgS1:'src/assets/img/search.png',
 			}
 		},
 		mounted(){
@@ -120,11 +118,10 @@
 				d=self.dTime;
 				name=self.sName;
 				var url=int.stuNameList;
-				var sid=localStorage.getItem('sid');
 				var params={
 					current:self.page,
-					size:5,
-					teacherId:self.$route.params.Tid,
+					size:10,
+					teacherId:self.$route.params.id,
 					date:d,
 					stuName:name
 				}
@@ -134,7 +131,7 @@
 					if(d.code==0){
 						
 						if(d.data){
-							self.allList=d.data;
+							self.allList=d.data.records;
 							self.tip=false;
 							if(d.data.total==0){
 								self.next1=false;
@@ -157,25 +154,28 @@
 //					
 		       });
 			},
-			getPage(){
+			getPage(d,name){
 				var self=this;
+				d=self.dTime;
+				name=self.sName;
 				var url=int.stuNameList;
-				var sid=localStorage.getItem('sid');
-				var loginId=localStorage.getItem('loginId');
 				var params={
 					current:self.page,
-					size:5,
-					teacherId:loginId,
-					
+					size:10,
+					teacherId:self.$route.params.id,
+					date:d,
+					stuName:name
 				}
 				 ajax.post_data(url, params, function(d) {
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("预约记录列表",d);
-					if(d.code==0){	
+					if(d.code==0){
+						
 						if(d.data){
 							for(let i = 0; i < d.data.length; i++) {
-							self.allList.push(d.data[i]);
+								self.allList.push(d.data[i]);
 							}
+							self.tip=false;
 							if(d.data.total==0){
 								self.next1=false;
 								self.next1_text='暂无数据'
@@ -184,16 +184,20 @@
 								self.next1=true;
 								self.next1_text='查看更多'
 							}
-							if(d.data.current==d.data.pages){
+							if(d.data.current>=d.data.pages){
 								self.next1=false;
 								self.next1_text='没有更多了'
 							}
+						}else{
+							self.tip=true
+							self.allList='';
 						}
 						
 					}
-					
+//					
 		       });
 			},
+			
 			change1(value) {
 				var self = this;
 				self.dTime = value;
@@ -312,6 +316,7 @@
 		position: absolute;
 		top: 12rem;
 		left: 50%;
+		color: #666;
 		-webkit-transform: translateX(-50%);
 		-moz-transform: translateX(-50%);
 		-ms-transform: translateX(-50%);

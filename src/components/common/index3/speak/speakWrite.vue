@@ -11,14 +11,14 @@
 			</div>
 			<div class="write-title">
 			<span>话题名称：</span>
-			<input v-model="title" :placeholder="errtitle" type="text" />
+			<input v-model="title" maxlength="20" :placeholder="errtitle" type="text" />
 			</div>
 		
 		
 		<div class="write-bbox">
 			<div class="wtire-text">
 				<span>话题简介：</span>
-				<textarea v-model="speak" :placeholder="errspeak" rows="4"></textarea>
+				<textarea v-model="speak" maxlength="100" :placeholder="errspeak" rows="4"></textarea>
 			</div>
 			<div class="err-img">
 				{{errimg}}
@@ -40,7 +40,7 @@
 				<img src="../../../../assets/img/icons_1.png"/>
 				<span>发布之后需要进行审核</span>
 			</p>
-			<div class="btn-init" @click="faqi()">
+			<div class="btn-init" @click="dis && faqi()">
 				发布
 			</div>
 		</div>
@@ -60,6 +60,7 @@
 				title:'',speak:'',speakImg:'',
 				errtitle:'',errspeak:'',errimg:'',//错误提示
 				tips:true,
+				dis:true
 			}
 		},
 		created(){
@@ -112,6 +113,7 @@
 			//        	_this.$root.eventHub.$emit('Vloading',false)
 			            console.log("发布漂流",d);
 						if(d.code==0){
+							self.dis=false;
 							self.$vux.toast.show({
 								type: 'text',
 								text: '发布成功',
@@ -119,7 +121,7 @@
 							})
 							setTimeout(function(){
 								self.back()
-							},1000)
+							},800)
 						}
 						
 		       		});

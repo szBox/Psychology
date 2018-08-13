@@ -10,7 +10,7 @@
 			</div>
 			<div class="ov-div">
 				<p>{{myInfo.nickName}}</p>
-				<img class="" src="../../../assets/img/icon_yu.png" alt="" />
+				<!--<img class="" src="../../../assets/img/icon_yu.png" alt="" />-->
 				<span class="">{{bbF}}</span>
 			</div>
 		</div>

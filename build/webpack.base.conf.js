@@ -27,6 +27,7 @@ let webpackConfig = {
     alias: {
      'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'swiper': 'swiper/dist/js/swiper.js',//引入这句即可
       'jquery':'jquery'
     }
   },
@@ -47,7 +48,8 @@ let webpackConfig = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+//       include: [resolve('src'), resolve('test')] 本来的
+        include: [resolve('src'), resolve('test') ,resolve('static/config/global.js')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

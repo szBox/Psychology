@@ -8,7 +8,7 @@
 		<ul class="activitys-ul" v-if="allList.length">
 				<li  v-for="(sou,index) in allList" @click="goPath(sou.id)" >
 					<div class="lf zutuan-img">
-						<img  class="imgz" :src="sou.covers" alt="" />
+						<img style="border-radius: 0.3rem;" class="imgz" :src="sou.covers" alt="" />
 						
 					</div>
 					<div class="lf zutuan-info">
@@ -29,7 +29,7 @@
 				<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
 			</ul>
 		
-		<div v-if='tip'>
+		<div v-if='tip' class="err-tips">
 			暂无数据
 		</div>
 	</div>
@@ -130,7 +130,7 @@
 							self.next1=true;
 							self.next1_text='查看更多'
 						}
-						if(d.data.current==d.data.pages){
+						if(d.data.current>=d.data.pages){
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}
@@ -197,4 +197,12 @@
 		height: 1.5rem;line-height: 1.5rem;
 		margin: 1rem auto;
 	}
+	.err-tips{
+		position: absolute;
+	    top: 12rem;
+	    left: 50%;
+	    color:#666;
+	    -webkit-transform: translateX(-50%);
+	    transform: translateX(-50%);
+	}   
 </style>

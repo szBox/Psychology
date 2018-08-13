@@ -4,7 +4,10 @@
 //let host='http://112.74.100.48';
 // let host='http://120.24.178.171';
 // let host='http://192.168.0.208';
-let host='http://119.23.41.124:8099/';
+
+//let host='http://119.23.41.124:8099/';  //线上地址
+//let host='https://119.23.41.124/heart/' //线上地址 new
+let host='https://heart.jingjing100.com/heart/' //线上地址 new2
 //let host='http://192.168.0.111:8099/';
 export default {
   //登录
@@ -109,6 +112,8 @@ export default {
 	
 	//话题审核
 	speakShenhe: host+'topic/edit',
+	//活动审核
+	activiShenhe: host+'activity/edit',
 	//我的收藏
 	soucangList:host+'article/list/favorite',
 	//修改个人信息  学生

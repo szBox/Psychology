@@ -37,7 +37,7 @@
 			
 			
 			<div class="show-div">
-				<h3>擅长</h3>
+				<h3 style="margin-bottom: 0;">擅长</h3>
 				<div class="skill" v-for="(skill,index) in skillArr">
 					{{skill}}
 				</div>
@@ -72,11 +72,11 @@
 										<span>{{item.day | ddDate}}</span>
 									</div>
 									<p >
-										<state-table  :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+										<state-table-admin  :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table-admin>
 									
 									</p>
 									<p >
-										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
+										<state-table-admin   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table-admin>
 										
 									</p>
 								</li>
@@ -90,11 +90,11 @@
 										<span>{{item.day | ddDate}}</span>
 									</div>
 									<p >
-										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table>
+										<state-table-admin   :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></state-table-admin>
 									
 									</p>
 									<p >
-										<state-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table>
+										<state-table-admin   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></state-table-admin>
 										
 									</p>
 								</li>
@@ -129,7 +129,7 @@
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
-	import stateTable from '../../common/State_Table'
+	import stateTableAdmin from '@/components/common/State_TableAdmin' //预约老师表格状态 (管理员的)
 	import Swiper from 'swiper'
 	export default {
 		data() {
@@ -149,7 +149,7 @@
 			}
 		},
 		components: {
-			stateTable
+			stateTableAdmin
 		},
 		filters:{
 			...filter,
@@ -488,14 +488,15 @@
 				font-weight: bold;
 				margin: 0.5rem 0;
 			}
+			>h5{
+				color: #666;
+			}
 			>.skill {
 				    float: left;
-				    margin-right: 0.5rem;
-				    width: 4rem;
-				    height: 1.5rem;
-				    line-height: 1.5rem;
-				    padding-left: 0.3rem;
-				  
+				    margin: 0.5rem 0.5rem 0 0;
+				    padding: 0 0.75rem 0 0.3rem;
+				    height: 1.4rem;
+				    line-height: 1.4rem;
 				    color: #fff;
 				}
 			>.skill:nth-child(3n-2) {

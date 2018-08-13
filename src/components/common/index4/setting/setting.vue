@@ -24,23 +24,52 @@
 			</li>
 		</ul>-->
 		
-		<div class="esc-btn">
+		<div class="esc-btn" @click="conshowFn()">
 			退出登录
 		</div>
+		 <confirm v-model="conShow"
+			title='操作提示'
+	      @on-cancel="onCancel"
+	      @on-confirm="onConfirm">
+	        <p style="text-align:center;">是否确认退出?</p>
+	      </confirm>
 	</div>
 </template>
 
 <script>
-	
+	import { Confirm } from 'vux'
 	export default({
+		data() {
+			return {
+				conShow:false,   //二次提示 
+			}
+		},
+		components:{
+			Confirm
+		},
 		methods:{
 			back() {
 				this.$router.go(-1);
 			},
 			goPath(path){
 				this.$router.push(path)
-			}
-			
+			},
+			conshowFn(){
+//				再次确认提示框
+				this.conShow=true
+
+			},
+		 	onCancel () {
+		      
+		    },
+		    onConfirm () {
+		    var self=this;
+//		    localStorage.removeItem('speakQx')
+//		    localStorage.removeItem('activQx')
+		     this.$router.push({
+		     	path:'/'
+		     })
+		    },
 		}
 	})
 </script>
@@ -79,7 +108,6 @@
 		line-height: 2.5rem;
 		text-align: center;
 		background: #fff;
-		text-align: center;
-		margin: 5rem 0;
+		margin: 3rem 0;
 	}
 </style>

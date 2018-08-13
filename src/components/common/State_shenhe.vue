@@ -3,7 +3,7 @@
 		<div  v-show="state==1" class="state_shenhe1 state_shenhe">审核中</div>
 		<div  v-show="state==3" class="state_shenhe2 state_shenhe">已驳回</div>
 		<div  v-show="state==2" class="state_shenhe3 state_shenhe">已通过</div>
-		
+<!--		<div  v-show="state==4" class="state_shenhe4 state_shenhe">已过期</div>-->
 
 	</div>
 </template>
@@ -52,5 +52,8 @@
 	    color: #40A0F1;
 	    border: 1px solid #40A0F1;
 	} 
-	
+	.state_shenhe4{
+	    color: #989898;
+	    background: #E5E5E5;
+	} 
 </style>

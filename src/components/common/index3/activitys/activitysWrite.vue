@@ -11,7 +11,7 @@
 			<div class="write-title">
 				<p>
 					<span>活动名称：</span>
-					<input v-model="play" type="text" />
+					<input v-model="play" maxlength="20" type="text" />
 				</p>
 				<p>
 					<span>联系方式：</span>
@@ -22,15 +22,15 @@
 			<div class="write-title">
 				<p>
 					<span>活动人数：</span>
-					<input v-model="people" type="text" />
+					<input v-model="people" type="number" />
 				</p>
 				<p>
 					<span>人均消费：</span>
-					<input v-model="money" type="text" />
+					<input v-model="money" type="number" />
 				</p>
 				<p>
 					<span>活动详情：</span>
-					<textarea rows="3" v-model="content"></textarea>
+					<textarea rows="3" maxlength="100" v-model="content"></textarea>
 				</p>
 
 			</div>
@@ -53,7 +53,7 @@
 				</p>
 				<p>
 					<span>集合地点：</span>
-					<textarea rows="3" v-model="address"></textarea>
+					<textarea rows="3" maxlength="100" v-model="address"></textarea>
 				</p>
 			</div>
 
@@ -62,7 +62,7 @@
 					<img src="../../../../assets/img/icons_1.png" />
 					<span>发布之后需要进行审核</span>
 				</p>
-				<div class="btn-init" @click="fabu()">
+				<div class="btn-init" @click="dis && fabu()">
 					发布
 				</div>
 			</div>
@@ -85,6 +85,7 @@
 				phone:'',
 				address:'',
 				tips:true,
+				dis:true,
 				startTime: '',
 				endTime: '',
 				jiheTime: '',
@@ -146,6 +147,7 @@
 			},
 			fabu() {
 				var self = this;
+				var numY=/^[1][3,4,5,7,8][0-9]{9}$/; 
 				if(!self.play){
 					self.$vux.toast.show({
 						type: 'text',
@@ -160,6 +162,13 @@
 						position: 'bottom'
 					})
 				}
+				else if(!numY.test(self.phone)){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '请正确填写联系方式',
+						position: 'bottom'
+					})
+				}
 				else if(!self.people){
 					self.$vux.toast.show({
 						type: 'text',
@@ -167,10 +176,24 @@
 						position: 'bottom'
 					})
 				}
+				else if(self.people>1000){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '活动人数最多32767人',
+						position: 'bottom'
+					})
+				}
 				else if(!self.money){
 					self.$vux.toast.show({
 						type: 'text',
 						text: '请填写人均消费',
+						position: 'bottom'
+					})
+				}
+				else if(self.money>1000){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '人均消费最多1000元',
 						position: 'bottom'
 					})
 				}
@@ -195,7 +218,7 @@
 						position: 'bottom'
 					})
 				}
-				else if(self.time2num < self.time1num) {
+				else if(self.time2num < self.time1num || self.time2num <new Date().getTime()) {
 					self.$vux.toast.show({
 						type: 'text',
 						text: '报名时间有误',
@@ -209,7 +232,7 @@
 						position: 'bottom'
 					})
 				}
-				else if(self.time3num<self.time1num||self.time3num<self.time2num){
+				else if(self.time3num<self.time1num||self.time3num<self.time2num || self.time3num<new Date().getTime()){
 					self.$vux.toast.show({
 						type: 'text',
 						text: '集合时间有误',
@@ -233,7 +256,7 @@
 						//        	_this.$root.eventHub.$emit('Vloading',false)
 						console.log(d);
 						if(d.code == 0) {
-							self.response = d.data;
+							self.dis = false;
 							self.$vux.toast.show({
 								type: 'text',
 								text: '操作成功',
@@ -241,7 +264,7 @@
 							})
 							setTimeout(function(){
 								self.back()
-							},1000)
+							},800)
 						}
 
 					});
@@ -254,6 +277,9 @@
 <style scoped lang="less">
 	.activitysWrite {
 		background: #F4F4F4;
+	}
+	.weui-cell {
+    	padding: 0 !important;
 	}
 	
 	.header {
@@ -310,7 +336,7 @@
 		span.time-sel {
 			float: left;
 			width: 32%;
-			padding-left: 0.75rem;
+			/*padding-left: 0.75rem;*/
 			border: 1px solid #E7E7E7;
 			border-radius: 0.5rem;
 			color: #999;

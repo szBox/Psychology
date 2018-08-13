@@ -1,13 +1,14 @@
 <template>
 	<div class="activitysNav1">
 
-		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller v-if='showInit'  style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li v-for="(item, index) in allList" @click="goPath(item.id)">
 					<div class="lf zutuan-img">
 						<img :src="item.headPic" alt=""/>
 						<h1>{{item.nickName}}</h1>
-						<p :class="typeClass">{{item.type | Types}}</p>
+						<!--<p :class="typeClass">{{item.type | Types}}</p>-->
+						<state-activity  :state='item.type'></state-activity>
 						<h5>{{item.timelast}}</h5>
 					</div>
 					<div class="lf zutuan-info">
@@ -47,6 +48,7 @@
 <script>
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
+	import stateActivity from '../../../common/State_Activity'
 	import filter from '@/assets/js/filters'
 	export default({
 		data() {
@@ -56,37 +58,18 @@
 				/*最后的数组*/
 				page: 1,
 				pages:'',
+				showInit:false,
 				/*当前页码*/
 			}
 		},
+		components: {
+			stateActivity
+		},
 		filters:{
 			...filter,
-			Types(val){
-				if(val==1){
-					return '我发起'
-				}
-				else if(val==2){
-					return '审核中'
-				}
-				else if(val==3){
-					return '我参与'
-				}
-				else if(val==4){
-					return '驳回'
-				}
-				else if(val==5){
-					return	'已满'
-				}
-				else if(val==6){
-//					return	'不在报名时间内'
-					return '已过期'
-				}
-				else if(val==7){
-					return '未参与'
-				}
-			}
 		},
 		mounted() {
+			this.$root.eventHub.$emit('Vloading',true)
 			this.getList()
 		},
 
@@ -120,6 +103,8 @@
 	//        	_this.$root.eventHub.$emit('Vloading',false)
 	            console.log(d);
 				if(d.code==0){
+					self.$root.eventHub.$emit('Vloading',false);
+					self.showInit=true;
 					self.pages=d.data.pages;
 					self.allList=d.data.records;
 				}

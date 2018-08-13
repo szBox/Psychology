@@ -6,17 +6,17 @@
 			<em @click="goWrite()">发起漂流</em>
 		</header>
 		<div class="b-content">
-			<scroller style="padding-top: 2.8rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+			<scroller  v-if='showInit'  style="padding-top: 2.8rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="speakList-ul">
 			<li v-for='(item,index) in allList'>
 				<div class="book-left">
-					<h1>{{item.nickName}}：<span>《{{item.hasName}}》</span></h1>
+					<h1 class="ellipsis" style="-webkit-line-clamp:2">{{item.nickName}}：<span>《{{item.hasName}}》</span></h1>
 					<div class="think-div">
-						<h1>想换：<span class="think-book">《{{item.wantName}}》</span></h1>
+						<h1  class="ellipsis" style="-webkit-line-clamp:2">想换：<span class="think-book">《{{item.wantName}}》</span></h1>
 						<div>
-							<p>
+							<p  class="ellipsis" style="-webkit-line-clamp:1">
 								<img src="../../../../assets/img/dz.png" alt="" />
-								<span>{{item.contactAddress}}</span>
+								<span >{{item.contactAddress}}</span>
 							</p>
 							<p>发布日期：{{item.insertTime | niceDate}}</p>
 						</div>
@@ -46,10 +46,12 @@
 				page:1,
 				pages:'',
 				allList:[],
+				showInit:false,
 			}
 		},
 		mounted() {
 			var self=this;
+			this.$root.eventHub.$emit('Vloading',true)
 			self.getList()
 		},
 		filters:{
@@ -79,6 +81,8 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("书籍列表",d);
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.pages=d.data.pages;
 						self.allList=d.data.records;
 						

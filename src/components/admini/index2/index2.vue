@@ -35,7 +35,7 @@
 							</p>
 						</div>
 						<h2>{{item.name}}</h2>
-						<p>预约数<span>{{item.num}}</span>例</p>
+						<p>预约数<span>{{item.num | numxx}}</span>例</p>
 					</div>
 					<div v-for='(item,index) in allList' v-if='index==0'  @click="goPath(item.id)">
 						<div class="nav-flex-img">
@@ -49,7 +49,7 @@
 						</div>
 						
 						<h2>{{item.name}}</h2>
-						<p>预约数<span>{{item.num}}</span>例</p>
+						<p>预约数<span>{{item.num | numxx}}</span>例</p>
 					</div>
 					<div v-for='(item,index) in allList' v-if='index==2'  @click="goPath(item.id)">
 						<div class="nav-flex-img">
@@ -63,7 +63,7 @@
 						</div>
 						
 						<h2>{{item.name}}</h2>
-						<p>预约数<span>{{item.num}}</span>例</p>
+						<p>预约数<span>{{item.num | numxx}}</span>例</p>
 					</div>
 				</div>
 
@@ -73,7 +73,7 @@
 						<img :src="item.headPic" alt="" />
 						<div class="teacher-name">
 							<h2>{{item.name}}</h2>
-							<p>预约数<span>{{item.num}}</span>例</p>
+							<p>预约数<span>{{item.num | numxx}}</span>例</p>
 						</div>
 						<div class="teacher-icon">
 							<p><img src="../../../assets/img/zan0.png" />{{item.praiseCount}}</p>
@@ -102,6 +102,7 @@
 		created() {
 
 		},
+		
 		data() {
 			return {
 				page1:1,
@@ -118,6 +119,15 @@
 			this.getNav1(2);
 			var self=this;
 			self.myId=localStorage.getItem('loginId');
+		},
+		filters:{
+			numxx(val){
+				if(val ==null){
+					return '0'
+				}else{
+					return val
+				}
+			}
 		},
 		methods: {
 			back() {

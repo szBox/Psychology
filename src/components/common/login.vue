@@ -88,7 +88,13 @@
      
     },
     created(){
-    	
+    	 if(localStorage.getItem('speakQx')){
+    	 	  localStorage.removeItem('speakQx')
+		    	
+    	 }
+    	 if(localStorage.getItem('activQx')){
+    	 		localStorage.removeItem('activQx')
+    	 }
     },
     methods:{
     	goForget(){
@@ -149,6 +155,27 @@
             }else if(d.code==0){
 //							console.log(self.$store)
 //          	self.$store.state.user=d.data
+							for(var i=0; i<d.data.codes.length; i++){
+								if(d.data.codes[i]=='12010105'){
+            		 //话题权限
+            		 		console.log('话题有')
+	            		 localStorage.setItem('speakQx','Y')
+//	            		 break
+	            	}
+//								else{
+//	            		 localStorage.setItem('speakQx','N')
+//	            		 
+//	            	}
+	            	if(d.data.codes[i]=='12040105'){
+	            		console.log('组团有')
+	            		//组团审核
+	            		localStorage.setItem('activQx','Y')
+//	            		break
+	            	}
+//	            	else{
+//	            		localStorage.setItem('activQx','N')
+//	            	}
+							}
             	
             	//跳页面
             	self.phone=localStorage.setItem('phone',self.phone);
@@ -158,6 +185,8 @@
               localStorage.setItem('sid',d.data.sid);
               localStorage.setItem('loginName',d.data.loginName);
               localStorage.setItem('loginId',d.data.id);
+              localStorage.removeItem('peopel')
+							localStorage.removeItem('address')
               self.btnType=false;
               self.$router.push({ // 你需要接受路由的参数再跳转
 								path:'/index1'
@@ -166,6 +195,7 @@
 			      },
 			      error: function (err) {
 			        console.log('错误信息：' + JSON.stringify(err));
+								alert('错误信息：' + JSON.stringify(err))
 			      }
 		    })
       

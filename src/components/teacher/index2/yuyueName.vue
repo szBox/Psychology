@@ -12,42 +12,32 @@
 			</div>
 			<div class="picker-div">
 				<input type="text" v-model='sName' placeholder="学生姓名"/>
-				<img style="width: 0.8rem;" @click="search(sName)" class="search-img" :src="imgS1" alt=""/>
+				<img style="width: 0.8rem;" @click="search(sName)" class="search-img" src="../../../assets/img/search.png" alt=""/>
 			</div>
 		</div>
 		<ul v-if="allList.length" class="name-list">
 			<li v-for="(item,index) in allList">
 				<div class="data-div">
-					<p>{{item.insertTime | niceDate}}</p>
-					<p></p>
+					<p>{{item.date | niceDate}}  {{item.period | ampm}}</p>
+					
+					<ul style="clear: both;">
+						<li v-for="(list,index) in item.studentSubscibeList">
+							<div class="name-div">
+								<img :src="list.stuHeadPic" alt="" />
+								<div>
+									<h4>{{list.stuName}}</h4>
+									<h5>{{list.className}}</h5>
+								</div>
+								
+								<p class="">{{list.insertTime | niceDate}}</p>
+							</div>
+						</li>
+					</ul>
 				</div>
 				
-				<div class="name-div">
-					<img src="../../../../build/logo.png" alt="" />
-					<div>
-						<h4>{{}}</h4>
-						<h5>三年级二班</h5>
-					</div>
-					
-					<p class="">2018/03/12</p>
-				</div>
-			</li>
-			<li>
-				<div class="data-div">
-					<p>2018/03/12 星期三 上午</p>
-					<p></p>
-				</div>
 				
-				<div class="name-div">
-					<img src="../../../../build/logo.png" alt="" />
-					<div>
-						<h4>王老师</h4>
-						<h5>三年级二班</h5>
-					</div>
-					
-					<p class="">2018/03/12</p>
-				</div>
 			</li>
+			
 			<p  class="more-btn" @click="next1 && more1() ">{{next1_text}}</p>
 		</ul>
 		<div class="err-tips" v-if='tip'>
@@ -76,8 +66,7 @@
 				dd:'',
 				dTime:'',
 				sName:'',
-				results: [],
-      			imgS1:'src/assets/img/search.png',
+      			
 			}
 		},
 		mounted(){
@@ -99,6 +88,13 @@
 		},
 		filters:{
 			...filter,
+			ampm(val){
+				if(val==1){
+					return '上午'
+				}else if(val==2){
+					return '下午'
+				}
+			}
 		},
 		computed:{
 			
@@ -137,13 +133,13 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("预约记录列表",d);
 					if(d.code==0){
+						
 						if(d.data){
-							for(let i = 0; i < d.data.length; i++) {
-							self.allList=d.data;
-							}
+							self.allList=d.data.records;
+							self.tip=false;
 							if(d.data.total==0){
 								self.next1=false;
-								self.next1_text='暂无评论'
+								self.next1_text='暂无数据'
 							}
 							else{
 								self.next1=true;
@@ -153,52 +149,59 @@
 								self.next1=false;
 								self.next1_text='没有更多了'
 							}
-							if(!d.data.records.length){
-								self.tip=true
-							}
 						}else{
 							self.tip=true
+							self.allList='';
 						}
 						
 					}
-					
+//					
 		       });
 			},
-			getPage(){
+			getPage(d,name){
 				var self=this;
+				d=self.dTime;
+				name=self.sName;
 				var url=int.stuNameList;
 				var sid=localStorage.getItem('sid');
 				var loginId=localStorage.getItem('loginId');
+				console.log('1111',self.dTime)
 				var params={
 					current:self.page,
 					size:10,
 					teacherId:loginId,
-					
+					date:d,
+					stuName:name
 				}
-				 ajax.post_data(url, params, function(d) {
+				ajax.post_data(url, params, function(d) {
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log("预约记录列表",d);
-					if(d.code==0){	
+					if(d.code==0){
+						
 						if(d.data){
 							for(let i = 0; i < d.data.length; i++) {
-							self.allList.push(d.data[i]);
+								self.allList.push(d.data[i]);
 							}
+							self.tip=false;
 							if(d.data.total==0){
 								self.next1=false;
-								self.next1_text='暂无评论'
+								self.next1_text='暂无数据'
 							}
 							else{
 								self.next1=true;
 								self.next1_text='查看更多'
 							}
-							if(d.data.current==d.data.pages){
+							if(d.data.current>=d.data.pages){
 								self.next1=false;
 								self.next1_text='没有更多了'
 							}
+						}else{
+							self.tip=true
+							self.allList='';
 						}
 						
 					}
-					
+//					
 		       });
 			},
 			change1(value) {
@@ -322,6 +325,7 @@
 		position: absolute;
 		top: 12rem;
 		left: 50%;
+		color: #666;
 		-webkit-transform: translateX(-50%);
 		-moz-transform: translateX(-50%);
 		-ms-transform: translateX(-50%);

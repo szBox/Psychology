@@ -20,7 +20,7 @@
 
 			<div class="show-div">
 				<h3>预约时间</h3>
-				<span class="typeOn">预约同步</span>
+				<!--<span class="typeOn">预约同步</span>-->
 			</div>
 			<div id="yuyue-table">
 				<div class="show-tableBox" style="margin-bottom: 2rem;">
@@ -45,11 +45,11 @@
 										<span>{{item.day | ddDate}}</span>
 									</div>
 									<p >
-										<set-table  :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></set-table>
+										<set-table  :ap='1' :yuyueDay='item.day | ymdDate' :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></set-table>
 									
 									</p>
 									<p >
-										<set-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></set-table>
+										<set-table  :ap='2' :yuyueDay='item.day | ymdDate'  :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></set-table>
 										
 									</p>
 								</li>
@@ -62,12 +62,13 @@
 										<p>周{{index+1 | weekNum}}</p>
 										<span>{{item.day | ddDate}}</span>
 									</div>
+									<h1></h1>
 									<p >
-										<set-table   :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></set-table>
+										<set-table  :ap='1' :yuyueDay='item.day | ymdDate'  :yuyue='item.day | ymdDate | weekAm(tableArr,1)'></set-table>
 									
 									</p>
 									<p >
-										<set-table   :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></set-table>
+										<set-table  :ap='2' :yuyueDay='item.day | ymdDate' :yuyue='item.day | ymdDate | weekAm(tableArr,2)'></set-table>
 										
 									</p>
 								</li>
@@ -88,7 +89,7 @@
 				</div>
 
 			</div>
-			<div @click="setFn()" class="fabu-fixed">
+			<div @click="dis && setFn()" class="fabu-fixed">
 				发布
 			</div>
 		</div>
@@ -124,11 +125,13 @@
 				starDate:'',
 				NumDay: 24 * 60 * 60 * 1000,
 				endDate:'',
+				dis:true,
 				dateAll: [
 				
 				],
 				tableArr:[],
 				newArr:[], //传给后台的集合
+				closeIndex:'',
 			}
 		},
 		filters:{
@@ -168,6 +171,7 @@
 					}else if(yue==4){
 						return '4'
 					}
+					
 				
 			},
 			weekPm(val,date,pm){
@@ -288,6 +292,7 @@
 			},
 			getTable(){
 				var self=this;
+				
 				var loginId=localStorage.getItem('loginId')
 				var url=int.tableWeek;
 				var sid=localStorage.getItem('sid')
@@ -304,19 +309,49 @@
 					if(d.code==0){
 						self.tableArr=d.data;
 						for(var i=0; i<d.data.length; i++){
-							self.newArr.push({
-								userId:self.$route.params.Tid,
-								address:'',
-								date: d.data[i].date,
-								id: d.data[i].id,
-								maxNum: '',
-								period: d.data[i].period,
-								sid: d.data[i].sid,
-								teacherId: d.data[i].teacherId,
-							})
+							if(d.data[i].status==1){
+								self.newArr.push({
+									userId:self.$route.params.Tid,
+									address:'',
+									date: d.data[i].date,
+									id: d.data[i].id,
+									maxNum: '',
+									period: d.data[i].period,
+									sid: sid,
+									teacherId: loginId,
+								})
+							}
+							
 						}
 						console.log('新的数组',self.newArr)
 					}
+				})
+				self.$nextTick(function(){
+					self.$root.eventHub.$off('zidingyi')
+					self.$root.eventHub.$on('zidingyi',function(type,day,ap,id){
+						console.log('状态',type,day,ap,id)
+						if(type==true){
+							self.newArr.push({
+								userId:self.$route.params.Tid,
+								address:'',
+								date: day,
+								id: id,
+								maxNum: '',
+								period: ap,
+								sid:sid,
+								teacherId: loginId,
+							})
+							console.log('点击之后新的数组',self.newArr)
+						}else if(type==false){
+							for(var i=0; i<self.newArr.length; i++){
+								if((self.newArr[i].date)+'&'+(self.newArr[i].period)==(day+'&'+ap)){
+									self.closeIndex=i
+								};
+							}
+							self.newArr.splice(self.closeIndex,1)
+							console.log('删除之后新的数组',self.newArr)
+						}
+					})
 				})
 			},
 			setFn(){
@@ -325,8 +360,8 @@
 					self.peopleErr='请输入预约人数'
 				}else if(!self.address){
 					self.addressErr='请输入预约地点'
-				}else if(self.tableArr.length!=0){
-					
+//				}else if(self.tableArr.length!=0){
+					}else{
 					
 					var self=this;
 					var loginId=localStorage.getItem('loginId')
@@ -346,7 +381,7 @@
 						if(d.code==0){
 							localStorage.setItem('peopel',self.people)
 							localStorage.setItem('address',self.address)
-							
+							self.dis=false;
 							
 							self.$vux.toast.show({
 								type: 'text',
@@ -354,6 +389,7 @@
 								position: 'bottom'
 							})
 							setTimeout(function(){
+								
 								self.back();
 							},800)
 						}

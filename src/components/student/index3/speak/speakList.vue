@@ -2,11 +2,11 @@
 	<div class="speakList">
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
-			<h1>话题列表学生</h1>
+			<h1>话题列表</h1>
 			<em @click="goWrite()">发布</em>
 		</header>
 
-		<scroller style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller  v-if='showInit'  style="padding-top: 2.75rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="speakList-ul">
 				<li v-for="(item, index) in allList" @click="goPath(item.id)">
 					<h3 class="ellipsis">{{item.summary}}</h3>
@@ -39,7 +39,7 @@
 				/*最后的数组*/
 				page: 1,
 				pages:'',
-				
+				showInit:false,
 			}
 		},
 		created(){
@@ -50,6 +50,7 @@
 		},
 		mounted(){
 			var self=this;
+			this.$root.eventHub.$emit('Vloading',true)
 			self.getList();
 		},
 		methods: {
@@ -68,9 +69,14 @@
 				}
 				 ajax.post_data(url, params, function(d) {
 		//        	_this.$root.eventHub.$emit('Vloading',false)
-		            console.log("话题列表",d);
-					self.allList=d.data.records;
-					self.pages=d.data.pages;
+					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
+						self.pages=d.data.pages;
+						self.allList=d.data.records
+						
+					}
+		            
 					
 		       });
 			},

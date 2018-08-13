@@ -12,7 +12,7 @@
 					<img :src="userInfo.headPic"/>
 					<span>{{userInfo.nickName}}</span>
 				</h1>
-				<p class="ellipsis">
+				<p class="">
 					{{userInfo.summary}}
 				</p>
 				<img :src="userInfo.imageUrl" alt="" />
@@ -67,8 +67,8 @@
 				 </p>
 				
 			 	<ul  v-if='speakAll!=0' class="danmu-ul">
-			 		<li v-for="(item,index) in speakList">
-						<p>{{item.content}}</p>
+			 		<li class="ellipsis" v-for="(item,index) in danList" :style="{background:'bg'}">
+						{{item.content}}
 					</li>
 			 	</ul>
 			 	<h4 class='err-dan' v-if='speakAll==0'>
@@ -93,6 +93,7 @@
 				userInfo:'', //话题 作者信息
 				speakAll:'',  //话题总条数
 				speakList:[],  //话题列表
+				danList:[],  //弹幕列表
 				next1_text:'',
 				next1:true,	//加载更多 状态
 				bb:'',  //留言 BB
@@ -101,13 +102,40 @@
 				maxL:100,
 				danTitle:true,
 				danmu:false,
+				dis:true,
 			}
 		},
 		mounted(){
 			var self=this;
 			self.getInfo();
-			self.getPage();
-
+			self.getList();
+			self.danStyle();
+			self.getDan();
+			
+			
+		},
+		computed:{
+			bg(){
+				for(var i=0; i<$('.danmu-ul li').length; i++){
+					var rnum=Math.floor(Math.random() * 5+1); 
+					console.log('rrrrr',rnum)
+					if(rnum == 1){
+						return ' url(../../../../assets/img/dan1.png) no-repeat;'
+					}
+					if(rnum == 2){
+						return 'url(../../../../assets/img/dan2.png) no-repeat;'
+					}
+					if(rnum == 3){
+						return ' url(../../../../assets/img/dan3.png) no-repeat;'
+					}
+					if(rnum == 4){
+						return ' url(../../../../assets/img/dan4.png) no-repeat;'
+					}
+					if(rnum == 5){
+						return 'url(../../../../assets/img/dan5.png) no-repeat;'
+					}
+				}
+			}
 		},
 		filters:{
 			...filter,
@@ -128,21 +156,32 @@
 			danStyle(){
 				var margin;
 				var mNum=200
+				var dely;
 				var times;
+				var delyArr=[];
 				console.log('长度',$('.danmu-ul li').length)
 				for(var i=0; i<$('.danmu-ul li').length; i++){
-					var ran=(Math.random()*1)
-					console.log('随机数',ran)
-					if((ran*(i+1))<5){
-						times=5
-					}else if((ran*(i+1))>10){
-						times=10
-					}else{
-						times=ran*(i+1)
+					var ran=(Math.random()*2)
+					dely=Math.ceil(i/5);
+//					times=ran
+					margin=mNum*(i/10+ran);
+					if(mNum*(i/10+ran)<115){
+						margin=175
 					}
+					if(i+1<6){
+						times=5
+					}else{
+						times=i+1
+					}
+					console.log('延时系数',dely+'---left距离'+margin)
 					$('.danmu-ul li').eq(i).css({
-						left:mNum*(1+ran)+'%',
-						transition:"all "+times+"s linear",
+						'left':margin+'%',
+//						'transition':"all 5s linear "+(dely+1)+"s",
+//						'-webkit-transition':"all 5s linear "+(dely+1)+"s",
+						'transition':"all " +times+"s linear "+(dely)+"s",
+						'-webkit-transition':"all " +times+"s linear "+(dely)+"s",
+//						'transition':"all " +times+"s linear ",
+//						'-webkit-transition':"all " +times+"s linear ",
 					})
 				}
 			},
@@ -151,9 +190,11 @@
 				var self=this;
 				self.danmu=true;
 				self.danTitle=false;
-				$('.danmu-ul li').css({
+				$('.danmu-ul li').animate({
 					left:-100+'%'
 				})
+				
+				
 			},
 			danOff(){
 				//关闭弹幕
@@ -182,6 +223,7 @@
 			},
 			getPage(){
 				var self=this;
+				self.ndex1=false;
 				var url=int.speakPage;
 				var params={
 					current: self.page,
@@ -203,7 +245,7 @@
 							self.next1=true;
 							self.next1_text='加载更多'
 						}
-						if(d.data.current==d.data.pages){
+						if(d.data.current>=d.data.pages){
 							self.next1=false;
 							self.next1_text='没有更多了'
 						}
@@ -226,9 +268,6 @@
 						for(let i = 0; i < d.data.records.length; i++) {
 							self.speakList=d.data.records;
 						}
-						self.$nextTick(function(){
-							self.danStyle()
-						})
 						
 						if(d.data.total==0){
 							self.next1=false;
@@ -243,6 +282,27 @@
 							self.next1_text='没有更多了'
 						}
 					}
+				})
+			},
+			getDan(){
+				var self=this;
+				var url=int.speakPage;
+				var params={
+					current: 1,
+					size: 999999,
+					topicId:self.$route.params.id
+				};
+				ajax.post_data(url,params,function(d){
+					console.log('弹幕列表详情',d)
+					self.speakAll=d.data.total;
+					if(d.code==0){
+						self.danList=d.data.records;
+						self.$nextTick(function(){
+							self.danStyle()
+						})
+						
+				
+				}
 				})
 			},
 			speakBB(){
@@ -261,7 +321,7 @@
 							self.bb='';
 							self.maxL=100;
 							self.getList();
-							
+							self.getDan()
 						}
 					})
 				}
@@ -471,28 +531,45 @@
 			height: 100%;
 				li{
 					position: absolute;
-					height: 1.5rem;
-					line-height: 1.5rem;
-					border: 2px solid red;
+					width: 7.5rem;
+					-webkit-line-clamp: 1;
+					/*padding-right: 1.5rem;*/
+					padding-left: 2rem;
+					height: 1.7rem;
+					overflow: hidden;
+					line-height: 1.7rem;
 					/*left:300%;
 					transition:left 5s linear;
 					-webkit-transition:left 5s linear;*/
 				}
 				li:nth-child(5n-4){
 					top: 15%;
-					background: ;
+					background: url(../../../../assets/img/dan1.png) no-repeat;
+					background-size: cover;
+					color: #000;
 				}
 				li:nth-child(5n-3){
 					top: 30%;
+					background: url(../../../../assets/img/dan2.png) no-repeat;
+					background-size: cover;
+					color: #FF8C0F;
 				}
 				li:nth-child(5n-2){
 					top: 45%;
+					background: url(../../../../assets/img/dan3.png) no-repeat;
+					background-size: cover;
 				}
 				li:nth-child(5n-1){
 					top: 65%;
+					background: url(../../../../assets/img/dan4.png) no-repeat;
+					background-size: cover;
+					
 				}
 				li:nth-child(5n){
-					top: 75%;
+					top: 80%;
+					background: url(../../../../assets/img/dan5.png) no-repeat;
+					background-size: cover;
+					color: #000;
 				}
 			}
 			

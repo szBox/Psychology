@@ -5,13 +5,20 @@ import footBar from '@/components/common/footBar'
 import login from '@/components/common/login'
 import forget from '@/components/common/mimaForget'
 import chat from '@/components/common/chat' //聊天 (公共的)
+
+import gameAir from '@/components/games/air/air'
+import ifnameGame from '@/components/common/ifnameGame'
+
 import stateShenhe from '@/components/common/State_shenhe' //审核状态 样式 (公共的)
 import stateTable from '@/components/common/State_Table' //预约表格状态 (公共的)
+import stateTableTea from '@/components/common/State_TableTea' //预约老师表格状态 (老师 )
+import stateTableAdmin from '@/components/common/State_TableAdmin' //预约老师表格状态 (管理员的)
+import stateActivity from '@/components/common/State_Activity' //组团活动状态 (公共的)
 import myalert from '@/components/common/alert' //弹窗 (公共的)
 import indexA1 from '@/components/common/index1/index1'		//心灵阅读 (公共的)
 import yueduInfo from '@/components/common/index1/yueduInfo'		//心灵阅读 > 详情 (公共的)
 
-import navTop from '@/components/common/navTop'
+
 
 import index3 from '@/components/common/index3/index3'		//互动   (公共的)
 import index4 from '@/components/common/index4/index4'		//我的    (管理员-老师 公共的)
@@ -35,8 +42,7 @@ import activitysList from '@/components/common/index3/activitys/activitysList'		
 import activitysNav1 from '@/components/common/index3/activitys/activitysNav1'		//互动 > 组团活动list 所有活动
 import activitysNav2 from '@/components/common/index3/activitys/activitysNav2'		//互动 > 组团活动list 我的参与
 import activitysInfo from '@/components/common/index3/activitys/activitysInfo'		//互动 > 组团活动list 活动详情  发起的
-import activitysInfo2 from '@/components/common/index3/activitys/activitysInfo2'		//互动 > 组团活动list 活动详情  参与的
-import activitysInfo3 from '@/components/common/index3/activitys/activitysInfo3'		//互动 > 组团活动list 活动详情   还没报名的
+
 import activitysWrite from '@/components/common/index3/activitys/activitysWrite'		//互动 > 组团活动list 发起组团
 
 import gamesList from '@/components/common/index3/games/gamesList'		//互动 > 游戏擂台list
@@ -103,6 +109,8 @@ import yuyueNameT from '@/components/teacher/index2/yuyueName'		//咨询预约 >
 Vue.use(Router)
 
 export default new Router({
+	mode: 'history',
+	base: '/heartApp/',
   routes: [
     {
       path: '/',
@@ -119,15 +127,36 @@ export default new Router({
       name: 'chat',
       component: chat
     },
+  
+    {
+    	path: '/ifnameGame',
+      name: 'ifnameGame',
+      component: ifnameGame
+    },
     {
     	path: '/stateShenhe',
       name: 'stateShenhe',
       component: stateShenhe
     },
     {
+    	path: '/stateActivity',
+      name: 'stateActivity',
+      component: stateActivity
+    },
+    {
     	path: '/stateTable',
       name: 'stateTable',
       component: stateTable
+    },
+    {
+    	path: '/stateTableAdmin',
+      name: 'stateTableAdmin',
+      component: stateTableAdmin
+    },
+    {
+    	path: '/stateTableTea',
+      name: 'stateTableTea',
+      component: stateTableTea
     },
      {
     	path: '/alert',
@@ -140,6 +169,7 @@ export default new Router({
    		path:'/home',
    		name:	'footBar',
    		component: footBar,
+   		meta: { keepAlive: true },
    		redirect: '/home/index1',
    		children:[
    			{
@@ -152,27 +182,32 @@ export default new Router({
    				path:'/index2A', 
 		   		name:	'index2A',			//咨询预约 (学生的)
 		   		component: index2A,
+		   		meta: { keepAlive: true },
    			},
    			{
    				path:'/index2B', 
 		   		name:	'index2B',			//咨询预约 (老师)
 		   		component: index2B,
+		   		meta: { keepAlive: true },
    			},
    		
    			{
    				path:'/index2C', 
 		   		name:	'index2C',			//咨询预约 (管理员)
 		   		component: index2C,
+		   		meta: { keepAlive: true },
    			},
    			{
    				path:'/index3',		
 		   		name:	'index3',			//互动  (公共的)
 		   		component: index3,
+		   		meta: { keepAlive: true },
    			},
    			{
    				path:'/index4',
 		   		name:	'index4',			//我的  (管理员-教师 公共的)
 		   		component: index4,
+		   		meta: { keepAlive: true },
    			},
    		
    		
@@ -290,16 +325,6 @@ export default new Router({
 	   		component: activitysInfo,
 		},
 		{
-				path:'/activitysList/activitysInfo2/:id',
-	   		name:	'activitysInfo2',			// 互动 > 组团活动list 活动详情
-	   		component: activitysInfo2,
-		},
-		{
-				path:'/activitysList/activitysInfo3/:id',
-	   		name:	'activitysInfo3',			// 互动 > 组团活动list 活动详情
-	   		component: activitysInfo3,
-		},
-		{
 				path:'/activitysList/activitysWrite',
 	   		name:	'activitysWrite',			// 互动 > 组团活动list 发起组团
 	   		component: activitysWrite,
@@ -404,7 +429,12 @@ export default new Router({
 				   		component: huatiNav2,
 					}
 	   		]
-		}
+		},
+		{
+				path:'/gameAir',
+	   		name:	'gameAir',			// 打飞机
+	   		component: gameAir,
+		},
   ],
    scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {

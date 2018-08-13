@@ -8,15 +8,16 @@
 		<div class="b-content">
 			<div class="activi-li">
 				<div class="faqi-img">
-					<img src="../../../../assets/img/ren1.png" alt="" />
+					<img :src="userInfo.imageUrl" alt="" />
 					<div>
 						<p>{{userInfo.nickName}}</p>
 						<h6>{{userInfo.insertTime | niceDate}}</h6>
 					</div>
 				</div>
-				<p class="activi-type">
-					{{userInfo.type | TypesName}}
-				</p>
+				
+				<p class="activi-type" v-if='userInfo.state==1' style="float: right; color: #E37212;">{{userInfo.state | State}}</p>
+				<p class="activi-type" v-if='userInfo.state==3' style="float: right; color: #B1B1B1;">{{userInfo.state | State}}</p>
+				
 			</div>
 			<div class="activi-li">
 				<p style="border: none;font-size: 0.8rem;">
@@ -54,10 +55,16 @@
 		
 	
 		<div v-if='roleType' class="btn-fixed">
-			<div v-if='userInfo.state==2' @click="getYes(2)" class="btn-yes">通过</div>
-			<div v-if='userInfo.state==2'@click="getYes(3)" class="btn-no">驳回</div>
-		</div>
+				<div v-if='userInfo.state==1' @click="conshowFn(2,'通过')" class="btn-yes">通过</div>
+				<div v-if='userInfo.state==1'@click="conshowFn(3,'驳回')" class="btn-no">驳回</div>
+			</div>
 		
+		 <confirm v-model="conShow"
+			title='操作提示'
+	      @on-cancel="onCancel"
+	      @on-confirm="onConfirm">
+	        <p style="text-align:center;">是否确认{{ConfirmStr}}?</p>
+	      </confirm>
 		
 	</div>
 </template>
@@ -65,18 +72,21 @@
 <script>
 	import int from '@/assets/js/interface'
 	import ajax from '@/assets/js/ajax'
-	import myalert from '../../alert'
-	import { Toast } from 'vux'
+	import { Toast, Confirm } from 'vux'
 	import filter from '@/assets/js/filters'
 	export default({
 		data(){
 			return{
 				userInfo:"",      //发起作者 信息
 				roleType:false,
+				conShow:false,   //二次提示 
+				ConfirmState:'',  //提示  通过/驳回的状态 传给提示框
+				ConfirmStr:'', //提示  通过/驳回的内容  传给提示框
 			}
 		},
 		components:{
-			Toast
+			Toast,
+			Confirm
 		},
 		created(){
 			
@@ -86,7 +96,8 @@
 			var self=this;
 			this.getUser();
 			var role=localStorage.getItem('role');
-			if(role=='M'||role=='T'){
+			var activQx=localStorage.getItem('activQx');
+			if(role=='M'||activQx=='Y'){
 				self.roleType=true
 			}
 
@@ -100,37 +111,13 @@
 		},
 		filters: {
 			...filter,
-			TypesName(val){
-				 if(val==1){
-					return '我发起'
-				}
-				else if(val==2){
+			State(val){
+				if(val=='1'){
 					return '审核中'
+				}else if(val=='3'){
+					return '已驳回'
 				}
-				else if(val==3){
-					return '我参与'
-				}
-				else if(val==4){
-					return '驳回'
-				}
-				else if(val==5){
-					return	'已满'
-				}
-				else if(val==6){
-					return	'不在报名时间内'
-				}
-				else if(val==7){
-					return '未参与'
-				}
-			},
-			TypesBtn(val){
-				
-				if(val ==3||val==4||val==5||val==6||val==7){
-					return	'我要报名'
-				}else if(val==2){
-					return '审核中'
-				}
-			},
+			}
 	   },
 		methods: {
 			back() {
@@ -160,13 +147,25 @@
 	
 	          	});
 			},
-			getYes(s){
-				var self=this;
-				var url=int.activityCaozuo;
+							conshowFn(state,str){
+//				再次确认提示框
+				this.conShow=true
+				this.ConfirmState=state;
+				this.ConfirmStr=str;
+
+			},
+		 	onCancel () {
+		      
+		    },
+		    onConfirm () {
+		     var self=this;
+		     console.log(self.ConfirmState+'////'+self.ConfirmStr)
+		     //	调ajax  通过传2, 驳回传3
+				var url=int.activiShenhe;
 				var params={
+					state:self.ConfirmState,
 					id:self.$route.params.id,
-					state:s
-				};
+				}
 				ajax.put_data(url,params,function(d){
 					console.log('通过/驳回',d)
 					if(d.code==0){
@@ -177,11 +176,11 @@
 						})
 						setTimeout(function(){
 							self.back()
-						},800)
+						},1000)
 					}
 					
 				})
-			},
+		    },
 		}
 	})
 </script>

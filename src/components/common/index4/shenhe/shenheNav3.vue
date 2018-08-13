@@ -1,17 +1,17 @@
 <template>
 	<div class="shengheNav2">
-		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller  v-if='showInit' style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li v-for="(item, index) in AllList" @click="goPath(item.state,item.id)">
 					<div class="lf zutuan-img">
-						<img src="../../../../assets/img/ren1.png" alt="" />
+						<img  style="border-radius: 0.3rem;" :src="item.headPic" alt="" />
 						<h1>{{item.nickName}}</h1>
 						<state-shenhe style='margin: 0 auto;' :state='item.state'></state-shenhe>
 						<!--<h5>30分钟前</h5>-->
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
-						<span>{{item.name}}</span>
+						<span   class="ellipsis" style="-webkit-line-clamp: 1;">{{item.name}}</span>
 						<em>
 							<span>
 								<i>{{item.count}}</i>人/
@@ -20,7 +20,7 @@
 						</em>
 					
 					</h1>
-					<h2>{{item.content}}</h2>
+					<h2   class="ellipsis" style="-webkit-line-clamp: 2;">{{item.content}}</h2>
 					<div class="activitys-info">
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
@@ -56,6 +56,7 @@
 				pages:'',
 				dataType:'',
 				dataStatus:'',
+				showInit:false,
 				/*当前页码*/
 			}
 		},
@@ -90,12 +91,14 @@
 			
 		},
 		mounted(){
+			this.$root.eventHub.$emit('Vloading',true)
 			var self=this;
 			var role=localStorage.getItem('role');
-			if(role=='S'){
+			var activQx=localStorage.getItem('activQx');
+			if(role=='S'|| role=='T'){
 				self.dataType=1;
 				self.dataStatus=''
-			}else{
+			}else if(role=='M'||activQx=='Y'){
 				self.dataType='';
 				self.dataStatus=1
 			}
@@ -130,6 +133,8 @@
 				ajax.post_data(url,params,function(d){
 					console.log('组团审核列表',d)
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.pages=d.data.pages;
 						self.AllList=d.data.records;
 					}

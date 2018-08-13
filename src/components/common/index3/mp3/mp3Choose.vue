@@ -11,16 +11,16 @@
 			<div class="mp3ChooseInp">
 				<div class="mp3ChooseInp-div">
 					<span>歌曲名称:</span>
-					<input v-model="mp3" :placeholder="errmp3" type="text" />
+					<input v-model="mp3" maxlength="20" :placeholder="errmp3" type="text" />
 				</div>
 				<div class="mp3ChooseInp-div">
 					<span>赠送给:</span>
-					<input v-model="to" :placeholder="errto" type="text" />
+					<input v-model="to" maxlength="20" :placeholder="errto" type="text" />
 				</div>
 				
 				<div class="mp3ChooseInp-div">
 					<span>我想说:</span>
-					<textarea v-model="speak" :placeholder="errSpeak" name="" rows="3" cols=""></textarea>
+					<textarea v-model="speak" maxlength="50" :placeholder="errSpeak" name="" rows="3" cols=""></textarea>
 				</div>
 				<div class="mp3ChooseInp-div">
 					<span>播放时间:</span>
@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<div class="btn-box">
-				<div class="btn-init" @click="mp3D()">
+				<div class="btn-init" @click="dis && mp3D()">
 					点歌
 				</div>
 			</div>
@@ -49,6 +49,7 @@
 	
 			data() {
 				return {
+					dis:true,
 					mp3:'',to:'',speak:'',mp3Time:'',mp3Timenum:'',
 					errmp3:'',errto:'',errSpeak:'',errTime:'',//错误提示
 				}
@@ -81,6 +82,13 @@
 				else if(!self.mp3Timenum){
 					self.errTime='请选择播放时间'
 				}
+				else if(self.mp3Timenum<new Date().getTime()){
+					self.$vux.toast.show({
+						type: 'text',
+						text: '播放时间已过',
+						position: 'bottom'
+					})
+				}
 				else{
 					var url=int.mp3Add;
 					var sid=localStorage.getItem('sid');
@@ -97,6 +105,7 @@
 			//        	_this.$root.eventHub.$emit('Vloading',false)
 			            console.log("发布点歌",d);
 						if(d.code==0){
+							self.dis=false;
 							self.$vux.toast.show({
 								type: 'text',
 								text: '发布成功',
@@ -104,7 +113,7 @@
 							})
 							setTimeout(function(){
 								self.back()
-							},1000)
+							},800)
 						}
 						
 		       		});
@@ -123,6 +132,7 @@
 	.mp3Choose{
 		background: #F4F4F4;
 	}
+	
 	input {
 		border: none;
 	}
@@ -146,9 +156,10 @@
 			margin-bottom: 0.5rem;
 			.em-data{
 				float: left;
-				width: 70%;
+				width: 100%;
 				height: 1.8rem;
 				line-height: 1.8rem;
+				margin-left: -4.75rem;
 				>a{
 					padding-left: 1rem;
 					display: block;

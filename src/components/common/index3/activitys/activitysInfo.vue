@@ -4,11 +4,12 @@
 		<header class="header">
 			<div  @click="back()"><img src="../../../../assets/img/goback.png" alt=""/></div>
 			<h1 >{{userInfo.name}}</h1>
+			<!--<h1>{{shenheList}}</h1>-->
 		</header>
 		<div class="b-content">
 			<div class="activi-li">
 				<div class="faqi-img">
-					<img src="../../../../assets/img/ren1.png" alt="" />
+					<img :src="userInfo.headPic" alt="" />
 					<div>
 						<p>{{userInfo.nickName}}</p>
 						<h6>{{userInfo.insertTime | niceDate}}</h6>
@@ -64,9 +65,12 @@
 						<em></em>
 					</h1>
 				</div>
+				
 				<ul v-if='toggleNav==1'>
+					
 					<li v-for='(item,index) in baominList'>
 						<!--{{item}}-->
+						
 						<p>
 							<img :src="item.headPic" alt="" />
 							<span v-if='item.type==1'>{{item.nickName}}</span>
@@ -134,21 +138,29 @@
 				</ul>
 				<p  class="more-btn" :class="{'nodata' : nodata1==true}"  @click="next1 && more1() ">{{next1_text}}</p>
 			</div>
-			<!--<myalert :alertProps='alertType' :type='type'></myalert>-->
 			
-			<div v-if='userInfo.type=="5"' class="huifu-div">
+			<!--<myalert :alertProps='alertType' :type='type'></myalert>-->
+			<div class="bgg" v-if="maxNum"></div>
+			<div v-if='maxNum' class="huifu-div" style="margin-bottom: 2rem;">
 				<h2>信息回复</h2>
 				<p>当前报名人员已满,请下次再来</p>
 			</div>
-			<div class="btn-box" v-if='userInfo.type!=1'>
+			<div class="btn-box" v-if='!helpShow'>
 				<div v-show='userInfo.type==2||userInfo.type==3||userInfo.type==4||
 					userInfo.type==5||userInfo.type==6||userInfo.type==7'
 					 :style="{background:TypesBtn_bgcolor}" 
 					 class="btn-init" @click='baomin()'>{{TypesBtn}}</div>
+					<div class="btn-init" v-show='btnTimeType' style="background: #D7D5D6;">
+						{{btnTime}}
+					</div>
+			</div>
+			<div class="Ecs-help" v-if="helpShow">
+				<p @click='baomin()' :style="{background:TypesBtn_bgcolor}" >{{TypesBtn}}</p>
+				<p @click="helpCoverShow()">其他人退出活动</p>
 			</div>
 		</div>
 		<!--添加报名--fixed-->
-		<div class='add-fixed' v-if="userInfo.type==3" @click="addFn()">
+		<div class='add-fixed' v-if="userInfo.type==3&&userInfo.type!=5" @click="addFn()">
 			<img src="../../../../assets/img/icontext1.png" alt="" />
 			<span>添加报名</span>
 		</div>
@@ -175,11 +187,34 @@
 				
 			</div>
 		</div>
-		
+		<div class="alert-bg" v-if="helpCover">
+			<div class="alert-box">
+				<h1>退出活动</h1>
+				<img @click="closeAlert()" src="../../../../assets/img/closebig.png" alt="" />
+				
+				<div>
+					<ul class="help-list">
+					<li v-for="(help,index) in helpList">
+						<span>{{help.name}}</span>
+						<p>{{help.phone}}</p>
+						<div @click="helpEsc(help.id)">退出</div>
+					</li>
+				</ul>
+				</div>
+				
+			</div>
+		</div>
 		<div class="alert-bg" v-if='baoYes' @click="coverYes()">
 			<div class="baoming-yes">
-				<p>当前用户已报名</p>
+				<p>{{baoYesStr}}</p>
 				请等待审核
+			</div>
+		</div>
+		<div class="alert-bg" v-if='baoEsc'>
+			<div class="baoming-no">
+				<img src="../../../../assets/img/closebig.png" @click="Esccover()" alt="" />
+				<p>你确定要退出活动吗?</p>
+				<div class="Esc-btn"  @click="myEsc()">确定</div>
 			</div>
 		</div>
 	      <confirm v-model="conShow"
@@ -205,17 +240,24 @@
 				TypesBtn_bgcolor:'',  //报名 按钮 样式
 				userInfo:"",      //发起作者 信息+
 				TypesBtn:'',  //报名按钮名字
+				TypesMan:'', //人数已满
+				maxNum:false,
 				baominList:[],	//报名记录  返回数据
 				shenheList:[],	//待审核记录  返回数据
 				toggleNav:1,	//我发起状态  切换nav
 				alertType:false,	//弹窗 
-				
+				myEscId:'',   //自己退出 需要的记录id
 				page1:1,	page2:1,		//当前页1
-				
+				pageHelp:1,
+				helpShow:false,   //（退出， 帮别人退出）
+				helpCover:false,   //帮别人退出 弹窗
+				helpList:'',
 				next1_text:'',	next2_text:'',	
 				next1:true,	next2:true,	//加载更多 状态
 				mybao:false,    //我要报名  弹窗
 				baoYes:false,   //报名成功 弹窗
+				baoEsc:false,  //退出活动 弹窗
+				baoYesStr:'',
 				myname:'',myclass:'',mytel:'', 
 				errname:'',errclass:'',errtel:'', //错误提示
 				nodata1:false,  //'暂无数据的样式'
@@ -224,6 +266,7 @@
 				ConfirmId:'',  //提示 id
 				ConfirmState:'',  //提示  通过/驳回的状态 传给提示框
 				ConfirmStr:'', //提示  通过/驳回的内容  传给提示框
+				btnTime:'',btnTimeType:false
 			}
 		},
 		components:{
@@ -233,10 +276,13 @@
 		created(){
 			this.getUser()
 			this.getList1()
+			this.getHelp()//帮别人报名列表
+			this.getMy() //查看自己报名 列表
 		},
 		
 		mounted(){
 			var self=this;
+			
 		},
 		computed:{
 			colorFn(val){
@@ -265,11 +311,15 @@
 				}
 				else if(val==6){
 //					return	'不在报名时间内'
-					return '已过期'
+					return '未开始'
 				}
 				else if(val==7){
-//					return '未参与'
-					return ''
+					return '未参与'
+//					return ''
+				}
+				else if(val==8){
+					return '已过期'
+//					return ''
 				}
 			},
 			TypesBtn(val){
@@ -303,21 +353,34 @@
 						if(d.data.type==2){ 
 							self.TypesBtn='审核中'
 
-							self.TypesBtn_bgcolor=''
+							self.TypesBtn_bgcolor='#32C4FF'
 						}
 						else if(d.data.type==3){  //已参与
 							self.TypesBtn='退出活动'
 							self.TypesBtn_bgcolor='#FE6637'
 						}
 						else if(d.data.type==5){ //报名人数已满,
-							self.Typestn_bgcolor='#D7D5D6'
+							self.TypesBtn_bgcolor='#D7D5D6'
 							self.TypesBtn='我要报名'
+							self.TypesMan='人数已满'
+							
 						}
-						
+						else if(d.data.type==4){ //报名人数已满,
+							self.TypesBtn_bgcolor='#D7D5D6'
+							self.TypesBtn='报名失败'
+							
+						}
 						else if(d.data.type==7){ //未参与
 							self.TypesBtn='我要报名'
-							self.TypesName_color='#666'
-							self.TypesBtn_bgcolor=''
+							if(d.data.count==d.data.total){
+								self.maxNum=true
+								self.TypesName_color='#666'
+								self.TypesBtn_bgcolor='#D7D5D6'
+							}else{
+								self.maxNum=false;
+								
+								self.TypesBtn_bgcolor='#32C4FF'
+							}
 						}
 						
 						else if(d.data.type==6){  //已参与
@@ -325,6 +388,13 @@
 							self.TypesBtn_bgcolor='#D7D5D6'
 							self.TypesName_color='#666'
 						}
+						
+						var nowT=new Date().getTime()
+						if(nowT<d.data.signupStartTime){
+							self.btnTime='不在报名时间内';
+							self.btnTimeType=true
+						}
+						
 					}
 				
 	             
@@ -360,7 +430,7 @@
 							self.nodata1=false;
 							self.next1_text='加载更多'
 						}
-						if(d.data.current==d.data.pages){
+						if(d.data.current>=d.data.pages){
 							self.next1=false;
 							self.nodata1=false;
 							self.next1_text='没有更多了'
@@ -388,9 +458,7 @@
 	//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log('报名记录',d);
 					if(d.code==0){
-						for(var i = 0; i < d.data.records.length; i++) {
-							self.baominList=d.data.records;
-							}
+						self.baominList=d.data.records;
 						if(d.data.total==0){
 							self.next1=false;
 							self.next1_text='暂无数据'
@@ -440,7 +508,7 @@
 							self.nodata2=false;
 							self.next2_text='加载更多'
 						}
-						if(d.data.current==d.data.pages){
+						if(d.data.current>=d.data.pages){
 							self.next2=false;
 							self.nodata2=false;
 							self.next2_text='没有更多了'
@@ -467,9 +535,8 @@
 	//        	_this.$root.eventHub.$emit('Vloading',false)
 		            console.log('待审核',d);
 					if(d.code==0){
-						for(var i = 0; i < d.data.records.length; i++) {
-							self.shenheList=d.data.records;
-							}
+						self.shenheList=d.data.records;
+							
 						if(d.data.total==0){
 							self.next2=false;
 							self.next2_text='暂无数据'
@@ -492,6 +559,60 @@
 	
 	          	});
           	},
+          	getMy(){
+				var self=this;
+          		//查看 详情的 报名记录列表
+	          	var url2=int.activityInfoBaoming;
+	          	var params2={
+					activityId:self.$route.params.id,
+					current:self.page1,
+					size:10,
+					state:2,
+					type:1
+					
+				} 
+	          	ajax.post_data(url2, params2, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+		            console.log('自己报名记录',d);
+					if(d.code==0){
+						if(d.data.records.length){
+							self.myEscId=d.data.records[0].id
+						}
+						
+					}
+	             
+	
+	          	});
+          	},
+          	getHelp(){
+				var self=this;
+				var mainUrl = int.activityInfoBaoming;
+	         	 var params = {
+	         	 	activityId:self.$route.params.id,
+	           		current: self.pageHelp, //当前页
+					size: 99999,  //每页展示 几条
+					state: 2, //状态
+					type: 2
+	          	};
+	          ajax.post_data(mainUrl, params, function(d) {
+	//        	_this.$root.eventHub.$emit('Vloading',false)
+				if(d.code==0){
+					console.log('帮别人报名列表',d);
+					if(d.data.total>0){//帮别人报过名
+						self.helpShow=true;
+					}else{
+						self.helpShow=false;
+						self.helpCover=false
+					}
+					
+					self.helpList=d.data.records;
+				
+					
+				}
+	            
+
+	          });
+			},
 			more1(){
 				//加载更多
 				var vm = this;
@@ -515,18 +636,32 @@
 				//关闭弹窗
 				var self=this;
 				self.mybao=false
+				self.helpCover=false
 			},
 			coverYes(){
 				//关闭   报名成功弹窗
 				var self=this;
 				self.baoYes=false;
+				self.baoYesStr='';
+			},
+			Esccover(){
+				//关闭  退出活动弹窗
+				var self=this;
+				self.baoEsc=false
+				
+			},
+			helpCoverShow(){
+				//其他人退出活动 弹窗
+				var self=this;
+				self.helpCover=true
 			},
 			baomin(){
 				//自己报名
 				var self=this;
 				var loginName=localStorage.getItem('loginName');
 				var sid=localStorage.getItem('sid');
-				if(self.userInfo.type==7){//未参与
+				if(self.maxNum==false){
+					if(self.userInfo.type==7){//未参与  点击就是报名
 //					self.mybao=true //开启报名弹窗
 					var url=int.activityInfoBao;
 					var params={
@@ -539,12 +674,68 @@
 		//        	_this.$root.eventHub.$emit('Vloading',false)
 			            console.log('报名成功了',d);
 						if(d.code==0){
+							self.baoYesStr='当前用户已报名'
 							self.baoYes=true;
 							self.getUser();
-							self.getList1();
+							
 						}
 		          	});
+					}else if(self.userInfo.type==3){//退出活动
+						self.baoEsc=true;
+					}
 				}
+				
+			},
+			myEsc(){
+				//自己退出活动
+				 var self=this;
+			     //	调ajax  通过传2, 驳回传3
+					var url=int.activityCaozuo;
+					var params={
+						state:4,
+						id:self.myEscId
+					}
+					ajax.put_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+			            console.log('操作',d);
+			            if(d.code==0){
+			            	self.$vux.toast.show({
+							type: 'text',
+							text: '操作成功',
+							position: 'bottom'
+							})
+			            	self.baoEsc=false;
+			            	self.getUser();
+			            	self.getList1();
+							
+
+			            }
+		          	});
+			},
+			helpEsc(id){
+				//帮别人 退出活动
+				 var self=this;
+			     //	调ajax  通过传2, 驳回传3
+					var url=int.activityCaozuo;
+					var params={
+						state:4,
+						id:id
+					}
+					ajax.put_data(url, params, function(d) {
+		//        	_this.$root.eventHub.$emit('Vloading',false)
+			            console.log('操作',d);
+			            if(d.code==0){
+			            	self.$vux.toast.show({
+							type: 'text',
+							text: '操作成功',
+							position: 'bottom'
+							})
+			            	self.getHelp();
+			            	self.getList1();
+			            	self.getUser();
+			            	
+			            }
+		          	});
 			},
 			myadd(){
 				//添加报名
@@ -571,19 +762,17 @@
 					ajax.post_data(url2, params, function(d) {
 						//        	_this.$root.eventHub.$emit('Vloading',false)
 						if(d.code==0){
-			            	self.$vux.toast.show({
-							type: 'text',
-							text: '操作成功,等待审核',
-							position: 'bottom'
-							})
-			            	self.mybao=false;
+							self.mybao=false;
 			            	setTimeout(function(){
-			            		
+			            		self.baoYes=true;
+			            		self.baoYesStr='添加报名信息成功'
 			            		self.myname='';
 			            		self.mytel='';
 			            		self.getUser();
-			            	},1000)
+			            	},500)
 			            	
+			            	
+			            		
 			            	
 			            	
 			            }
@@ -591,13 +780,14 @@
 				}
 			},
 			conshowFn(id,state,str){
-//				再次确认提示框
+//				审核报名再次确认提示框
 				this.conShow=true
 				this.ConfirmId=id;
 				this.ConfirmState=state;
 				this.ConfirmStr=str;
 
 			},
+
 		 	onCancel () {
 		      
 		    },
@@ -690,6 +880,7 @@
 	.baoming-ul{
 		padding:0 0.75rem;
 		background: #fff;
+		margin-bottom: 3rem;
 		>div{
 			border-bottom: 1px solid #F2F2F2;
 			overflow: hidden;
@@ -724,7 +915,7 @@
 		
 		>ul{
 			clear: both;
-			min-height: 5rem;
+			/*min-height: 5rem;*/
 		}
 		>ul:first-child{
 			padding-top: 50px;
@@ -792,7 +983,7 @@
 	.btn-box{
 		
 		background: #fff;
-		padding: 2.5rem 0 1.5rem;
+		/*padding: 2.5rem 0 1.5rem;*/
 		.btn-init{
 			position: fixed;
 			bottom: 0.5rem;
@@ -843,7 +1034,7 @@
 		/*border: 0.05rem solid;*/
 		width: 5rem;
 		height: 1.5rem;line-height: 1.5rem;
-		margin: 0 auto 1.5rem;
+		margin: 0 auto;
 	
 	}
 	.add-fixed{
@@ -874,7 +1065,7 @@
 		background: rgba(0,0,0,.5);
 	}
 	.alert-box{
-		width: 12rem;
+		width: 13rem;
 		position: fixed;
 		top: 50%;
 		left: 50%;
@@ -908,7 +1099,7 @@
 				overflow: hidden;
 				border-bottom: 1px solid #F9F9F9;
 				padding: 0.3rem 0;
-			
+				margin: 0.4rem 0;
 				span{
 					float: left;
 					line-height: 1.5rem;
@@ -934,8 +1125,63 @@
 				line-height: 1.5rem;
 			}
 		}
+		>div{
+			overflow-x: hidden;
+			overflow-y: scroll;
+			border-radius:0 0 0.75rem 0.75rem;
+			
+		}
+		ul.help-list{
+			width: 13.5rem;
+			overflow-x: hidden;
+			background: #fff;
+			/*min-height: 10rem;*/
+			height: 10rem;
+			overflow-y: scroll;
+			
+			>li{
+				padding-right: 0.5rem;
+				display: flex;
+				flex-flow: wrap;
+				justify-content:space-around;
+				line-height: 1.2rem;
+				margin: 1rem 0;
+				>div{
+					background: #FE6637;
+					color: #fff;
+					line-height: 1.2rem;
+					padding:0 1rem;
+					border-radius: 1rem;
+				}
+			}
+		}
 	}
 	.baoming-yes{
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		width: 10rem;
+		height: 10rem;
+		text-align: center;
+		/*color: #fff;*/
+		padding-top: 5.8rem;
+		-webkit-transform: translate(-50%,-50%);
+		-moz-transform: translate(-50%,-50%);
+		-ms-transform: translate(-50%,-50%);
+		-o-transform: translate(-50%,-50%);
+		transform: translate(-50%,-50%);
+		background: url(../../../../assets/img/baominYes.png);
+		background-size: 100% 100%;
+		>img{
+			width: 1.2rem;
+			height: 1.2rem;
+			position: absolute;
+			right: -0.6rem;
+			top: 1.4rem;
+		}
+		
+	}
+	.baoming-no{
 		position: fixed;
 		top: 50%;
 		left: 50%;
@@ -949,7 +1195,43 @@
 		-ms-transform: translate(-50%,-50%);
 		-o-transform: translate(-50%,-50%);
 		transform: translate(-50%,-50%);
-		background: url(../../../../assets/img/baominYes.png);
+		background: url(../../../../assets/img/escNo.png);
 		background-size: 100% 100%;
+		>img{
+			width: 1.2rem;
+			height: 1.2rem;
+			position: absolute;
+			right: -0.6rem;
+			top: 1.4rem;
+		}
+		
+	}
+	.Esc-btn{
+		background: #32C4FF;
+		color: #fff;
+		margin:0.5rem 2.5rem;
+		line-height: 1.5rem;
+		border-radius: 1rem;
+		
+	}
+	.Ecs-help{
+		position: fixed;
+		>p{
+			position: fixed;
+		    bottom: 0.5rem;
+		    border-radius: 1rem;
+		    color: #fff;
+		    line-height: 2rem;
+		    width: 45%;
+		    text-align: center;
+		    margin: 0 0.75rem;
+		}
+		>p:first-child{
+			left: 0;
+		}
+		>p:last-child{
+			right: 0;
+			background: #fba825;
+		}
 	}
 </style>

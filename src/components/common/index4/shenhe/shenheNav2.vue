@@ -1,18 +1,19 @@
 <template>
 	<div class="shengheNav2">
-		<scroller style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
+		<scroller  v-if='showInit' style="padding-top: 5.05rem;" :on-refresh="refresh" :on-infinite="infinite" ref="my_scroller">
 			<ul class="activitys-ul">
 				<li v-for="(item, index) in AllList" @click="goPath(item.state,item.id)">
 					<div class="lf zutuan-img">
-						<img src="../../../../assets/img/ren1.png" alt="" />
+						<img  style="border-radius: 0.3rem;" :src="item.headPic" alt="" />
 						<h1>{{item.nickName}}</h1>
 						<!--<p>{{item.type | TypeLeft}}</p>-->
-						<state-shenhe :state='item.state'></state-shenhe>
+						<state-shenhe v-show='!student' :state='item.state'></state-shenhe>
+						<state-activity v-show='student' :state='item.type'></state-activity>
 						<!--<h5>30分钟前</h5>-->
 					</div>
 					<div class="lf zutuan-info">
 						<h1>
-						<span>{{item.name}}</span>
+						<span  class="ellipsis" style="-webkit-line-clamp: 1;">{{item.name}}</span>
 						<em>
 							<span>
 								<i>{{item.count}}</i>人/
@@ -21,7 +22,7 @@
 						</em>
 					
 					</h1>
-					<h2>{{item.content}}</h2>
+					<h2  class="ellipsis">{{item.content}}</h2>
 					<div class="activitys-info">
 						<div>
 							<img src="../../../../assets/img/icon_time.png" alt="" />
@@ -48,6 +49,7 @@
 	import ajax from '@/assets/js/ajax'
 	import filter from '@/assets/js/filters'
 	import stateShenhe from '../../State_shenhe'
+	import stateActivity from '../../State_Activity'
 	export default({
 		data() {
 			return {
@@ -57,11 +59,14 @@
 				pages:'',
 				dataType:'',
 				dataStatus:'',
+				student:'',
+				showInit:false,
 				/*当前页码*/
 			}
 		},
 		components:{
-			stateShenhe
+			stateShenhe,
+			stateActivity
 		},
 		filters:{
 			...filter,
@@ -91,14 +96,23 @@
 			
 		},
 		mounted(){
+			this.$root.eventHub.$emit('Vloading',true)
 			var self=this;
 			var role=localStorage.getItem('role');
-			if(role=='S'){
+			var activQx=localStorage.getItem('activQx');
+			if(role=='T'){
 				self.dataType=1;
 				self.dataStatus=''
-			}else{
+				self.student=false;
+			}else if(role=='S'){
+				self.dataType=1;
+				self.dataStatus='2'
+				self.student=true;
+			}
+			else if(role=='M'||activQx=='Y'){
 				self.dataType='';
 				self.dataStatus=1
+				self.student=false;
 			}
 			self.getList();
 		},
@@ -131,6 +145,8 @@
 				ajax.post_data(url,params,function(d){
 					console.log('组团审核列表',d)
 					if(d.code==0){
+						self.$root.eventHub.$emit('Vloading',false);
+						self.showInit=true;
 						self.pages=d.data.pages;
 						self.AllList=d.data.records;
 					}
@@ -238,6 +254,7 @@
 			h2{
 				color: #999;
 				font-size: 0.8rem;
+				-webkit-line-clamp: 2;
 			}
 		}
 		.activitys-info{
